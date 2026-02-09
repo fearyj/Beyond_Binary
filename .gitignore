@@ -1,3 +1,18 @@
 venv/
 
 .env
+.claude/
+
+# Android
+*.iml
+.gradle/
+local.properties
+.idea/
+build/
+app/build/
+*.apk
+*.aab
+*.ap_
+captures/
+.externalNativeBuild/
+.cxx/
