@@ -2,7 +2,6 @@
 
 ## What Was Built
 
-Beyond Binary is an Android wellness app built as a Final Year Project (FYP). The core feature implemented is a **For You Page (FYP)** — a TikTok-style vertical-scrolling feed that recommends wellness events to users.
 
 The app has two feed tabs:
 
