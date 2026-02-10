@@ -1,8 +1,10 @@
 package com.beyondbinary.app;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     private List<Event> events;
     private OnEventClickListener listener;
+
+    // Emoji background drawables cycling: blue, purple, green
+    private static final int[] EMOJI_BACKGROUNDS = {
+            R.drawable.bg_emoji_home_blue,
+            R.drawable.bg_emoji_home_purple,
+            R.drawable.bg_emoji_home_green
+    };
 
     public interface OnEventClickListener {
         void onEventClick(Event event);
@@ -37,7 +46,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = events.get(position);
-        holder.bind(event, listener);
+        holder.bind(event, listener, position);
     }
 
     @Override
@@ -46,46 +55,71 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     }
 
     static class EventViewHolder extends RecyclerView.ViewHolder {
+        private FrameLayout emojiBox;
         private TextView emojiText;
         private TextView titleText;
         private TextView categoryText;
         private TextView dateText;
         private TextView locationText;
-        private TextView timeText;
+        private TextView participantsText;
+        private View btnEventDetails;
+        private View btnViewMap;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
+            emojiBox = itemView.findViewById(R.id.emoji_box);
             emojiText = itemView.findViewById(R.id.event_emoji);
             titleText = itemView.findViewById(R.id.event_title);
             categoryText = itemView.findViewById(R.id.event_category);
             dateText = itemView.findViewById(R.id.event_date);
             locationText = itemView.findViewById(R.id.event_location);
-            timeText = itemView.findViewById(R.id.event_time);
+            participantsText = itemView.findViewById(R.id.event_participants);
+            btnEventDetails = itemView.findViewById(R.id.btn_event_details);
+            btnViewMap = itemView.findViewById(R.id.btn_view_map);
         }
 
-        public void bind(Event event, OnEventClickListener listener) {
-            // Set emoji based on event type category
+        public void bind(Event event, OnEventClickListener listener, int position) {
+            // Set emoji
             String emoji = EventCategoryHelper.getEmojiForEventType(event.getEventType());
             emojiText.setText(emoji);
 
-            // Set title
+            // Cycle emoji background color
+            int bgIndex = position % EMOJI_BACKGROUNDS.length;
+            emojiBox.setBackgroundResource(EMOJI_BACKGROUNDS[bgIndex]);
+
+            // Title
             titleText.setText(event.getTitle());
 
-            // Set category
+            // Category
             String category = EventCategoryHelper.getCategoryForEventType(event.getEventType());
             categoryText.setText(category);
 
-            // Parse and format date from time string (e.g., "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM")
+            // Combined date + time on one line
             String dateFormatted = extractDate(event.getTime());
-            dateText.setText(dateFormatted);
+            String timeFormatted = extractTime(event.getTime());
+            if (!timeFormatted.isEmpty()) {
+                dateText.setText(dateFormatted + " | " + timeFormatted);
+            } else {
+                dateText.setText(dateFormatted);
+            }
 
-            // Set location
+            // Location
             locationText.setText(event.getLocation());
 
-            // Extract just the time portion
-            String timeFormatted = extractTime(event.getTime());
-            timeText.setText(timeFormatted);
+            // Participants
+            participantsText.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " Pax");
 
+            // Event Details button
+            btnEventDetails.setOnClickListener(v -> listener.onEventClick(event));
+
+            // View on Map button
+            btnViewMap.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), MapsActivity.class);
+                intent.putExtra("EVENT_ID", event.getId());
+                v.getContext().startActivity(intent);
+            });
+
+            // Card click
             itemView.setOnClickListener(v -> listener.onEventClick(event));
         }
 
@@ -93,30 +127,23 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             if (timeString == null || timeString.isEmpty()) {
                 return "Date TBD";
             }
-
-            // Parse "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM"
-            if (timeString.contains("•")) {
-                String datePart = timeString.split("•")[0].trim();
-                return datePart;
+            if (timeString.contains(" \u2022 ")) {
+                return timeString.split(" \u2022 ")[0].trim();
             }
-
             return timeString;
         }
 
         private String extractTime(String timeString) {
             if (timeString == null || timeString.isEmpty()) {
-                return "Time TBD";
+                return "";
             }
-
-            // Parse "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM"
-            if (timeString.contains("•")) {
-                String[] parts = timeString.split("•");
+            if (timeString.contains(" \u2022 ")) {
+                String[] parts = timeString.split(" \u2022 ");
                 if (parts.length > 1) {
                     return parts[1].trim();
                 }
             }
-
-            return timeString;
+            return "";
         }
     }
 }

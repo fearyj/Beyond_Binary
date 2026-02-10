@@ -11,49 +11,52 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-
 public class HomeFragment extends Fragment {
 
-    private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private View tabPersonalised;
+    private View tabRecommended;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_with_tabs, container, false);
 
-        tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.view_pager);
-        FloatingActionButton fabCreateEvent = view.findViewById(R.id.fab_create_event);
+        tabPersonalised = view.findViewById(R.id.tab_personalised);
+        tabRecommended = view.findViewById(R.id.tab_recommended);
+        View fabCreateEvent = view.findViewById(R.id.fab_create_event);
 
         // Setup ViewPager with adapter
         HomePagerAdapter adapter = new HomePagerAdapter(requireActivity());
         viewPager.setAdapter(adapter);
 
-        // Link TabLayout with ViewPager
-        new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> {
-                    switch (position) {
-                        case 0:
-                            tab.setText("Personalised");
-                            break;
-                        case 1:
-                            tab.setText("Recommended");
-                            break;
-                    }
-                }
-        ).attach();
+        // Tab click listeners
+        tabPersonalised.setOnClickListener(v -> {
+            viewPager.setCurrentItem(0);
+            updateTabState(0);
+        });
 
-        // Setup FAB click listener
+        tabRecommended.setOnClickListener(v -> {
+            viewPager.setCurrentItem(1);
+            updateTabState(1);
+        });
+
+        // Sync tab state when swiping
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateTabState(position);
+            }
+        });
+
+        // FAB click
         fabCreateEvent.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddEventActivity.class);
             startActivity(intent);
         });
 
-        // Setup message icon click listener
+        // Message icon click
         View messageIcon = view.findViewById(R.id.message_icon);
         messageIcon.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MessagesActivity.class);
@@ -61,5 +64,15 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void updateTabState(int selectedPosition) {
+        if (selectedPosition == 0) {
+            tabPersonalised.setBackgroundResource(R.drawable.bg_tab_active);
+            tabRecommended.setBackgroundResource(R.drawable.bg_tab_inactive);
+        } else {
+            tabPersonalised.setBackgroundResource(R.drawable.bg_tab_inactive);
+            tabRecommended.setBackgroundResource(R.drawable.bg_tab_active);
+        }
     }
 }

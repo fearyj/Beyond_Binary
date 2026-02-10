@@ -3,7 +3,7 @@ package com.beyondbinary.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +15,6 @@ import com.beyondbinary.app.api.DeleteEventResponse;
 import com.beyondbinary.app.api.EventResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.beyondbinary.app.api.UpdateEventResponse;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.HashMap;
@@ -29,21 +28,63 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private TextView titleText;
     private TextView typeText;
+    private TextView emojiText;
     private TextView locationText;
+    private TextView dateText;
     private TextView timeText;
     private TextView descriptionText;
     private TextView participantsText;
-    private Button joinButton;
-    private Button viewOnMapButton;
+    private View joinButton;
+    private View inviteButton;
+    private View viewOnMapButton;
     private View attendanceButtonsContainer;
-    private Button attendedButton;
-    private Button notAttendedButton;
-    private Button leaveEventButton;
-    private android.widget.ImageButton shareButton;
+    private View attendedButton;
+    private View notAttendedButton;
+    private View leaveEventButton;
+    private View joinInviteRow;
+    private ImageView shareButton;
+    private ImageView backButton;
 
     private int eventId;
     private Event event;
     private boolean userHasJoined = false;
+
+    // Emoji mapping for event types
+    private static final java.util.Map<String, String> EVENT_EMOJIS = new HashMap<>();
+    static {
+        EVENT_EMOJIS.put("soccer", "\u26BD");
+        EVENT_EMOJIS.put("basketball", "\uD83C\uDFC0");
+        EVENT_EMOJIS.put("tennis", "\uD83C\uDFBE");
+        EVENT_EMOJIS.put("ping pong", "\uD83C\uDFD3");
+        EVENT_EMOJIS.put("volleyball", "\uD83C\uDFD0");
+        EVENT_EMOJIS.put("running", "\uD83C\uDFC3");
+        EVENT_EMOJIS.put("yoga", "\uD83E\uDDD8");
+        EVENT_EMOJIS.put("gym", "\uD83C\uDFCB\uFE0F");
+        EVENT_EMOJIS.put("hiking", "\u26F0\uFE0F");
+        EVENT_EMOJIS.put("cycling", "\uD83D\uDEB4");
+        EVENT_EMOJIS.put("coffee", "\u2615");
+        EVENT_EMOJIS.put("dinner", "\uD83C\uDF7D\uFE0F");
+        EVENT_EMOJIS.put("lunch", "\uD83C\uDF5C");
+        EVENT_EMOJIS.put("bbq", "\uD83C\uDF56");
+        EVENT_EMOJIS.put("movie", "\uD83C\uDFAC");
+        EVENT_EMOJIS.put("book club", "\uD83D\uDCDA");
+        EVENT_EMOJIS.put("board games", "\uD83C\uDFB2");
+        EVENT_EMOJIS.put("party", "\uD83C\uDF89");
+        EVENT_EMOJIS.put("concert", "\uD83C\uDFB5");
+        EVENT_EMOJIS.put("beach", "\uD83C\uDFD6\uFE0F");
+        EVENT_EMOJIS.put("painting", "\uD83C\uDFA8");
+        EVENT_EMOJIS.put("photography", "\uD83D\uDCF7");
+        EVENT_EMOJIS.put("museum", "\uD83C\uDFDB\uFE0F");
+        EVENT_EMOJIS.put("language exchange", "\uD83D\uDDE3\uFE0F");
+        EVENT_EMOJIS.put("coding", "\uD83D\uDCBB");
+        EVENT_EMOJIS.put("picnic", "\uD83E\uDDFA");
+        EVENT_EMOJIS.put("swimming", "\uD83C\uDFCA");
+        EVENT_EMOJIS.put("badminton", "\uD83C\uDFF8");
+        EVENT_EMOJIS.put("fishing", "\uD83C\uDFA3");
+        EVENT_EMOJIS.put("karaoke", "\uD83C\uDFA4");
+        EVENT_EMOJIS.put("bowling", "\uD83C\uDFB3");
+        EVENT_EMOJIS.put("study", "\uD83D\uDCDD");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +95,21 @@ public class EventDetailActivity extends AppCompatActivity {
         eventId = getIntent().getIntExtra("EVENT_ID", -1);
         userHasJoined = getIntent().getBooleanExtra("USER_HAS_JOINED", false);
 
-        // Setup toolbar
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(v -> finish());
-
         // Initialize views
+        backButton = findViewById(R.id.btn_back);
         shareButton = findViewById(R.id.btn_share);
+        emojiText = findViewById(R.id.event_detail_emoji);
         titleText = findViewById(R.id.event_detail_title);
         typeText = findViewById(R.id.event_detail_type);
         locationText = findViewById(R.id.event_detail_location);
+        dateText = findViewById(R.id.event_detail_date);
         timeText = findViewById(R.id.event_detail_time);
         descriptionText = findViewById(R.id.event_detail_description);
         participantsText = findViewById(R.id.event_detail_participants);
         joinButton = findViewById(R.id.btn_join_event);
+        inviteButton = findViewById(R.id.btn_invite);
         viewOnMapButton = findViewById(R.id.btn_view_on_map);
+        joinInviteRow = findViewById(R.id.join_invite_row);
         attendanceButtonsContainer = findViewById(R.id.attendance_buttons_container);
         attendedButton = findViewById(R.id.btn_attended);
         notAttendedButton = findViewById(R.id.btn_not_attended);
@@ -82,8 +124,10 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         // Setup button listeners
+        backButton.setOnClickListener(v -> finish());
         shareButton.setOnClickListener(v -> shareEvent());
         joinButton.setOnClickListener(v -> joinEvent());
+        inviteButton.setOnClickListener(v -> shareEvent());
         viewOnMapButton.setOnClickListener(v -> viewOnMap());
         attendedButton.setOnClickListener(v -> markAttendance(true));
         notAttendedButton.setOnClickListener(v -> markAttendance(false));
@@ -118,10 +162,28 @@ public class EventDetailActivity extends AppCompatActivity {
     private void displayEventDetails() {
         titleText.setText(event.getTitle());
         typeText.setText(event.getEventType());
-        locationText.setText("📍 " + event.getLocation());
-        timeText.setText("🕐 " + event.getTime());
         descriptionText.setText(event.getDescription());
-        participantsText.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " participants");
+
+        // Set emoji based on event type
+        String emoji = getEmojiForEvent(event.getEventType());
+        emojiText.setText(emoji);
+
+        // Parse and display date and time separately
+        String timeString = event.getTime();
+        if (timeString != null && timeString.contains(" • ")) {
+            String[] parts = timeString.split(" • ", 2);
+            dateText.setText(parts[0]);
+            timeText.setText(parts.length > 1 ? parts[1] : "");
+        } else {
+            dateText.setText(timeString != null ? timeString : "");
+            timeText.setText("");
+        }
+
+        // Location
+        locationText.setText(event.getLocation());
+
+        // Participants
+        participantsText.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " Pax");
 
         // Check if user is the creator
         android.content.SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
@@ -130,11 +192,9 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // Show appropriate buttons based on join status
         if (userHasJoined) {
-            // User has joined - show leave/cancel button
-            joinButton.setVisibility(View.GONE);
+            joinInviteRow.setVisibility(View.GONE);
             leaveEventButton.setVisibility(View.VISIBLE);
 
-            // Only show attendance buttons if opened from My Events (with USER_HAS_JOINED extra)
             boolean openedFromMyEvents = getIntent().getBooleanExtra("USER_HAS_JOINED", false);
             if (openedFromMyEvents) {
                 attendanceButtonsContainer.setVisibility(View.VISIBLE);
@@ -142,38 +202,53 @@ public class EventDetailActivity extends AppCompatActivity {
                 attendanceButtonsContainer.setVisibility(View.GONE);
             }
 
-            // Change button text if user is creator
             if (isCreator) {
-                leaveEventButton.setText("Cancel Event");
+                ((TextView) leaveEventButton).setText("Cancel Event");
             } else {
-                leaveEventButton.setText("Leave Event");
+                ((TextView) leaveEventButton).setText("Leave Event");
             }
         } else {
-            // User hasn't joined - show join button
-            joinButton.setVisibility(View.VISIBLE);
+            joinInviteRow.setVisibility(View.VISIBLE);
             attendanceButtonsContainer.setVisibility(View.GONE);
             leaveEventButton.setVisibility(View.GONE);
 
-            // Check if event is full
             if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
                 joinButton.setEnabled(false);
-                joinButton.setText("Event Full");
+                joinButton.setAlpha(0.5f);
+                ((TextView) joinButton).setText("Full");
             }
         }
+    }
+
+    private String getEmojiForEvent(String eventType) {
+        if (eventType == null) return "\uD83C\uDF1F";
+        String lower = eventType.toLowerCase().trim();
+
+        // Exact match
+        if (EVENT_EMOJIS.containsKey(lower)) {
+            return EVENT_EMOJIS.get(lower);
+        }
+
+        // Partial match
+        for (java.util.Map.Entry<String, String> entry : EVENT_EMOJIS.entrySet()) {
+            if (lower.contains(entry.getKey()) || entry.getKey().contains(lower)) {
+                return entry.getValue();
+            }
+        }
+
+        return "\uD83C\uDF1F"; // Default star emoji
     }
 
     private void joinEvent() {
         if (event.getCurrentParticipants() < event.getMaxParticipants()) {
             event.setCurrentParticipants(event.getCurrentParticipants() + 1);
-            participantsText.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " participants");
+            participantsText.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " Pax");
 
             Toast.makeText(this, "Joined event successfully!", Toast.LENGTH_SHORT).show();
 
-            // Update UI to show leave button and attendance options
             userHasJoined = true;
             displayEventDetails();
 
-            // Update participant count on backend
             ApiService apiService = RetrofitClient.getApiService();
             apiService.updateEvent(eventId, event).enqueue(new Callback<UpdateEventResponse>() {
                 @Override
@@ -182,7 +257,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void onFailure(Call<UpdateEventResponse> call, Throwable t) {}
             });
 
-            // Track "joined" interaction
             android.content.SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
             int userId = prefs.getInt("user_id", -1);
             if (userId != -1) {
@@ -207,7 +281,6 @@ public class EventDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Open share activity to select friends
         Intent intent = new Intent(this, ShareEventActivity.class);
         intent.putExtra("EVENT_ID", eventId);
         intent.putExtra("EVENT", event);
@@ -234,10 +307,9 @@ public class EventDetailActivity extends AppCompatActivity {
             apiService.createInteraction(body).enqueue(new Callback<CreateInteractionResponse>() {
                 @Override
                 public void onResponse(Call<CreateInteractionResponse> call, Response<CreateInteractionResponse> response) {
-                    String message = attended ? "Marked as Attended ✓" : "Marked as Not Attended";
+                    String message = attended ? "Marked as Attended" : "Marked as Not Attended";
                     Toast.makeText(EventDetailActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                    // Update button states
                     if (attended) {
                         attendedButton.setEnabled(false);
                         notAttendedButton.setEnabled(true);
@@ -266,13 +338,11 @@ public class EventDetailActivity extends AppCompatActivity {
         ApiService apiService = RetrofitClient.getApiService();
 
         if (isCreator) {
-            // Creator is cancelling the event - delete it
             apiService.deleteEvent(eventId).enqueue(new Callback<DeleteEventResponse>() {
                 @Override
                 public void onResponse(Call<DeleteEventResponse> call, Response<DeleteEventResponse> response) {
                     Toast.makeText(EventDetailActivity.this, "Event cancelled successfully", Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK); // Signal that event was removed
-                    // Navigate back to My Events
+                    setResult(RESULT_OK);
                     Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
                     intent.putExtra("OPEN_MY_EVENTS", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -285,11 +355,9 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // User is leaving the event
             if (event.getCurrentParticipants() > 0) {
                 event.setCurrentParticipants(event.getCurrentParticipants() - 1);
 
-                // Update backend
                 apiService.updateEvent(eventId, event).enqueue(new Callback<UpdateEventResponse>() {
                     @Override
                     public void onResponse(Call<UpdateEventResponse> call, Response<UpdateEventResponse> response) {}
@@ -297,7 +365,6 @@ public class EventDetailActivity extends AppCompatActivity {
                     public void onFailure(Call<UpdateEventResponse> call, Throwable t) {}
                 });
 
-                // Track "left" interaction - wait for completion before finishing
                 if (userId != -1) {
                     Map<String, Object> body = new HashMap<>();
                     body.put("user_id", userId);
@@ -308,8 +375,7 @@ public class EventDetailActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<CreateInteractionResponse> call, Response<CreateInteractionResponse> response) {
                             Toast.makeText(EventDetailActivity.this, "Left event successfully", Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK); // Signal that event was removed
-                            // Navigate back to My Events
+                            setResult(RESULT_OK);
                             Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
                             intent.putExtra("OPEN_MY_EVENTS", true);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -324,7 +390,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "Left event successfully", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
-                    // Navigate back to My Events
                     Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
                     intent.putExtra("OPEN_MY_EVENTS", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -338,9 +403,6 @@ public class EventDetailActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
-        // Don't select any item by default since we're viewing event details
-        bottomNav.setSelectedItemId(0);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -351,7 +413,10 @@ public class EventDetailActivity extends AppCompatActivity {
                 return true;
 
             } else if (itemId == R.id.nav_chatbot) {
-                Toast.makeText(this, "AI Chatbot - Coming Soon!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_CHATBOT", true);
+                startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_my_events) {
@@ -364,15 +429,23 @@ public class EventDetailActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_map) {
                 Intent intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_profile) {
                 Intent intent = new Intent(this, ProfileActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             }
 
             return false;
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 }

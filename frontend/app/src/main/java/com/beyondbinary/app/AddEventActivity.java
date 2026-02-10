@@ -7,22 +7,20 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.beyondbinary.app.api.ApiService;
 import com.beyondbinary.app.api.CreateEventResponse;
 import com.beyondbinary.app.api.CreateInteractionResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -43,15 +41,15 @@ public class AddEventActivity extends AppCompatActivity {
     private static final String TAG = "AddEventActivity";
 
     // Form inputs
-    private TextInputEditText inputTitle;
+    private EditText inputTitle;
     private AutoCompleteTextView inputEventType;
-    private TextInputEditText inputLocation;
-    private TextInputEditText inputDescription;
-    private TextInputEditText inputDate;
-    private TextInputEditText inputStartTime;
-    private TextInputEditText inputEndTime;
-    private TextInputEditText inputMaxParticipants;
-    private MaterialButton btnCreateEvent;
+    private EditText inputLocation;
+    private EditText inputDescription;
+    private EditText inputDate;
+    private EditText inputStartTime;
+    private EditText inputEndTime;
+    private EditText inputMaxParticipants;
+    private View btnCreateEvent;
 
     // Utils
     private Geocoder geocoder;
@@ -59,8 +57,8 @@ public class AddEventActivity extends AppCompatActivity {
 
     // Date and time storage
     private Calendar selectedDate = Calendar.getInstance();
-    private int startHour = 18, startMinute = 0;  // Default 6:00 PM
-    private int endHour = 20, endMinute = 0;      // Default 8:00 PM
+    private int startHour = 15, startMinute = 0;  // Default 3:00 PM
+    private int endHour = 17, endMinute = 0;      // Default 5:00 PM
 
     // Event types for dropdown
     private final String[] eventTypes = {
@@ -76,13 +74,6 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
-
-        // Setup toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         // Initialize geocoder and executor
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -198,12 +189,9 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
     private void showDatePicker() {
@@ -218,7 +206,7 @@ public class AddEventActivity extends AppCompatActivity {
                     selectedDate.set(selectedYear, selectedMonth, selectedDay);
 
                     // Format and display date
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM, yyyy", Locale.getDefault());
                     inputDate.setText(dateFormat.format(selectedDate.getTime()));
                 },
                 year, month, day
@@ -359,7 +347,9 @@ public class AddEventActivity extends AppCompatActivity {
 
         // Disable button while processing
         btnCreateEvent.setEnabled(false);
-        btnCreateEvent.setText("Creating...");
+        if (btnCreateEvent instanceof android.widget.TextView) {
+            ((android.widget.TextView) btnCreateEvent).setText("Creating...");
+        }
 
         // Current participants starts at 1 (host counts as first participant)
         int currentParticipants = 1;
@@ -492,10 +482,12 @@ public class AddEventActivity extends AppCompatActivity {
 
     private void resetCreateButton() {
         btnCreateEvent.setEnabled(true);
-        btnCreateEvent.setText("Create Event");
+        if (btnCreateEvent instanceof android.widget.TextView) {
+            ((android.widget.TextView) btnCreateEvent).setText("Create");
+        }
     }
 
-    private String getTextOrEmpty(TextInputEditText editText) {
+    private String getTextOrEmpty(EditText editText) {
         if (editText.getText() == null) return "";
         return editText.getText().toString().trim();
     }
