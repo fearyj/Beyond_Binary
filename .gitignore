@@ -41,6 +41,9 @@ gradle-app.setting
 .cxx/
 local.properties
 
+# Claude Code
+.claude/
+
 # IDE
 .idea/
 *.iml
