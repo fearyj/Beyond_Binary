@@ -62,6 +62,9 @@ public class ChatbotFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        // Add welcome message
+        addMessage("👋 Hi! I'm your Beyond Binary AI assistant. I can help you discover events, answer questions about activities, or chat about anything! How can I help you today?", false);
+
         sendButton.setOnClickListener(v -> {
             String messageText = messageInput.getText().toString().trim();
             if (!messageText.isEmpty()) {
@@ -76,8 +79,15 @@ public class ChatbotFragment extends Fragment {
     }
 
     private void getChatbotResponse(String userMessage) {
+        // Add system context to help with event recommendations
+        String systemPrompt = "You are a helpful AI assistant for Beyond Binary, a community app that helps people discover and join local events. " +
+                "You can help users find events, suggest activities based on their interests, answer questions about event types, " +
+                "and provide general assistance. Be friendly, concise, and helpful. When suggesting events, mention different types like " +
+                "sports (soccer, basketball, yoga), social activities (coffee meetups, board games), outdoor activities (hiking, beach), " +
+                "dining (BBQ, sushi), arts (painting, photography), and learning (book clubs, workshops).";
+
         List<TextPart> parts = new ArrayList<>();
-        parts.add(new TextPart(userMessage));
+        parts.add(new TextPart(systemPrompt + "\n\nUser: " + userMessage + "\n\nAssistant:"));
 
         Content content = new Content(parts);
 
