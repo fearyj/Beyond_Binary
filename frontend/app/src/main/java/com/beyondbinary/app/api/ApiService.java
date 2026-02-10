@@ -63,4 +63,8 @@ public interface ApiService {
 
     @GET("interactions/{userId}")
     Call<InteractionsResponse> getUserInteractions(@Path("userId") int userId);
+
+    // User events endpoint
+    @GET("users/{userId}/events")
+    Call<UserEventsResponse> getUserEvents(@Path("userId") int userId);
 }

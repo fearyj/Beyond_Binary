@@ -620,10 +620,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
                 return true;
 
-            } else if (itemId == R.id.nav_add_event) {
-                // Navigate to Add Event Activity
-                Intent intent = new Intent(this, AddEventActivity.class);
+            } else if (itemId == R.id.nav_my_events) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_MY_EVENTS", true);
                 startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_map) {

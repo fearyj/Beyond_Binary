@@ -25,9 +25,25 @@ public class UserResponse {
         @SerializedName("interest_tags")
         private String interestTags;
 
+        @SerializedName("username")
+        private String username;
+
+        @SerializedName("dob")
+        private String dob;
+
+        @SerializedName("address")
+        private String address;
+
+        @SerializedName("caption")
+        private String caption;
+
         public int getId() { return id; }
         public String getEmail() { return email; }
         public String getBio() { return bio; }
         public String getInterestTags() { return interestTags; }
+        public String getUsername() { return username; }
+        public String getDob() { return dob; }
+        public String getAddress() { return address; }
+        public String getCaption() { return caption; }
     }
 }

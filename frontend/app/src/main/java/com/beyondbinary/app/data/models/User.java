@@ -9,6 +9,10 @@ public class User {
     private String email;
     private String bio;
     private String interestTags;
+    private String username;
+    private String dob;
+    private String address;
+    private String caption;
 
     public User() {}
 
@@ -34,6 +38,18 @@ public class User {
 
     public String getInterestTags() { return interestTags; }
     public void setInterestTags(String interestTags) { this.interestTags = interestTags; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getDob() { return dob; }
+    public void setDob(String dob) { this.dob = dob; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getCaption() { return caption; }
+    public void setCaption(String caption) { this.caption = caption; }
 
     public List<String> getInterestTagsAsList() {
         if (interestTags == null || interestTags.isEmpty()) {

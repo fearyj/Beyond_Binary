@@ -11,7 +11,7 @@ import com.beyondbinary.app.data.models.User;
 public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "beyondbinary.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private static AppDatabaseHelper instance;
 
@@ -32,7 +32,11 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY, " +
                 "email TEXT, " +
                 "bio TEXT, " +
-                "interest_tags TEXT)");
+                "interest_tags TEXT, " +
+                "username TEXT, " +
+                "dob TEXT, " +
+                "address TEXT, " +
+                "caption TEXT)");
     }
 
     @Override
@@ -49,6 +53,10 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         values.put("email", user.getEmail());
         values.put("bio", user.getBio());
         values.put("interest_tags", user.getInterestTags());
+        values.put("username", user.getUsername());
+        values.put("dob", user.getDob());
+        values.put("address", user.getAddress());
+        values.put("caption", user.getCaption());
         return db.insertWithOnConflict("users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -62,6 +70,10 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
             user.setBio(cursor.getString(cursor.getColumnIndexOrThrow("bio")));
             user.setInterestTags(cursor.getString(cursor.getColumnIndexOrThrow("interest_tags")));
+            user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
+            user.setDob(cursor.getString(cursor.getColumnIndexOrThrow("dob")));
+            user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+            user.setCaption(cursor.getString(cursor.getColumnIndexOrThrow("caption")));
         }
         cursor.close();
         return user;

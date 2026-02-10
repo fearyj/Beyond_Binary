@@ -13,11 +13,11 @@
         android:icon="@android:drawable/ic_dialog_info"
         android:title="AI Chat" />
 
-    <!-- 3. Add Event (Center - Prominent) -->
+    <!-- 3. My Events (Center) -->
     <item
-        android:id="@+id/nav_add_event"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="Add" />
+        android:id="@+id/nav_my_events"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="My Events" />
 
     <!-- 4. Map -->
     <item

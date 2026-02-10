@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.beyondbinary.app.chatbot.ChatbotFragment;
 import com.beyondbinary.app.onboarding.OnboardingFragment;
+import com.beyondbinary.app.registration.ProfileSetupFragment;
 import com.beyondbinary.app.registration.RegistrationFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
+        boolean openMyEvents = getIntent().getBooleanExtra("OPEN_MY_EVENTS", false);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
             int userId = prefs.getInt("user_id", -1);
             onboardingDone = prefs.getBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, false);
+            // Existing users who already onboarded before profile setup was added
+            // should be treated as having completed profile setup
+            boolean profileSetupDone = prefs.getBoolean(ProfileSetupFragment.KEY_PROFILE_SETUP_COMPLETED, false)
+                    || onboardingDone;
 
             if (userId == -1) {
                 // No user registered — show registration
@@ -37,12 +43,24 @@ public class MainActivity extends AppCompatActivity {
                         .beginTransaction()
                         .replace(R.id.fragment_container, new RegistrationFragment())
                         .commit();
+            } else if (!profileSetupDone) {
+                // User registered but hasn't completed profile setup
+                bottomNav.setVisibility(android.view.View.GONE);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileSetupFragment())
+                        .commit();
             } else if (!onboardingDone) {
-                // User registered but hasn't completed onboarding
+                // User completed profile setup but hasn't completed onboarding
                 bottomNav.setVisibility(android.view.View.GONE);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, new OnboardingFragment())
+                        .commit();
+            } else if (openMyEvents) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new MyEventsFragment())
                         .commit();
             } else if (openChatbot) {
                 getSupportFragmentManager()
@@ -59,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigation();
 
-        if (onboardingDone && openChatbot) {
+        if (onboardingDone && openMyEvents) {
+            bottomNav.setSelectedItemId(R.id.nav_my_events);
+        } else if (onboardingDone && openChatbot) {
             bottomNav.setSelectedItemId(R.id.nav_chatbot);
         }
     }
@@ -85,9 +105,11 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, new ChatbotFragment())
                         .commit();
                 return true;
-            } else if (itemId == R.id.nav_add_event) {
-                Intent intent = new Intent(this, AddEventActivity.class);
-                startActivity(intent);
+            } else if (itemId == R.id.nav_my_events) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new MyEventsFragment())
+                        .commit();
                 return true;
             } else if (itemId == R.id.nav_map) {
                 Intent intent = new Intent(this, MapsActivity.class);

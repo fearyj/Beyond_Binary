@@ -80,6 +80,28 @@ function initializeDatabase() {
         }
     });
 
+    // Add profile setup columns (ignore if already exists)
+    db.run('ALTER TABLE users ADD COLUMN username TEXT', (err) => {
+        if (err && !err.message.includes('duplicate column')) {
+            console.error('Error adding username column:', err);
+        }
+    });
+    db.run('ALTER TABLE users ADD COLUMN dob TEXT', (err) => {
+        if (err && !err.message.includes('duplicate column')) {
+            console.error('Error adding dob column:', err);
+        }
+    });
+    db.run('ALTER TABLE users ADD COLUMN address TEXT', (err) => {
+        if (err && !err.message.includes('duplicate column')) {
+            console.error('Error adding address column:', err);
+        }
+    });
+    db.run('ALTER TABLE users ADD COLUMN caption TEXT', (err) => {
+        if (err && !err.message.includes('duplicate column')) {
+            console.error('Error adding caption column:', err);
+        }
+    });
+
     // Migrate existing users with NULL password_hash to default password
     bcrypt.hash('password123', 10, (err, hash) => {
         if (err) {
@@ -449,11 +471,18 @@ app.get('/api/users/:id', (req, res) => {
 // Update user profile
 app.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
-    const { bio, interest_tags } = req.body;
+    const { bio, interest_tags, username, dob, address, caption } = req.body;
 
     db.run(
-        'UPDATE users SET bio = COALESCE(?, bio), interest_tags = COALESCE(?, interest_tags) WHERE id = ?',
-        [bio, interest_tags, id],
+        `UPDATE users SET
+            bio = COALESCE(?, bio),
+            interest_tags = COALESCE(?, interest_tags),
+            username = COALESCE(?, username),
+            dob = COALESCE(?, dob),
+            address = COALESCE(?, address),
+            caption = COALESCE(?, caption)
+        WHERE id = ?`,
+        [bio, interest_tags, username, dob, address, caption, id],
         function(err) {
             if (err) {
                 console.error('Error updating user:', err);
@@ -471,6 +500,28 @@ app.put('/api/users/:id', (req, res) => {
                 }
                 res.json({ success: true, user });
             });
+        }
+    );
+});
+
+// Get user's events (created and joined)
+app.get('/api/users/:userId/events', (req, res) => {
+    const { userId } = req.params;
+
+    db.all(
+        `SELECT e.*, ui.interaction_type
+         FROM user_interactions ui
+         JOIN events e ON ui.event_id = e.id
+         WHERE ui.user_id = ? AND ui.interaction_type IN ('created', 'joined')
+         ORDER BY e.createdAt DESC`,
+        [userId],
+        (err, rows) => {
+            if (err) {
+                console.error('Error fetching user events:', err);
+                return res.status(500).json({ error: 'Failed to fetch user events' });
+            }
+
+            res.json({ success: true, events: rows });
         }
     );
 });
@@ -587,6 +638,7 @@ app.listen(PORT, () => {
     console.log(`  POST   /api/users/login`);
     console.log(`  GET    /api/users/:id`);
     console.log(`  PUT    /api/users/:id`);
+    console.log(`  GET    /api/users/:userId/events`);
     console.log(`  POST   /api/interactions`);
     console.log(`  GET    /api/interactions/:userId`);
     console.log(`  GET    /api/stats`);

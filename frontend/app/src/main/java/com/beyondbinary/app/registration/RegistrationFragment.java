@@ -22,6 +22,7 @@ import com.beyondbinary.app.R;
 import com.beyondbinary.app.api.ApiService;
 import com.beyondbinary.app.api.CreateUserResponse;
 import com.beyondbinary.app.api.RetrofitClient;
+import com.beyondbinary.app.data.database.AppDatabaseHelper;
 import com.beyondbinary.app.onboarding.OnboardingFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -156,6 +157,7 @@ public class RegistrationFragment extends Fragment {
                         prefs.edit().putInt("user_id", userId).apply();
 
                         CreateUserResponse.UserData user = result.getUser();
+                        syncUserToLocalDb(userId, user);
                         if (user != null && user.getBio() != null && !user.getBio().isEmpty()) {
                             prefs.edit().putBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, true).apply();
                             navigateToHome();
@@ -202,6 +204,7 @@ public class RegistrationFragment extends Fragment {
 
                         // Check if existing user with bio (already onboarded)
                         CreateUserResponse.UserData user = result.getUser();
+                        syncUserToLocalDb(userId, user);
                         if (user != null && user.getBio() != null && !user.getBio().isEmpty()) {
                             prefs.edit().putBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, true).apply();
                             navigateToHome();
@@ -238,7 +241,7 @@ public class RegistrationFragment extends Fragment {
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new OnboardingFragment())
+                .replace(R.id.fragment_container, new ProfileSetupFragment())
                 .commit();
     }
 
@@ -252,6 +255,21 @@ public class RegistrationFragment extends Fragment {
                 .beginTransaction()
                 .replace(R.id.fragment_container, new HomeFragment())
                 .commit();
+    }
+
+    private void syncUserToLocalDb(int userId, CreateUserResponse.UserData userData) {
+        if (userData == null) return;
+        AppDatabaseHelper dbHelper = AppDatabaseHelper.getInstance(requireContext());
+        com.beyondbinary.app.data.models.User localUser = new com.beyondbinary.app.data.models.User();
+        localUser.setId(userId);
+        localUser.setEmail(userData.getEmail());
+        localUser.setBio(userData.getBio());
+        localUser.setInterestTags(userData.getInterestTags());
+        localUser.setUsername(userData.getUsername());
+        localUser.setDob(userData.getDob());
+        localUser.setAddress(userData.getAddress());
+        localUser.setCaption(userData.getCaption());
+        dbHelper.insertUser(localUser);
     }
 
     private void resetButton() {

@@ -157,9 +157,6 @@ public class AddEventActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
-        // Set Add Event as selected by default
-        bottomNav.setSelectedItemId(R.id.nav_add_event);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -176,8 +173,11 @@ public class AddEventActivity extends AppCompatActivity {
                 finish();
                 return true;
 
-            } else if (itemId == R.id.nav_add_event) {
-                // Already on Add Event screen
+            } else if (itemId == R.id.nav_my_events) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_MY_EVENTS", true);
+                startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_map) {

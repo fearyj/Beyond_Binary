@@ -178,9 +178,11 @@ public class EventDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "AI Chatbot - Coming Soon!", Toast.LENGTH_SHORT).show();
                 return true;
 
-            } else if (itemId == R.id.nav_add_event) {
-                Intent intent = new Intent(this, AddEventActivity.class);
+            } else if (itemId == R.id.nav_my_events) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_MY_EVENTS", true);
                 startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_map) {
