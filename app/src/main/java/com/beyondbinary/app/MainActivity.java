@@ -1,15 +1,22 @@
 package com.beyondbinary.app;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.beyondbinary.app.chatbot.ChatbotFragment;
 import com.beyondbinary.app.fyp.ExoPlayerManager;
 import com.beyondbinary.app.fyp.FypFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +38,35 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
         if (savedInstanceState == null) {
+            loadFragment(new FypFragment());
+        }
+    }
+
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new FypFragment())
+                    .replace(R.id.fragment_container, fragment)
                     .commit();
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment fragment = null;
+        int itemId = item.getItemId();
+        if (itemId == R.id.navigation_fyp) {
+            fragment = new FypFragment();
+        } else if (itemId == R.id.navigation_chatbot) {
+            fragment = new ChatbotFragment();
+        }
+        return loadFragment(fragment);
     }
 
     @Override

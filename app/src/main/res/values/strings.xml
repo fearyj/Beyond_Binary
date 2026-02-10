@@ -3,4 +3,6 @@
     <string name="app_name">Beyond Binary</string>
     <string name="tab_personalized">Personalized</string>
     <string name="tab_recommended">Recommended</string>
+    <string name="title_fyp">FYP</string>
+    <string name="title_chatbot">Chatbot</string>
 </resources>
