@@ -504,17 +504,25 @@ app.put('/api/users/:id', (req, res) => {
     );
 });
 
-// Get user's events (created and joined)
+// Get user's events (created and joined, excluding left events)
 app.get('/api/users/:userId/events', (req, res) => {
     const { userId } = req.params;
 
     db.all(
-        `SELECT e.*, ui.interaction_type
+        `SELECT DISTINCT e.*
          FROM user_interactions ui
          JOIN events e ON ui.event_id = e.id
-         WHERE ui.user_id = ? AND ui.interaction_type IN ('created', 'joined')
+         WHERE ui.user_id = ?
+           AND ui.interaction_type IN ('created', 'joined')
+           AND NOT EXISTS (
+               SELECT 1 FROM user_interactions ui_left
+               WHERE ui_left.user_id = ?
+                 AND ui_left.event_id = e.id
+                 AND ui_left.interaction_type = 'left'
+                 AND ui_left.created_at > ui.created_at
+           )
          ORDER BY e.createdAt DESC`,
-        [userId],
+        [userId, userId],
         (err, rows) => {
             if (err) {
                 console.error('Error fetching user events:', err);

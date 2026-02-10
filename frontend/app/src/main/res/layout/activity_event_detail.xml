@@ -137,6 +137,49 @@
                 app:cornerRadius="8dp"
                 android:layout_marginBottom="12dp" />
 
+            <!-- Attendance Buttons (shown when user has joined) -->
+            <LinearLayout
+                android:id="@+id/attendance_buttons_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_attended"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="Attended"
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_not_attended"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="Not Attended"
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+
+            </LinearLayout>
+
+            <!-- Leave Button (shown when user has joined) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_leave_event"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Leave Event"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                android:visibility="gone"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:layout_marginBottom="12dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_view_on_map"
                 android:layout_width="match_parent"

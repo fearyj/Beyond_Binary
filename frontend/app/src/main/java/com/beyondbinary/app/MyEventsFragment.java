@@ -1,5 +1,6 @@
 package com.beyondbinary.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,6 +38,22 @@ public class MyEventsFragment extends Fragment implements MyEventsAdapter.OnEven
     private TextView emptyText;
     private MyEventsAdapter adapter;
     private final List<UserEventsResponse.UserEvent> eventsList = new ArrayList<>();
+    private ActivityResultLauncher<Intent> eventDetailLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Register activity result launcher
+        eventDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Event was left or cancelled, refresh the list
+                        loadMyEvents();
+                    }
+                });
+    }
 
     @Nullable
     @Override
@@ -82,14 +101,31 @@ public class MyEventsFragment extends Fragment implements MyEventsAdapter.OnEven
                 if (response.isSuccessful() && response.body() != null) {
                     List<UserEventsResponse.UserEvent> events = response.body().getEvents();
                     if (events != null && !events.isEmpty()) {
+                        // Clear the list completely before adding new events
                         eventsList.clear();
-                        eventsList.addAll(events);
-                        adapter.notifyDataSetChanged();
-                        recyclerView.setVisibility(View.VISIBLE);
+
+                        // Use a Set to track event IDs and prevent duplicates
+                        java.util.Set<Integer> seenIds = new java.util.HashSet<>();
+                        for (UserEventsResponse.UserEvent event : events) {
+                            if (event != null && !seenIds.contains(event.getId())) {
+                                seenIds.add(event.getId());
+                                eventsList.add(event);
+                            }
+                        }
+
+                        // Check if we have any events after deduplication
+                        if (!eventsList.isEmpty()) {
+                            adapter.notifyDataSetChanged();
+                            recyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            showEmpty();
+                        }
                     } else {
+                        eventsList.clear();
                         showEmpty();
                     }
                 } else {
+                    eventsList.clear();
                     showEmpty();
                 }
             }
@@ -98,6 +134,7 @@ public class MyEventsFragment extends Fragment implements MyEventsAdapter.OnEven
             public void onFailure(@NonNull Call<UserEventsResponse> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
+                eventsList.clear();
                 showEmpty();
                 Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
             }
@@ -113,6 +150,7 @@ public class MyEventsFragment extends Fragment implements MyEventsAdapter.OnEven
     public void onEventClick(UserEventsResponse.UserEvent event) {
         Intent intent = new Intent(getContext(), EventDetailActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
-        startActivity(intent);
+        intent.putExtra("USER_HAS_JOINED", true); // User is viewing from My Events
+        eventDetailLauncher.launch(intent); // Use launcher to get result
     }
 }
