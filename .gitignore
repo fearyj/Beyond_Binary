@@ -1,3 +1,50 @@
 venv/
 
+# Copy folders
+Beyond_Binary - Copy/
+
+# API Keys and Secrets
 .env
+local.properties
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+.eggs/
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+build/
+.gradle/
+gradle-app.setting
+.cxx/
+local.properties
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild
+.navigation/
+.vscode/
+
+# Logs
+*.log

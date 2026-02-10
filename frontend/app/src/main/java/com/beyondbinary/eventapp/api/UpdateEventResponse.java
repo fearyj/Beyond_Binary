@@ -1,0 +1,19 @@
+package com.beyondbinary.eventapp.api;
+
+import com.google.gson.annotations.SerializedName;
+
+public class UpdateEventResponse {
+    @SerializedName("success")
+    private boolean success;
+
+    @SerializedName("message")
+    private String message;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}

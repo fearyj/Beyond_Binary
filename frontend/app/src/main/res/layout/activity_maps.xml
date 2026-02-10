@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Map Fragment -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Search Bar Container with Material Design -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:gravity="center_vertical">
+
+            <!-- Search Icon -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔍"
+                android:textSize="24sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp" />
+
+            <!-- Search Input -->
+            <EditText
+                android:id="@+id/search_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Search Singapore locations..."
+                android:inputType="text"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"
+                android:background="@android:color/transparent"
+                android:maxLines="1" />
+
+            <!-- Search Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:textSize="14sp"
+                android:layout_marginEnd="4dp"
+                app:cornerRadius="20dp"
+                style="@style/Widget.Material3.Button.ElevatedButton" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Show All Events Button (Hidden by default) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/show_all_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show All Events"
+        android:textSize="14sp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:icon="@android:drawable/ic_menu_view"
+        app:cornerRadius="20dp"
+        style="@style/Widget.Material3.Button.TonalButton" />
+
+    <!-- Floating Action Button - Current Location -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="80dp"
+        android:contentDescription="My Location"
+        app:srcCompat="@android:drawable/ic_menu_mylocation"
+        app:tint="#FFFFFF"
+        app:backgroundTint="#2196F3"
+        app:elevation="6dp" />
+
+    <!-- Bottom Navigation Bar -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:elevation="8dp"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
