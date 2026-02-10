@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
@@ -59,6 +60,7 @@ function initializeDatabase() {
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE NOT NULL,
+            password_hash TEXT,
             bio TEXT,
             interest_tags TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -69,6 +71,28 @@ function initializeDatabase() {
         } else {
             console.log('Users table ready');
         }
+    });
+
+    // Add password_hash column for existing databases (ignore if already exists)
+    db.run('ALTER TABLE users ADD COLUMN password_hash TEXT', (err) => {
+        if (err && !err.message.includes('duplicate column')) {
+            console.error('Error adding password_hash column:', err);
+        }
+    });
+
+    // Migrate existing users with NULL password_hash to default password
+    bcrypt.hash('password123', 10, (err, hash) => {
+        if (err) {
+            console.error('Error hashing default password:', err);
+            return;
+        }
+        db.run('UPDATE users SET password_hash = ? WHERE password_hash IS NULL', [hash], function(err) {
+            if (err) {
+                console.error('Error migrating existing users:', err);
+            } else if (this.changes > 0) {
+                console.log(`Migrated ${this.changes} existing user(s) with default password`);
+            }
+        });
     });
 
     db.run(`
@@ -307,12 +331,16 @@ app.delete('/api/events/:id', (req, res) => {
 
 // ==================== USER ROUTES ====================
 
-// Register user (or return existing)
+// Register user
 app.post('/api/users', (req, res) => {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
+    }
+
+    if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
     // Check if user already exists
@@ -323,25 +351,78 @@ app.post('/api/users', (req, res) => {
         }
 
         if (existing) {
-            return res.json({
-                success: true,
-                message: 'User already exists',
-                userId: existing.id,
-                user: existing
+            return res.status(409).json({
+                success: false,
+                message: 'An account with this email already exists'
             });
         }
 
-        // Create new user
-        db.run('INSERT INTO users (email) VALUES (?)', [email], function(err) {
+        // Hash password and create new user
+        bcrypt.hash(password, 10, (err, hash) => {
             if (err) {
-                console.error('Error creating user:', err);
+                console.error('Error hashing password:', err);
                 return res.status(500).json({ error: 'Failed to create user' });
             }
 
-            res.status(201).json({
+            db.run('INSERT INTO users (email, password_hash) VALUES (?, ?)', [email, hash], function(err) {
+                if (err) {
+                    console.error('Error creating user:', err);
+                    return res.status(500).json({ error: 'Failed to create user' });
+                }
+
+                res.status(201).json({
+                    success: true,
+                    message: 'User created successfully',
+                    userId: this.lastID
+                });
+            });
+        });
+    });
+});
+
+// Login user (verify email + password)
+app.post('/api/users/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
+    if (!password) {
+        return res.status(400).json({ error: 'Password is required' });
+    }
+
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
+        if (err) {
+            console.error('Error looking up user:', err);
+            return res.status(500).json({ error: 'Failed to look up user' });
+        }
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'No account found with this email'
+            });
+        }
+
+        bcrypt.compare(password, user.password_hash, (err, match) => {
+            if (err) {
+                console.error('Error comparing password:', err);
+                return res.status(500).json({ error: 'Failed to verify password' });
+            }
+
+            if (!match) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Incorrect password'
+                });
+            }
+
+            res.json({
                 success: true,
-                message: 'User created successfully',
-                userId: this.lastID
+                message: 'Login successful',
+                userId: user.id,
+                user: user
             });
         });
     });
@@ -503,6 +584,7 @@ app.listen(PORT, () => {
     console.log(`  PUT    /api/events/:id`);
     console.log(`  DELETE /api/events/:id`);
     console.log(`  POST   /api/users`);
+    console.log(`  POST   /api/users/login`);
     console.log(`  GET    /api/users/:id`);
     console.log(`  PUT    /api/users/:id`);
     console.log(`  POST   /api/interactions`);

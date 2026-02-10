@@ -48,6 +48,9 @@ public interface ApiService {
     @POST("users")
     Call<CreateUserResponse> createUser(@Body Map<String, String> body);
 
+    @POST("users/login")
+    Call<CreateUserResponse> loginUser(@Body Map<String, String> body);
+
     @GET("users/{id}")
     Call<UserResponse> getUser(@Path("id") int id);
 
