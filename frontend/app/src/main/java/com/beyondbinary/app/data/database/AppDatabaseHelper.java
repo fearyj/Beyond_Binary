@@ -42,8 +42,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE users (" +
                 "id INTEGER PRIMARY KEY, " +
-                "bio TEXT, " +
-                "interest_tags TEXT)");
+                "bio TEXT)");
     }
 
     @Override
@@ -100,7 +99,6 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("id", user.getId());
         values.put("bio", user.getBio());
-        values.put("interest_tags", user.getInterestTags());
         return db.insertWithOnConflict("users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -112,7 +110,6 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             user = new User();
             user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
             user.setBio(cursor.getString(cursor.getColumnIndexOrThrow("bio")));
-            user.setInterestTags(cursor.getString(cursor.getColumnIndexOrThrow("interest_tags")));
         }
         cursor.close();
         return user;

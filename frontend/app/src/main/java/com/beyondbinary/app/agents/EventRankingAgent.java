@@ -75,11 +75,9 @@ public class EventRankingAgent {
 
     private String buildPrompt(User user, List<Event> events) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Given this user profile:\n");
-        sb.append("Bio: ").append(user.getBio()).append("\n");
-        sb.append("Interests: ").append(user.getInterestTags()).append("\n\n");
-        sb.append("Rank these events by meaningfulness (most relevant first).\n");
-        sb.append("Return ONLY a comma-separated list of event IDs, nothing else.\n\n");
+        sb.append("Given this user's questionnaire answers: ").append(user.getBio()).append("\n\n");
+        sb.append("Rank these events by how meaningful and relevant they are to this person.\n");
+        sb.append("Return ONLY a comma-separated list of event IDs (most relevant first), nothing else.\n\n");
         sb.append("Events:\n");
 
         for (Event event : events) {
