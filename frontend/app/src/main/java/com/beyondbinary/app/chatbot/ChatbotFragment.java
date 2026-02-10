@@ -48,7 +48,7 @@ public class ChatbotFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize the Generative Model
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", BuildConfig.GEMINI_API_KEY);
+        GenerativeModel gm = new GenerativeModel("gemini-2.5-flash", BuildConfig.GEMINI_API_KEY);
         generativeModel = GenerativeModelFutures.from(gm);
 
         recyclerView = view.findViewById(R.id.recyclerView_chatbot);
