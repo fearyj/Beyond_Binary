@@ -67,4 +67,8 @@ public interface ApiService {
     // User events endpoint
     @GET("users/{userId}/events")
     Call<UserEventsResponse> getUserEvents(@Path("userId") int userId);
+
+    // Chatbot endpoint
+    @POST("chatbot/chat")
+    Call<ChatbotResponse> sendChatMessage(@Body ChatbotRequest request);
 }

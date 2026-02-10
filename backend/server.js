@@ -6,9 +6,13 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
+const { initializeVectorStore, reindexEvents } = require('./chatbot/vectorStore');
+const { createChatbotGraph } = require('./chatbot/graph');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_PATH = process.env.DATABASE_PATH || './database/events.db';
+let chatbotGraph = null;
 
 // Middleware
 app.use(cors());
@@ -22,6 +26,16 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
     } else {
         console.log('Connected to SQLite database');
         initializeDatabase();
+        // Initialize chatbot vector store and graph after a short delay for DB setup
+        setTimeout(async () => {
+            try {
+                await initializeVectorStore(db);
+                chatbotGraph = createChatbotGraph(db);
+                console.log('Chatbot vector store and graph initialized');
+            } catch (e) {
+                console.error('Error initializing chatbot:', e);
+            }
+        }, 2000);
     }
 });
 
@@ -278,6 +292,7 @@ app.post('/api/events', (req, res) => {
                     message: 'Event created successfully',
                     eventId: this.lastID
                 });
+                reindexEvents(db);
             }
         }
     );
@@ -327,6 +342,7 @@ app.put('/api/events/:id', (req, res) => {
                     success: true,
                     message: 'Event updated successfully'
                 });
+                reindexEvents(db);
             }
         }
     );
@@ -347,8 +363,43 @@ app.delete('/api/events/:id', (req, res) => {
                 success: true,
                 message: 'Event deleted successfully'
             });
+            reindexEvents(db);
         }
     });
+});
+
+// ==================== CHATBOT ROUTES ====================
+
+// Chatbot chat endpoint
+app.post('/api/chatbot/chat', async (req, res) => {
+    const { message, userId, conversationHistory } = req.body;
+
+    if (!message) {
+        return res.status(400).json({ error: 'Message is required' });
+    }
+
+    if (!chatbotGraph) {
+        return res.status(503).json({
+            type: 'text',
+            message: 'Chatbot is still initializing. Please try again in a moment.'
+        });
+    }
+
+    try {
+        const result = await chatbotGraph.invoke({
+            userMessage: message,
+            userId: userId || null,
+            conversationHistory: conversationHistory || [],
+        });
+
+        res.json(result.finalResponse || { type: 'text', message: 'Sorry, I had trouble processing that.' });
+    } catch (e) {
+        console.error('Chatbot error:', e);
+        res.status(500).json({
+            type: 'text',
+            message: 'Sorry, I encountered an error. Please try again.'
+        });
+    }
 });
 
 // ==================== USER ROUTES ====================
@@ -650,6 +701,7 @@ app.listen(PORT, () => {
     console.log(`  POST   /api/interactions`);
     console.log(`  GET    /api/interactions/:userId`);
     console.log(`  GET    /api/stats`);
+    console.log(`  POST   /api/chatbot/chat`);
 });
 
 // Graceful shutdown
