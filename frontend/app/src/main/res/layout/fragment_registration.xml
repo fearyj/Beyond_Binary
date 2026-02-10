@@ -21,7 +21,7 @@
         android:gravity="center"
         android:text="Buddeee"
         android:fontFamily="@font/itim"
-        android:textColor="@color/black"
+        android:textColor="#343149"
         android:textSize="24sp"
         android:textStyle="bold"
         android:letterSpacing="-0.02" />
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Create an account"
-        android:textColor="@color/black"
+        android:textColor="#343149"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Enter your email to sign up for this app"
-        android:textColor="@color/black"
+        android:textColor="#6E6B7B"
         android:textSize="14sp" />
 
     <View
@@ -69,7 +69,7 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:boxStrokeColor="@color/black"
+        app:boxStrokeColor="#343149"
         app:hintTextColor="#828282">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -93,7 +93,7 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:boxStrokeColor="@color/black"
+        app:boxStrokeColor="#343149"
         app:hintTextColor="#828282"
         app:endIconMode="password_toggle">
 
@@ -117,7 +117,7 @@
         android:text="Continue"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:backgroundTint="@color/black"
+        app:backgroundTint="#343149"
         app:cornerRadius="12dp" />
 
     <View
@@ -182,7 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Continue with Google"
-            android:textColor="@color/black"
+            android:textColor="#343149"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -216,7 +216,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Continue with Apple"
-            android:textColor="@color/black"
+            android:textColor="#343149"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -247,7 +247,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Already have an account? Sign In"
-        android:textColor="@color/black"
+        android:textColor="#343149"
         android:textSize="14sp"
         android:clickable="true"
         android:focusable="true" />

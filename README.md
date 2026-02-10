@@ -1,422 +1,261 @@
-# Beyond Binary
+# Buddeee
 
 A community-driven Android application that helps isolated individuals connect through AI-powered event recommendations, interactive maps, and personalized event discovery.
 
-## 🎯 Mission
+## Architecture
 
-Beyond Binary creates a platform where people can discover events through personalized AI recommendations, explore activities on an interactive map, and build meaningful connections in their community.
+```
++-----------------------------------------------------------+
+|                  Android App (Frontend)                     |
+|  Java / Android SDK / Material Design 3                    |
+|  Google Maps, Gemini AI, Retrofit, Glide                   |
++---------------------------+-------------------------------+
+                            | HTTP/REST (Retrofit)
+                            v
++---------------------------+-------------------------------+
+|               Node.js Backend (Express.js)                 |
+|  RESTful API / User Auth / Event CRUD                      |
++---------------------------+-------------------------------+
+                            |
+                            v
++-----------------------------------------------------------+
+|                    SQLite Database                          |
+|  Events, Users, Interactions                               |
++-----------------------------------------------------------+
+```
 
-## ✨ Features
+## Features
 
-### 🏠 Event Discovery Home
-- **Personalized & Recommended Tabs**: Swipe between curated event feeds
-- **Google Gemini AI Integration**: Intelligent event ranking based on your profile
-- **Clean List Interface**: Browse events with titles, locations, times, and participant counts
-- **Event Detail View**: Tap any event to see full details, join, or view on map
-- **Quick Event Creation**: Floating Action Button for instant event creation
-- **Bottom Navigation**: Consistent navigation across all screens
+### Event Discovery
+- Personalized and Recommended tabs with swipeable feeds
+- Google Gemini 2.0 Flash AI-powered event ranking
+- Event detail view with join, share, and map integration
 
-### 📋 Event Detail Page
-- **Full Event Information**: Complete details including description, time, location, participants
-- **Join Events**: One-tap joining with real-time participant tracking
-- **Map Integration**: "View on Map" button with auto-zoom to event location
-- **Event Type Badges**: Visual category indicators
-- **Bottom Navigation**: Navigate anywhere without going back
+### Interactive Event Map
+- Google Maps with custom emoji markers for 70+ event categories
+- Tap markers to view details; auto-zoom from event detail
+- Address geocoding and location search
 
-### 🗺️ Interactive Event Map
-- **Google Maps Integration**: Explore events on an interactive map
-- **Custom Emoji Markers**: Visual event type indicators (⚽🏀🎾☕🍣🎨📚)
-- **Tap to View Details**: Click map markers to navigate to full event details
-- **Auto-Zoom Feature**: Navigate from event details to see exact location
-- **70+ Event Categories** including:
-  - 🏀 Sports: Soccer, Basketball, Yoga, Running, Tennis
-  - 🥾 Outdoor: Hiking, Camping, Rock Climbing, Beach activities
-  - ☕ Social: Coffee meetups, Board Games, Karaoke, Movie nights
-  - 🍣 Dining: Sushi, BBQ, Pizza, Wine Tasting, Cooking Classes
-  - 🎨 Arts: Painting, Photography, Museum visits, Theater
-  - 📚 Learning: Book Clubs, Language Exchange, Workshops
-- **Real-time Event Details**: View participant count, time, location in info windows
-- **Address Geocoding**: Automatic address-to-coordinate conversion
-- **Location Search**: Find events near specific locations
+### Event Creation
+- Create events with title, location, time, description, category
+- Date/time pickers, participant limits, backend sync
 
-### ➕ Event Creation
-- **Easy Event Posting**: Create events with title, location, time, description
-- **Category Selection**: Choose from 70+ specific event types
-- **Date & Time Pickers**: Intuitive date/time selection
-- **Participant Management**: Set and track participant limits
-- **Backend Integration**: Events synced to SQLite database
-- **Form Validation**: Ensures all required fields are filled
+### Community Profile (Achievement View)
+- Gamified isometric neighborhood with houses, roads, traffic light
+- Shop overlay to buy decorations (Fountain, Garden, Bench, Signboard)
+- Profile stats: events attended, hosted, friends
+- Photo grid from attended events
 
-### 👥 Community Profile
-- **Instagram-Style Design**: Clean, modern profile interface
-- **User Stats**: Track events attended, events hosted, and friend connections
-- **Events Photos Tab**: View photos from attended events
-- **Community Tab**: Social features and connections
-- **Profile Editing**: Customize your profile
+### AI Chatbot
+- Gemini-powered assistant for event discovery and queries
+- Context-aware responses using event database
 
-### 🤖 AI Chatbot (Coming Soon)
-- Smart event recommendations and queries
+### Messaging
+- Direct messaging between users
+- Event card sharing in chat
 
-## 🏗️ Tech Stack
+## Tech Stack
 
-### Frontend (Android)
-- **Java** with Android SDK
-- **Google Maps API** - Interactive map visualization
-- **Google Gemini 2.0 Flash** - AI-powered event ranking
-- **Room Database** - Local data persistence
-- **Retrofit** - REST API communication
-- **Material Design 3** - Modern UI components
-- **ViewPager2** - Swipeable content tabs
-- **RecyclerView** - Efficient list rendering
-- **CoordinatorLayout** - Advanced UI behaviors
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Java, Android SDK (compileSdk 36), Material Design 3 |
+| AI | Google Gemini 2.0 Flash (generative AI SDK) |
+| Maps | Google Maps SDK for Android |
+| Networking | Retrofit 2, OkHttp |
+| Image Loading | Glide |
+| Local DB | SQLite (AppDatabaseHelper) |
+| Backend | Node.js, Express.js |
+| Backend DB | SQLite3 |
+| Build | Gradle 9.1.0, AGP 9.0.0 |
 
-### Backend (Node.js)
-- **Express.js** - REST API server
-- **SQLite3** - Event database
-- **CORS** - Cross-origin requests
-- **dotenv** - Environment configuration
+## Project Structure
 
-## 🚀 Setup from Scratch
+```
+Beyond_Binary/
+├── frontend/                          # Android application
+│   ├── app/src/main/
+│   │   ├── java/com/beyondbinary/app/
+│   │   │   ├── MainActivity.java              # Main entry, bottom nav, fragment routing
+│   │   │   ├── SplashActivity.java            # Splash/front page
+│   │   │   ├── ProfileActivity.java           # Profile + achievement community view
+│   │   │   ├── MapsActivity.java              # Interactive event map
+│   │   │   ├── AddEventActivity.java          # Event creation form
+│   │   │   ├── EventDetailActivity.java       # Full event detail page
+│   │   │   ├── MessagesActivity.java          # Messaging list
+│   │   │   ├── ShopItem.java / ShopItemAdapter.java  # Shop overlay
+│   │   │   ├── agents/
+│   │   │   │   └── EventRankingAgent.java     # Gemini AI integration
+│   │   │   ├── api/                           # Retrofit API service + response models
+│   │   │   ├── chatbot/                       # AI chatbot fragment
+│   │   │   ├── data/
+│   │   │   │   ├── database/AppDatabaseHelper.java
+│   │   │   │   ├── models/User.java, Event.java
+│   │   │   │   └── providers/EventProvider.java
+│   │   │   ├── fyp/                           # Home tabs (Personalized, Recommended)
+│   │   │   ├── messaging/                     # Chat activity
+│   │   │   ├── onboarding/                    # Interest selection onboarding
+│   │   │   └── registration/                  # Sign up / sign in
+│   │   └── res/
+│   │       ├── layout/                        # XML layouts
+│   │       ├── drawable/                      # Vector icons, shape backgrounds
+│   │       ├── drawable-xxhdpi/               # PNG assets (houses, shop items, logo)
+│   │       ├── font/itim.ttf                  # Itim font
+│   │       └── values/                        # Colors, strings, themes
+│   ├── build.gradle                           # Dependencies, API keys from local.properties
+│   └── local.properties                       # API keys (gitignored)
+│
+├── backend/                           # Node.js REST API
+│   ├── server.js                      # Express server with all endpoints
+│   ├── init-database.js               # Database seeder (sample Singapore events)
+│   ├── database/events.db             # SQLite database (gitignored)
+│   ├── package.json
+│   └── .env                           # Environment config (gitignored)
+│
+└── README.md
+```
+
+## System Setup
 
 ### Prerequisites
-- **Android Studio** (latest version)
-- **Node.js** (v14+)
-- **Google Cloud Account** (for API keys)
 
-### Step 1: Clone the Repository
+| Tool | Minimum Version | Notes |
+|------|----------------|-------|
+| JDK | 17+ | JDK 25 supported with Gradle 9.1.0 |
+| Android SDK | API 36 | build-tools 36.0.0 |
+| Node.js | v14+ | For backend |
+| Android Studio | Latest | Or build via CLI with Gradle |
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/fearyj/Beyond_Binary.git
 cd Beyond_Binary
 ```
 
-### Step 2: Get API Keys
+### 2. Get API Keys
 
-#### Google Maps API Key
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable **Maps SDK for Android**
-4. Go to **Credentials** → **Create Credentials** → **API Key**
-5. Copy the API key
+- **Google Maps API Key**: [Google Cloud Console](https://console.cloud.google.com/) - Enable Maps SDK for Android
+- **Google Gemini API Key**: [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-#### Google Gemini API Key
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Click **Get API Key**
-3. Copy the API key
-
-### Step 3: Backend Setup
+### 3. Backend Setup
 
 ```bash
-# Navigate to backend
 cd backend
-
-# Install dependencies
 npm install
-
-# Create .env file
-cat > .env << EOF
-PORT=3000
-DATABASE_PATH=./database/events.db
-NODE_ENV=development
-EOF
-
-# Initialize database with sample events
-npm run init-db
-
-# Start the server
-npm start
+npm run init-db    # Seed database with sample events
+npm start          # Start server on port 3000
 ```
 
-You should see:
-```
-Connected to SQLite database
-Events table ready
-Server running on port 3000
-```
+For development with auto-restart: `npm run dev`
 
-**Keep this terminal running** while testing the app.
+### 4. Frontend Setup
 
-### Step 4: Frontend Setup
-
-```bash
-# Navigate to frontend
-cd ../frontend
-
-# Create local.properties file
-cat > local.properties << EOF
-sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
-geminiApiKey=YOUR_GEMINI_API_KEY_HERE
-mapsApiKey=YOUR_GOOGLE_MAPS_API_KEY_HERE
-EOF
-```
-
-**Important**: Replace the placeholders:
-- `YOUR_USERNAME` - Your Mac username
-- `YOUR_GEMINI_API_KEY_HERE` - Your Gemini API key from Step 2
-- `YOUR_GOOGLE_MAPS_API_KEY_HERE` - Your Maps API key from Step 2
-
-### Step 5: Open in Android Studio
-
-```bash
-# Open Android Studio with the project
-open -a "Android Studio" /path/to/Beyond_Binary/frontend
-```
-
-Or manually:
-1. Open Android Studio
-2. Click **File** → **Open**
-3. Navigate to `Beyond_Binary/frontend`
-4. Click **Open**
-
-### Step 6: Configure Gradle JDK
-
-1. In Android Studio: **Preferences** → **Build, Execution, Deployment** → **Build Tools** → **Gradle**
-2. Set **Gradle JDK** to **Embedded JDK (jbr-17)**
-3. Click **Apply** and **OK**
-4. Wait for Gradle sync to complete
-
-### Step 7: Run the App
-
-1. **Start an Android Emulator** or connect a physical device
-   - Recommended: Pixel 5 or newer with API 24+
-2. Click the **Run** button (▶️) in Android Studio
-3. Select your device/emulator
-4. Wait for build and installation
-
-## 📁 Project Structure
-
-```
-Beyond_Binary/
-├── frontend/                           # Android application
-│   ├── app/
-│   │   ├── src/main/
-│   │   │   ├── java/com/beyondbinary/app/
-│   │   │   │   ├── MainActivity.java           # Main entry with bottom nav
-│   │   │   │   ├── HomeFragment.java           # Event discovery with tabs
-│   │   │   │   ├── EventListFragment.java      # Personalized events list
-│   │   │   │   ├── RecommendedEventsFragment.java  # Recommended events
-│   │   │   │   ├── EventDetailActivity.java    # Full event details page
-│   │   │   │   ├── EventListAdapter.java       # RecyclerView adapter
-│   │   │   │   ├── HomePagerAdapter.java       # Tab management
-│   │   │   │   ├── MapsActivity.java           # Interactive event map
-│   │   │   │   ├── AddEventActivity.java       # Create new events
-│   │   │   │   ├── ProfileActivity.java        # User profile/community
-│   │   │   │   ├── agents/
-│   │   │   │   │   └── EventRankingAgent.java  # Gemini AI integration
-│   │   │   │   ├── api/                         # Backend API clients
-│   │   │   │   │   ├── ApiService.java
-│   │   │   │   │   ├── RetrofitClient.java
-│   │   │   │   │   └── *Response.java
-│   │   │   │   ├── data/                        # Data models & providers
-│   │   │   │   ├── Event.java                   # Event model
-│   │   │   │   ├── EventDao.java                # Room DAO
-│   │   │   │   └── EventDatabase.java           # Room database
-│   │   │   └── res/                             # UI layouts, drawables
-│   │   │       ├── layout/
-│   │   │       │   ├── activity_main.xml
-│   │   │       │   ├── fragment_home_with_tabs.xml
-│   │   │       │   ├── activity_event_detail.xml
-│   │   │       │   ├── fragment_event_list.xml
-│   │   │       │   ├── item_event_list.xml
-│   │   │       │   └── ...
-│   │   │       └── ...
-│   │   └── build.gradle                         # Dependencies
-│   └── local.properties                         # API keys (gitignored)
-│
-├── backend/                            # Node.js REST API
-│   ├── server.js                       # Express server
-│   ├── init-database.js                # Database seeder
-│   ├── database/
-│   │   └── events.db                   # SQLite database (gitignored)
-│   ├── package.json                    # Node dependencies
-│   └── .env                            # Environment vars (gitignored)
-│
-└── README.md                           # This file
-```
-
-## 🔧 Configuration Files
-
-### `frontend/local.properties` (Gitignored)
+Create `frontend/local.properties`:
 ```properties
-sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+sdk.dir=YOUR_ANDROID_SDK_PATH
 geminiApiKey=YOUR_GEMINI_API_KEY
-mapsApiKey=YOUR_MAPS_API_KEY
+mapsApiKey=YOUR_GOOGLE_MAPS_API_KEY
 ```
 
-### `backend/.env` (Gitignored)
-```env
-PORT=3000
-DATABASE_PATH=./database/events.db
-NODE_ENV=development
+**Build via Android Studio:**
+1. Open `Beyond_Binary/frontend` in Android Studio
+2. Sync Gradle
+3. Run on emulator or device
+
+**Build via CLI (PowerShell):**
+```powershell
+cd frontend
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-25.0.2"
+$env:ANDROID_HOME = "C:\Android"
+.\gradlew.bat assembleDebug
+C:\Android\platform-tools\adb.exe install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-## 🎮 How to Use
-
-### 1. Home - Event Discovery
-- Browse events in **Personalized** and **Recommended** tabs
-- Tap any event card to view full details
-- Use the floating "+" button to quickly create events
-- Bottom navigation always accessible
-
-### 2. Event Details
-- View complete event information
-- Tap **Join Event** to participate
-- Tap **View on Map** to see exact location
-- Navigate using bottom navigation bar
-
-### 3. Map View
-- Explore events on interactive Google Maps
-- Tap emoji markers to see event info windows
-- Tap info windows to view full event details
-- Auto-zooms when navigating from event details
-- Search for events near specific locations
-
-### 4. Add Event
-- Fill in event details (title, location, description, time)
-- Select event category from dropdown
-- Choose date and time with pickers
-- Set participant limits
-- Submit to backend database
-
-### 5. Profile/Community
-- View your stats (events attended, events hosted, friends)
-- Browse **Events Photos** tab
-- Explore **Community** connections
-
-## 🧪 Testing Features
-
-### Backend Endpoints
-The backend runs on `http://localhost:3000` (maps to `http://10.0.2.2:3000` in Android emulator):
-
-- `GET /api/events` - List all events
-- `POST /api/events` - Create new event
-- `GET /api/events/:id` - Get specific event
-- `PUT /api/events/:id` - Update event
-- `DELETE /api/events/:id` - Delete event
-- `GET /api/events/nearby` - Find events near location
-- `GET /api/stats` - Get system statistics
-
-### Mock Data
-The app includes:
-- 20+ pre-seeded events in the database
-- Mock health data for AI ranking
-- Sample user profiles
-- Various event categories and types
-
-## 🐛 Troubleshooting
-
-### Gradle Sync Failed
-- Ensure Gradle JDK is set to Embedded JDK
-- Check `local.properties` has correct paths
-- Try **File** → **Invalidate Caches** → **Restart**
-
-### Map Not Loading
-- Verify `mapsApiKey` in `local.properties`
-- Ensure Maps SDK for Android is enabled in Google Cloud
-- Check internet connection
-
-### Backend Connection Failed
-- Confirm backend is running (`npm start`)
-- Check it's on port 3000
-- For emulator, use `10.0.2.2:3000` not `localhost:3000`
-
-### Events Not Loading
-- Verify backend is running and database is initialized
-- Check Retrofit API configuration in `RetrofitClient.java`
-- Check Android logs for API errors
-
-### UI Elements Cut Off (Pixel 9)
-- The app uses `fitsSystemWindows="true"` for proper spacing
-- Should work correctly on devices with notches/punch holes
-
-## 🔐 Security Notes
-
-**Never commit these files:**
-- `frontend/local.properties` - Contains API keys
-- `backend/.env` - Contains secrets
-- `backend/database/events.db` - Database file
-- `backend/node_modules/` - Large dependencies
-- `frontend/build/` - Build artifacts
-
-These are all in `.gitignore` for your protection.
-
-## 🚢 Building for Release
-
+**Build via CLI (Bash/Mac/Linux):**
 ```bash
 cd frontend
-./gradlew assembleRelease
+JAVA_HOME="/path/to/jdk" ANDROID_HOME="/path/to/android-sdk" ./gradlew assembleDebug
 ```
 
-The APK will be in: `frontend/app/build/outputs/apk/release/`
+## Backend API
 
-## 📝 API Documentation
+Base URL: `http://localhost:3000/api` (emulator: `http://10.0.2.2:3000/api`)
 
-### Event Object
-```json
-{
-  "id": 1,
-  "title": "Morning Yoga at Marina Bay",
-  "location": "Marina Bay Sands, Singapore",
-  "description": "Relaxing yoga session with sea views",
-  "time": "Thu, Feb 15, 2024 • 8:00 AM - 9:30 AM",
-  "currentParticipants": 5,
-  "maxParticipants": 20,
-  "eventType": "Yoga",
-  "latitude": 1.2834,
-  "longitude": 103.8607
-}
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/health | Health check |
+| GET | /api/events | List all events |
+| GET | /api/events/:id | Get event by ID |
+| GET | /api/events/nearby?latitude=&longitude=&radius= | Nearby events |
+| POST | /api/events | Create event |
+| PUT | /api/events/:id | Update event |
+| DELETE | /api/events/:id | Delete event |
+| GET | /api/stats | System statistics |
+| POST | /api/users | Create user |
+| GET | /api/users/:id | Get user |
+| PUT | /api/users/:id | Update user |
+| GET | /api/users/:id/interactions | User interactions |
 
-### Create Event Request
-```json
-{
-  "title": "Event Title",
-  "location": "Location Name",
-  "description": "Event description",
-  "time": "Formatted time string",
-  "currentParticipants": 1,
-  "maxParticipants": 20,
-  "eventType": "Soccer",
-  "latitude": 1.2834,
-  "longitude": 103.8607
-}
-```
-
-## 📱 App Navigation Flow
+## App Navigation Flow
 
 ```
-MainActivity (Home)
-├── HomeFragment (with tabs)
-│   ├── EventListFragment (Personalized)
-│   │   └── EventDetailActivity → MapsActivity
-│   └── RecommendedEventsFragment
-│       └── EventDetailActivity → MapsActivity
-├── MapsActivity
-│   └── Marker click → EventDetailActivity
-├── AddEventActivity
-├── ProfileActivity
-└── AI Chatbot (Coming Soon)
+SplashActivity (Front page with logo)
+    |
+    v
+MainActivity
+├── Registration / Sign In
+│   └── Profile Setup → Onboarding → Home
+├── Home (FYP tabs)
+│   ├── Personalized Events → Event Detail → Map
+│   └── Recommended Events → Event Detail → Map
+├── Map View (emoji markers → Event Detail)
+├── Add Event
+├── My Events
+├── AI Chatbot
+├── Messages → Chat
+└── Profile (Achievement Community + Shop)
 ```
 
-## 🎨 UI/UX Features
+## Configuration (Gitignored)
 
-- **Material Design 3**: Modern, clean interface
-- **Bottom Navigation**: Persistent navigation across all screens
-- **Floating Action Button**: Quick access to event creation
-- **RecyclerView**: Smooth, efficient scrolling
-- **Tab Layout**: Easy switching between event feeds
-- **Custom Info Windows**: Rich map marker details
-- **Responsive Layouts**: Works on all screen sizes
-- **System Insets**: Proper handling of notches and navigation bars
+**frontend/local.properties:**
+```properties
+sdk.dir=/path/to/android/sdk
+geminiApiKey=YOUR_KEY
+mapsApiKey=YOUR_KEY
+```
 
-## 🤝 Contributing
+**backend/.env:**
+```
+PORT=3000
+DATABASE_PATH=./database/events.db
+NODE_ENV=development
+```
 
-Contributions are welcome! This project aims to build a supportive community platform.
+## Troubleshooting
 
-## 📄 License
+| Problem | Solution |
+|---------|----------|
+| Gradle sync failed | Ensure JDK and SDK paths are correct in local.properties |
+| Map not loading | Verify mapsApiKey; enable Maps SDK in Google Cloud |
+| Backend connection failed | Ensure backend is running; emulator uses 10.0.2.2 not localhost |
+| Events not loading | Check backend logs; verify Retrofit config in RetrofitClient.java |
+| Port 3000 in use | Kill the process or use `PORT=3001 npm start` |
 
-Beyond Binary - Connecting people through shared experiences.
+## Development Workflow
 
----
+| What Changed | Rebuild APK? | Reinstall? | Restart Emulator? | Restart Backend? |
+|---|---|---|---|---|
+| Backend code | No | No | No | Auto (nodemon) |
+| Java / Kotlin | Yes | Yes | No | No |
+| XML layouts | Yes | Yes | No | No |
+| Drawables / resources | Yes | Yes | No | No |
+| build.gradle | Yes | Yes | No | No |
 
-**Built with ❤️ to reduce isolation and build community**
+## Security Notes
+
+Never commit: `local.properties`, `backend/.env`, `backend/database/events.db`, `node_modules/`, `build/` -- all are in `.gitignore`.
+
+## License
+
+MIT

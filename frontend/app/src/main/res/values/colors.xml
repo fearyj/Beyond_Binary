@@ -6,8 +6,8 @@
     <color name="teal_200">#03DAC5</color>
 
     <!-- Primary Brand Colors -->
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
+    <color name="primary">#343149</color>
+    <color name="primary_dark">#2A2740</color>
     <color name="primary_light">#BBDEFB</color>
     <color name="accent">#FF4081</color>
 

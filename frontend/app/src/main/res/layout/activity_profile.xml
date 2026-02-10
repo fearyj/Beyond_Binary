@@ -15,10 +15,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Buddee"
+            android:text="Buddeee"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/itim" />
 
         <ImageView
             android:id="@+id/btn_sign_out"
@@ -36,10 +37,12 @@
 
     <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="48dp"
         android:layout_marginBottom="56dp"
+        android:fillViewport="true"
         android:background="#FFFFFF">
 
         <LinearLayout
@@ -322,33 +325,184 @@
                 android:background="#FFFFFF"
                 android:padding="2dp" />
 
-            <!-- Person Tab Content (hidden by default) -->
-            <LinearLayout
+            <!-- Person Tab Content: Achievement Neighborhood View (hidden by default) -->
+            <FrameLayout
                 android:id="@+id/person_tab_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center"
-                android:visibility="gone">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:clipChildren="true"
+                android:clipToPadding="true">
 
+                <!-- Green Map Background -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#3EBE7A" />
+
+                <!-- === ROAD PAIR 1 (upper crossing) === -->
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="60dp"
+                    android:rotation="-22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="60dp"
+                    android:rotation="22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="70dp"
+                    android:rotation="-22"
+                    android:background="@drawable/bg_road_dashed" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="70dp"
+                    android:rotation="22"
+                    android:background="@drawable/bg_road_dashed" />
+
+                <!-- === ROAD PAIR 2 (middle crossing at traffic light) === -->
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="210dp"
+                    android:rotation="-22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="210dp"
+                    android:rotation="22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="220dp"
+                    android:rotation="-22"
+                    android:background="@drawable/bg_road_dashed" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="220dp"
+                    android:rotation="22"
+                    android:background="@drawable/bg_road_dashed" />
+
+                <!-- === ROAD PAIR 3 (lower crossing) === -->
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="30dp"
+                    android:rotation="-22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="30dp"
+                    android:rotation="22"
+                    android:background="#FFFFFF" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="40dp"
+                    android:rotation="-22"
+                    android:background="@drawable/bg_road_dashed" />
+                <View
+                    android:layout_width="700dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="40dp"
+                    android:rotation="22"
+                    android:background="@drawable/bg_road_dashed" />
+
+                <!-- Small House (upper-right corner, further apart) -->
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginEnd="-55dp"
+                    android:layout_marginTop="0dp"
+                    android:src="@drawable/img_house_small"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Small house" />
+
+                <!-- Large House with car (center-left, upper area) -->
+                <ImageView
+                    android:layout_width="190dp"
+                    android:layout_height="210dp"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/img_house_large"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="House" />
+
+                <!-- User Name Label (below the house, black + smaller) -->
                 <TextView
+                    android:id="@+id/achievement_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Community"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#757575" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Coming Soon!"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="175dp"
+                    android:text=""
                     android:textSize="14sp"
-                    android:textColor="#9E9E9E"
-                    android:layout_marginTop="8dp" />
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:shadowColor="#40000000"
+                    android:shadowDx="0"
+                    android:shadowDy="2"
+                    android:shadowRadius="3" />
 
-            </LinearLayout>
+                <!-- Traffic Light (center, at road intersection, slightly larger) -->
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="86dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="200dp"
+                    android:src="@drawable/ic_traffic_light"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Traffic light" />
+
+                <!-- Shopping Bag FAB (bottom-right) -->
+                <FrameLayout
+                    android:id="@+id/fab_shopping"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/bg_fab_achievement"
+                    android:elevation="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_shopping_bag"
+                        android:contentDescription="Shopping bag" />
+
+                </FrameLayout>
+
+            </FrameLayout>
 
         </LinearLayout>
 

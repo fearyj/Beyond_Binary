@@ -130,9 +130,15 @@ public class OnboardingFragment extends Fragment {
                 .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         int userId = prefs.getInt("user_id", -1);
 
-        // Save locally
+        // Save locally — read existing user first to preserve profile picture and other fields
         AppDatabaseHelper db = AppDatabaseHelper.getInstance(requireContext());
-        User localUser = new User(userId, bio, interestTags);
+        User localUser = db.getUserById(userId);
+        if (localUser == null) {
+            localUser = new User();
+            localUser.setId(userId);
+        }
+        localUser.setBio(bio);
+        localUser.setInterestTags(interestTags);
         db.insertUser(localUser);
 
         // Save to backend

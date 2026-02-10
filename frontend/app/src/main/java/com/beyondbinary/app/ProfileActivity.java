@@ -3,14 +3,15 @@ package com.beyondbinary.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,8 +25,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +45,9 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView friendsCountText;
     private RecyclerView photoGrid;
     private FlexboxLayout tagsContainer;
-    private LinearLayout personTabContent;
+    private FrameLayout personTabContent;
+    private TextView achievementUsername;
+    private androidx.core.widget.NestedScrollView scrollView;
 
     // Tab views
     private FrameLayout tabGrid;
@@ -71,6 +76,8 @@ public class ProfileActivity extends AppCompatActivity {
         photoGrid = findViewById(R.id.photo_grid);
         tagsContainer = findViewById(R.id.tags_container);
         personTabContent = findViewById(R.id.person_tab_content);
+        achievementUsername = findViewById(R.id.achievement_username);
+        scrollView = findViewById(R.id.scroll_view);
 
         // Tab views
         tabGrid = findViewById(R.id.tab_grid);
@@ -80,6 +87,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Sign out button
         findViewById(R.id.btn_sign_out).setOnClickListener(v -> signOut());
+
+        // Shopping bag FAB
+        findViewById(R.id.fab_shopping).setOnClickListener(v -> showShopDialog());
 
         // Setup tabs
         setupTabs();
@@ -167,6 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
         usernameText.setText(displayName);
+        achievementUsername.setText(displayName);
 
         String caption = user.getCaption();
         if (caption != null && !caption.isEmpty()) {
@@ -179,8 +190,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Load profile picture
         String picPath = user.getProfilePicturePath();
+        android.util.Log.d(TAG, "Profile pic path: " + picPath);
         if (picPath != null && !picPath.isEmpty()) {
             File picFile = new File(picPath);
+            android.util.Log.d(TAG, "Profile pic file exists: " + picFile.exists());
             if (picFile.exists()) {
                 profilePicture.setPadding(0, 0, 0, 0);
                 Glide.with(this)
@@ -278,10 +291,13 @@ public class ProfileActivity extends AppCompatActivity {
         tabGrid.setBackgroundColor(0xFFFFFFFF);
         tabPerson.setBackgroundColor(0xFF343149);
         tabGridIcon.setImageResource(R.drawable.ic_grid);
-        tabPersonIcon.setImageResource(R.drawable.ic_person);
+        tabPersonIcon.setImageResource(R.drawable.ic_person_active);
 
         photoGrid.setVisibility(View.GONE);
         personTabContent.setVisibility(View.VISIBLE);
+
+        // Scroll to top so the full achievement view is visible
+        scrollView.post(() -> scrollView.smoothScrollTo(0, 0));
     }
 
     private void setupBottomNavigation() {
@@ -326,6 +342,28 @@ public class ProfileActivity extends AppCompatActivity {
 
             return false;
         });
+    }
+
+    private void showShopDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View sheetView = getLayoutInflater().inflate(R.layout.dialog_shop, null);
+        dialog.setContentView(sheetView);
+
+        // Hardcoded shop items matching Figma design
+        List<ShopItem> shopItems = new ArrayList<>();
+        shopItems.add(new ShopItem(R.drawable.img_shop_fountain, "Fountain", 60));
+        shopItems.add(new ShopItem(R.drawable.img_shop_garden, "Garden", 60));
+        shopItems.add(new ShopItem(R.drawable.img_shop_bench, "Bench", 30));
+        shopItems.add(new ShopItem(R.drawable.img_shop_signboard, "Signboard", 20));
+
+        RecyclerView list = sheetView.findViewById(R.id.shop_items_grid);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(new ShopItemAdapter(shopItems));
+
+        // Close button
+        sheetView.findViewById(R.id.btn_close_shop).setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     private void signOut() {

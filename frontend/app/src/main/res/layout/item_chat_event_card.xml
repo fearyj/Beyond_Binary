@@ -112,7 +112,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_event_detail_button"
             android:gravity="center"
-            android:text="View on Map"
+            android:text="View Map"
             android:textColor="#343149"
             android:textSize="13sp"
             android:textStyle="bold" />
