@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.beyondbinary.app.api.ApiService;
 import com.beyondbinary.app.api.CreateEventResponse;
+import com.beyondbinary.app.api.CreateInteractionResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -26,8 +27,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -414,13 +417,20 @@ public class AddEventActivity extends AppCompatActivity {
                                     int currentParticipants, int maxParticipants,
                                     double latitude, double longitude) {
 
+        // Get user ID
+        android.content.SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+
         // Create Event object using constructor
         Event event = new Event(title, location, description, time,
                 currentParticipants, maxParticipants, eventType);
 
-        // Set coordinates
+        // Set coordinates and creator
         event.setLatitude(latitude);
         event.setLongitude(longitude);
+        if (userId != -1) {
+            event.setCreatorUserId(userId);
+        }
 
         // Call API
         ApiService apiService = RetrofitClient.getApiService();
@@ -434,11 +444,31 @@ public class AddEventActivity extends AppCompatActivity {
                     CreateEventResponse createResponse = response.body();
                     Log.d(TAG, "Event created: " + createResponse.getMessage());
 
+                    // Track "created" interaction
+                    if (userId != -1) {
+                        Map<String, Object> interactionBody = new HashMap<>();
+                        interactionBody.put("user_id", userId);
+                        interactionBody.put("event_id", createResponse.getEventId());
+                        interactionBody.put("interaction_type", "created");
+
+                        apiService.createInteraction(interactionBody).enqueue(new Callback<CreateInteractionResponse>() {
+                            @Override
+                            public void onResponse(@NonNull Call<CreateInteractionResponse> c,
+                                                   @NonNull Response<CreateInteractionResponse> r) {
+                                Log.d(TAG, "Created interaction tracked");
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<CreateInteractionResponse> c, @NonNull Throwable t) {
+                                Log.e(TAG, "Failed to track created interaction", t);
+                            }
+                        });
+                    }
+
                     Toast.makeText(AddEventActivity.this,
-                            "✅ Event created successfully!",
+                            "Event created successfully!",
                             Toast.LENGTH_LONG).show();
 
-                    // Go back to map
                     finish();
 
                 } else {

@@ -10,10 +10,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.beyondbinary.app.api.ApiService;
+import com.beyondbinary.app.api.CreateInteractionResponse;
 import com.beyondbinary.app.api.EventResponse;
 import com.beyondbinary.app.api.RetrofitClient;
+import com.beyondbinary.app.api.UpdateEventResponse;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -111,7 +116,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private void joinEvent() {
         if (event.getCurrentParticipants() < event.getMaxParticipants()) {
             event.setCurrentParticipants(event.getCurrentParticipants() + 1);
-            participantsText.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " participants");
+            participantsText.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " participants");
 
             if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
                 joinButton.setEnabled(false);
@@ -119,6 +124,32 @@ public class EventDetailActivity extends AppCompatActivity {
             }
 
             Toast.makeText(this, "Joined event successfully!", Toast.LENGTH_SHORT).show();
+
+            // Update participant count on backend
+            ApiService apiService = RetrofitClient.getApiService();
+            apiService.updateEvent(eventId, event).enqueue(new Callback<UpdateEventResponse>() {
+                @Override
+                public void onResponse(Call<UpdateEventResponse> call, Response<UpdateEventResponse> response) {}
+                @Override
+                public void onFailure(Call<UpdateEventResponse> call, Throwable t) {}
+            });
+
+            // Track "joined" interaction
+            android.content.SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+            int userId = prefs.getInt("user_id", -1);
+            if (userId != -1) {
+                Map<String, Object> body = new HashMap<>();
+                body.put("user_id", userId);
+                body.put("event_id", eventId);
+                body.put("interaction_type", "joined");
+
+                apiService.createInteraction(body).enqueue(new Callback<CreateInteractionResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateInteractionResponse> call, Response<CreateInteractionResponse> response) {}
+                    @Override
+                    public void onFailure(Call<CreateInteractionResponse> call, Throwable t) {}
+                });
+            }
         }
     }
 

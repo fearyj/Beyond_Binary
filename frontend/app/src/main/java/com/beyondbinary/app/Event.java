@@ -20,6 +20,8 @@ public class Event {
     private Double latitude;
     private Double longitude;
 
+    private Integer creatorUserId;
+
     public Event(String title, String location, String description, String time,
                  int currentParticipants, int maxParticipants, String eventType) {
         this.title = title;
@@ -65,4 +67,7 @@ public class Event {
 
     public Double getLongitude() { return longitude; }
     public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+    public Integer getCreatorUserId() { return creatorUserId; }
+    public void setCreatorUserId(Integer creatorUserId) { this.creatorUserId = creatorUserId; }
 }

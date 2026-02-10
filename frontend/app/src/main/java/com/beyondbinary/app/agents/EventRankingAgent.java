@@ -2,7 +2,7 @@ package com.beyondbinary.app.agents;
 
 import android.util.Log;
 
-import com.beyondbinary.app.data.models.Event;
+import com.beyondbinary.app.Event;
 import com.beyondbinary.app.data.models.User;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -28,7 +28,7 @@ public class EventRankingAgent {
     }
 
     public EventRankingAgent(String apiKey) {
-        GenerativeModel gm = new GenerativeModel("gemini-2.0-flash", apiKey);
+        GenerativeModel gm = new GenerativeModel("gemini-2.5-flash", apiKey);
         this.model = GenerativeModelFutures.from(gm);
     }
 
@@ -39,6 +39,10 @@ public class EventRankingAgent {
         }
 
         String prompt = buildPrompt(user, events);
+        Log.i(TAG, "=== GEMINI RANKING REQUEST ===");
+        Log.i(TAG, "User bio: " + user.getBio());
+        Log.i(TAG, "Events count: " + events.size());
+        Log.d(TAG, "Full prompt:\n" + prompt);
 
         Content content = new Content.Builder()
                 .addText(prompt)
@@ -51,9 +55,11 @@ public class EventRankingAgent {
             public void onSuccess(GenerateContentResponse result) {
                 try {
                     String text = result.getText();
+                    Log.i(TAG, "=== GEMINI RAW RESPONSE ===");
+                    Log.i(TAG, "Response text: " + text);
                     if (text != null) {
                         List<Event> ranked = parseRankedEvents(text.trim(), events);
-                        Log.d(TAG, "AI ranking successful, ranked " + ranked.size() + " events");
+                        Log.i(TAG, "AI ranking successful, ranked " + ranked.size() + "/" + events.size() + " events matched by ID");
                         callback.onResult(ranked);
                     } else {
                         Log.w(TAG, "AI returned null text, using original order");
@@ -67,7 +73,8 @@ public class EventRankingAgent {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.e(TAG, "AI ranking failed, using original order", t);
+                Log.e(TAG, "=== GEMINI CALL FAILED ===");
+                Log.e(TAG, "AI ranking failed: " + t.getClass().getSimpleName() + " - " + t.getMessage(), t);
                 callback.onResult(events);
             }
         }, Executors.newSingleThreadExecutor());
@@ -83,7 +90,7 @@ public class EventRankingAgent {
         for (Event event : events) {
             sb.append("ID:").append(event.getId())
               .append(" | ").append(event.getTitle())
-              .append(" | ").append(event.getCategory())
+              .append(" | ").append(event.getEventType())
               .append(" | ").append(event.getDescription())
               .append("\n");
         }
