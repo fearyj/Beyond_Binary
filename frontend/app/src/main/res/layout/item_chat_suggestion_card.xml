@@ -10,11 +10,12 @@
     android:clickable="true"
     android:focusable="true">
 
-    <!-- Sparkle Icon -->
+    <!-- Activity Emoji -->
     <TextView
+        android:id="@+id/suggestion_emoji"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="✨"
+        android:text="🎉"
         android:textSize="22sp"
         android:layout_marginEnd="12dp" />
 

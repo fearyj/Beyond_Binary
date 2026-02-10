@@ -250,7 +250,10 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     View suggestionCard = LayoutInflater.from(itemView.getContext())
                             .inflate(R.layout.item_chat_suggestion_card, suggestionsContainer, false);
 
+                    TextView emoji = suggestionCard.findViewById(R.id.suggestion_emoji);
                     TextView title = suggestionCard.findViewById(R.id.suggestion_title);
+
+                    emoji.setText(getEmojiForEvent(eventType));
                     title.setText(eventType);
 
                     // Click listener to create event with this suggestion
