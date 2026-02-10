@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.beyondbinary.app.api.ApiService;
 import com.beyondbinary.app.api.InteractionsResponse;
@@ -20,6 +22,9 @@ import com.beyondbinary.app.data.database.AppDatabaseHelper;
 import com.beyondbinary.app.data.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -32,6 +37,13 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView eventsCountText;
     private TextView hostedCountText;
     private TextView friendsCountText;
+    private RecyclerView photoGrid;
+
+    // Hardcoded grid thumbnails (2 event posts — people/group photos)
+    private final List<String> gridThumbnails = Arrays.asList(
+            "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?w=400&h=400&fit=crop"
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +64,14 @@ public class ProfileActivity extends AppCompatActivity {
         eventsCountText = findViewById(R.id.events_count);
         hostedCountText = findViewById(R.id.hosted_count);
         friendsCountText = findViewById(R.id.friends_count);
+        photoGrid = findViewById(R.id.photo_grid);
 
         // Setup tabs
         tabLayout = findViewById(R.id.tab_layout);
         setupTabs();
+
+        // Setup photo grid
+        setupPhotoGrid();
 
         // Load user data
         loadUserProfile();
@@ -63,6 +79,21 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Setup bottom navigation
         setupBottomNavigation();
+    }
+
+    private void setupPhotoGrid() {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        photoGrid.setLayoutManager(gridLayoutManager);
+
+        EventPhotoGridAdapter adapter = new EventPhotoGridAdapter(gridThumbnails, position -> {
+            if (position == 0) {
+                // First post (most recent) — open carousel post detail
+                Intent intent = new Intent(ProfileActivity.this, EventPostDetailActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        photoGrid.setAdapter(adapter);
     }
 
     private void loadUserProfile() {
@@ -170,14 +201,11 @@ public class ProfileActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (position == 0) {
-                    // Show Events Photos
-                    Toast.makeText(ProfileActivity.this,
-                            "Events Photos - Coming Soon!",
-                            Toast.LENGTH_SHORT).show();
+                    photoGrid.setVisibility(android.view.View.VISIBLE);
                 } else if (position == 1) {
-                    // Show placeholder section
+                    photoGrid.setVisibility(android.view.View.GONE);
                     Toast.makeText(ProfileActivity.this,
-                            "This section is not implemented yet",
+                            "Community - Coming Soon!",
                             Toast.LENGTH_SHORT).show();
                 }
             }

@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.beyondbinary.app.Event;
 import com.beyondbinary.app.EventDetailActivity;
+import com.beyondbinary.app.MapsActivity;
 import com.beyondbinary.app.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -22,6 +25,51 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_BOT = 2;
     private static final int VIEW_TYPE_EVENTS = 3;
     private static final int VIEW_TYPE_SUGGESTIONS = 4;
+
+    private static final Map<String, String> EVENT_EMOJIS = new HashMap<>();
+    static {
+        EVENT_EMOJIS.put("Yoga", "🧘‍♀️");
+        EVENT_EMOJIS.put("Yoga Class", "🧘‍♀️");
+        EVENT_EMOJIS.put("Meditation", "🧘");
+        EVENT_EMOJIS.put("Meditation Session", "🧘");
+        EVENT_EMOJIS.put("Basketball", "🏀");
+        EVENT_EMOJIS.put("Basketball Game", "🏀");
+        EVENT_EMOJIS.put("Soccer", "⚽");
+        EVENT_EMOJIS.put("Soccer Match", "⚽");
+        EVENT_EMOJIS.put("Tennis", "🎾");
+        EVENT_EMOJIS.put("Tennis Tournament", "🎾");
+        EVENT_EMOJIS.put("Hiking", "🥾");
+        EVENT_EMOJIS.put("Hiking Trip", "🥾");
+        EVENT_EMOJIS.put("Running", "🏃");
+        EVENT_EMOJIS.put("Cycling", "🚴");
+        EVENT_EMOJIS.put("Swimming", "🏊");
+        EVENT_EMOJIS.put("Coffee", "☕");
+        EVENT_EMOJIS.put("Coffee Meetup", "☕");
+        EVENT_EMOJIS.put("Cooking", "🍳");
+        EVENT_EMOJIS.put("Cooking Class", "🍳");
+        EVENT_EMOJIS.put("Music", "🎵");
+        EVENT_EMOJIS.put("Concert", "🎵");
+        EVENT_EMOJIS.put("Art", "🎨");
+        EVENT_EMOJIS.put("Art Class", "🎨");
+        EVENT_EMOJIS.put("Book Club", "📚");
+        EVENT_EMOJIS.put("Reading", "📚");
+        EVENT_EMOJIS.put("Gaming", "🎮");
+        EVENT_EMOJIS.put("Photography", "📷");
+        EVENT_EMOJIS.put("Dance", "💃");
+        EVENT_EMOJIS.put("Dance Class", "💃");
+        EVENT_EMOJIS.put("Picnic", "🧺");
+        EVENT_EMOJIS.put("Park Picnic", "🧺");
+        EVENT_EMOJIS.put("Beach", "🏖️");
+        EVENT_EMOJIS.put("Beach Volleyball", "🏐");
+        EVENT_EMOJIS.put("Volunteer", "🤝");
+        EVENT_EMOJIS.put("Volunteering", "🤝");
+        EVENT_EMOJIS.put("Workshop", "🔧");
+        EVENT_EMOJIS.put("Fitness", "💪");
+        EVENT_EMOJIS.put("Gym", "💪");
+        EVENT_EMOJIS.put("Brunch", "🥂");
+        EVENT_EMOJIS.put("Dinner", "🍽️");
+        EVENT_EMOJIS.put("Party", "🎉");
+    }
 
     private List<Message> messageList;
     private OnSuggestionClickListener suggestionClickListener;
@@ -89,6 +137,21 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return messageList.size();
     }
 
+    private static String getEmojiForEvent(String eventType) {
+        if (eventType == null) return "🎉";
+        // Try exact match first
+        String emoji = EVENT_EMOJIS.get(eventType);
+        if (emoji != null) return emoji;
+        // Try case-insensitive partial match
+        String lower = eventType.toLowerCase();
+        for (Map.Entry<String, String> entry : EVENT_EMOJIS.entrySet()) {
+            if (lower.contains(entry.getKey().toLowerCase())) {
+                return entry.getValue();
+            }
+        }
+        return "🎉";
+    }
+
     // ViewHolder for text messages
     static class TextMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
@@ -127,19 +190,36 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     View eventCard = LayoutInflater.from(itemView.getContext())
                             .inflate(R.layout.item_chat_event_card, eventsContainer, false);
 
+                    TextView emoji = eventCard.findViewById(R.id.chat_event_emoji);
                     TextView title = eventCard.findViewById(R.id.chat_event_title);
                     TextView type = eventCard.findViewById(R.id.chat_event_type);
                     TextView location = eventCard.findViewById(R.id.chat_event_location);
                     TextView time = eventCard.findViewById(R.id.chat_event_time);
                     TextView participants = eventCard.findViewById(R.id.chat_event_participants);
+                    View btnDetails = eventCard.findViewById(R.id.btn_event_details);
+                    View btnMap = eventCard.findViewById(R.id.btn_view_map);
 
+                    emoji.setText(getEmojiForEvent(event.getEventType()));
                     title.setText(event.getTitle());
                     type.setText(event.getEventType());
                     location.setText("📍 " + event.getLocation());
                     time.setText("🕐 " + event.getTime());
                     participants.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants());
 
-                    // Click listener to open event details
+                    // Event Details button → open event detail
+                    btnDetails.setOnClickListener(v -> {
+                        Intent intent = new Intent(itemView.getContext(), EventDetailActivity.class);
+                        intent.putExtra("EVENT_ID", event.getId());
+                        itemView.getContext().startActivity(intent);
+                    });
+
+                    // View on Map button → open maps
+                    btnMap.setOnClickListener(v -> {
+                        Intent intent = new Intent(itemView.getContext(), MapsActivity.class);
+                        itemView.getContext().startActivity(intent);
+                    });
+
+                    // Whole card click → event detail
                     eventCard.setOnClickListener(v -> {
                         Intent intent = new Intent(itemView.getContext(), EventDetailActivity.class);
                         intent.putExtra("EVENT_ID", event.getId());

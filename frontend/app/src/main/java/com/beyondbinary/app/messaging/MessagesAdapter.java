@@ -3,12 +3,15 @@ package com.beyondbinary.app.messaging;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.beyondbinary.app.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
 import java.util.List;
 
@@ -46,24 +49,33 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     }
 
     static class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView profilePicture;
+        private ImageView avatarImage;
         private TextView name;
         private TextView preview;
         private TextView time;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            profilePicture = itemView.findViewById(R.id.profile_picture);
+            avatarImage = itemView.findViewById(R.id.avatar_image);
             name = itemView.findViewById(R.id.message_name);
             preview = itemView.findViewById(R.id.message_preview);
             time = itemView.findViewById(R.id.message_time);
         }
 
         public void bind(MessageConversation conversation, OnConversationClickListener listener) {
-            profilePicture.setText(conversation.getProfileEmoji());
             name.setText(conversation.getName());
             preview.setText(conversation.getLastMessage());
             time.setText(conversation.getTime());
+
+            // Load avatar image
+            String avatarUrl = conversation.getAvatarUrl();
+            if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                Glide.with(avatarImage.getContext())
+                        .load(avatarUrl)
+                        .transform(new CircleCrop())
+                        .placeholder(android.R.color.darker_gray)
+                        .into(avatarImage);
+            }
 
             itemView.setOnClickListener(v -> listener.onConversationClick(conversation));
         }

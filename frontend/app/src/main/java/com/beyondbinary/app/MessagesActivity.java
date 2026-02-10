@@ -29,15 +29,22 @@ public class MessagesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.messages_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Hardcoded conversations
+        // Hardcoded conversations with avatar URLs
         conversations = new ArrayList<>();
-        conversations.add(new MessageConversation("Alicia Thor", "Alicia sent an invitation.", "18:00", "👩"));
-        conversations.add(new MessageConversation("Celeste Floyd", "See you on Sunday!", "14:33", "😊"));
-        conversations.add(new MessageConversation("Kamari Ponce", "You: Are you free on this Sunday?", "13:21", "🧑"));
-        conversations.add(new MessageConversation("Martin Blankenship", "Great, I'll bring the snacks!", "11:58", "👨"));
-        conversations.add(new MessageConversation("Paige Salinas", "You: Thinking of checking out that new...", "11:00", "👩‍🦰"));
-        conversations.add(new MessageConversation("Vincenzo Roberts", "Haha, worth it for sure!!", "10:58", "😎"));
-        conversations.add(new MessageConversation("Marceline Avila", "Perfect! Let's do it.", "09:46", "👱‍♀️"));
+        conversations.add(new MessageConversation("Alicia Thor", "Alicia sent an invitation.", "18:00", "👩",
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Celeste Floyd", "See you on Sunday!", "14:33", "😊",
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Kamari Ponce", "You: Are you free on this Sunday?", "13:21", "🧑",
+                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Martin Blankenship", "Great, I'll bring the snacks!", "11:58", "👨",
+                "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Paige Salinas", "You: Thinking of checking out that new...", "11:00", "👩‍🦰",
+                "https://images.unsplash.com/photo-1507527557404-50fbc8ba6e46?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Vincenzo Roberts", "Haha, worth it for sure!!", "10:58", "😎",
+                "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop"));
+        conversations.add(new MessageConversation("Marceline Avila", "See you later!", "09:46", "👱‍♀️",
+                "https://images.unsplash.com/photo-1517849845537-1d51a20414de?w=100&h=100&fit=crop"));
 
         adapter = new MessagesAdapter(conversations, conversation -> {
             // Open chat screen
@@ -49,31 +56,21 @@ public class MessagesActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        // Setup back button
-        android.view.View backButton = findViewById(R.id.back_button);
-        if (backButton != null) {
-            backButton.setOnClickListener(v -> goBackToHome());
-        }
-
         // Setup bottom navigation
         setupBottomNavigation();
     }
 
-    private void goBackToHome() {
+    @Override
+    public void onBackPressed() {
         Intent intent = new Intent(MessagesActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        goBackToHome();
         super.onBackPressed();
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_home); // No messages tab yet, default to home
+        bottomNav.setSelectedItemId(R.id.nav_home);
 
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

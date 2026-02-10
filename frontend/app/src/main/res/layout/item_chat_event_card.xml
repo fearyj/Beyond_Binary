@@ -1,85 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_event_card_pink"
+    android:orientation="vertical"
+    android:padding="14dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    android:focusable="true"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeColor="@color/primary"
-    app:strokeWidth="1dp">
+    android:focusable="true">
 
+    <!-- Top row: emoji box + event info -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <!-- Event Title -->
-        <TextView
-            android:id="@+id/chat_event_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="4dp" />
+        <!-- Emoji Icon Box -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_emoji_box_chat"
+            android:layout_marginEnd="12dp">
 
-        <!-- Event Type -->
-        <TextView
-            android:id="@+id/chat_event_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            android:background="@color/primary"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:layout_marginBottom="8dp" />
+            <TextView
+                android:id="@+id/chat_event_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="28sp"
+                android:text="🎉" />
 
-        <!-- Event Location -->
-        <TextView
-            android:id="@+id/chat_event_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="4dp"
-            android:drawablePadding="4dp" />
+        </FrameLayout>
 
-        <!-- Event Time -->
-        <TextView
-            android:id="@+id/chat_event_time"
-            android:layout_width="match_parent"
+        <!-- Event Details -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="4dp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <!-- Participants -->
-        <TextView
-            android:id="@+id/chat_event_participants"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary" />
+            <TextView
+                android:id="@+id/chat_event_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#343149"
+                android:layout_marginBottom="3dp" />
 
-        <!-- Tap to view hint -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tap to view details"
-            android:textSize="12sp"
-            android:textColor="@color/primary"
-            android:textStyle="italic"
-            android:layout_marginTop="8dp"
-            android:gravity="end" />
+            <TextView
+                android:id="@+id/chat_event_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#71717A"
+                android:layout_marginBottom="3dp" />
+
+            <TextView
+                android:id="@+id/chat_event_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#71717A"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/chat_event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#71717A"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/chat_event_participants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#71717A" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/btn_event_details"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_event_detail_button"
+            android:gravity="center"
+            android:text="Event Details"
+            android:textColor="#343149"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btn_view_map"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_event_detail_button"
+            android:gravity="center"
+            android:text="View on Map"
+            android:textColor="#343149"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

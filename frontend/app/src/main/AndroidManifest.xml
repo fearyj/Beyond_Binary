@@ -53,6 +53,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".EventPostDetailActivity"
+            android:exported="false"
+            android:label="Post"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".MessagesActivity"
             android:exported="false"
             android:label="Messages"

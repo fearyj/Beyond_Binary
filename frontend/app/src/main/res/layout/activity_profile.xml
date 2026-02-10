@@ -260,45 +260,14 @@
                 android:layout_height="1dp"
                 android:background="#E0E0E0" />
 
-            <!-- Content Area (Placeholder) -->
-            <LinearLayout
-                android:id="@+id/content_area"
+            <!-- Content Area - Photo Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photo_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="32dp"
-                android:minHeight="300dp"
-                android:gravity="center"
-                android:background="#FFFFFF">
-
-                <!-- Placeholder Icon -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📷"
-                    android:textSize="72sp"
-                    android:layout_marginBottom="20dp" />
-
-                <!-- Placeholder Text -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No photos yet"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#212121"
-                    android:layout_marginBottom="10dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Photos from events you attend will appear here"
-                    android:textSize="15sp"
-                    android:textColor="#757575"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-            </LinearLayout>
+                android:nestedScrollingEnabled="false"
+                android:background="#FFFFFF"
+                android:padding="1dp" />
 
         </LinearLayout>
 

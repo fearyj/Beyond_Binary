@@ -3,105 +3,116 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeColor="#E0E0E0"
-    app:strokeWidth="1dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="7dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
 
-    <LinearLayout
+    <!-- Relative layout so we can position badges absolutely -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:minHeight="165dp">
 
-        <!-- Title row with role badge -->
+        <!-- Emoji icon container (left) -->
+        <FrameLayout
+            android:id="@+id/icon_container"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_event_icon">
+
+            <TextView
+                android:id="@+id/event_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="36sp"
+                android:text="🧘" />
+
+        </FrameLayout>
+
+        <!-- Text content (middle) -->
         <LinearLayout
+            android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_toEndOf="@id/icon_container"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="80dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/event_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#212121"
+                android:textColor="#000000"
+                android:lineSpacingExtra="0dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/event_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="2dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/role_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF" />
-
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <!-- Event type -->
+        <!-- Category badge (top right) -->
         <TextView
-            android:id="@+id/event_type"
+            android:id="@+id/category_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#757575" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp" />
-
-        <!-- Location -->
+        <!-- Role badge (bottom right) -->
         <TextView
-            android:id="@+id/event_location"
+            android:id="@+id/role_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#757575"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp" />
-
-        <!-- Time -->
-        <TextView
-            android:id="@+id/event_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#757575"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp" />
-
-        <!-- Participants -->
-        <TextView
-            android:id="@+id/event_participants"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#757575" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

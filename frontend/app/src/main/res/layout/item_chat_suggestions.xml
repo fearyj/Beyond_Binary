@@ -2,26 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="horizontal"
+    android:gravity="start|bottom"
+    android:paddingStart="12dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
-    <!-- AI Assistant Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🤖 AI Assistant"
-        android:textSize="12sp"
-        android:textColor="@color/text_secondary"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="4dp" />
+    <!-- Bot Avatar -->
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_bot_avatar"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp" />
 
     <!-- Suggestion Cards Container -->
     <LinearLayout
         android:id="@+id/suggestions_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginEnd="48dp" />
+        android:layout_weight="1"
+        android:orientation="vertical" />
 
 </LinearLayout>

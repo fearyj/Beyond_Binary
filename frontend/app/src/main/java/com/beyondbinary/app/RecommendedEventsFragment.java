@@ -21,6 +21,7 @@ import com.beyondbinary.app.api.EventsResponse;
 import com.beyondbinary.app.api.InteractionsResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.beyondbinary.app.data.database.AppDatabaseHelper;
+import com.beyondbinary.app.data.providers.HealthDataProvider;
 import com.beyondbinary.app.data.models.User;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -137,8 +138,16 @@ public class RecommendedEventsFragment extends Fragment {
         String bio = (user != null && user.getBio() != null) ? user.getBio() : "";
         Log.i(TAG, "rankWithAI: userId=" + userId + ", bio='" + bio + "', interactions=" + interactions.size());
 
+        // Fetch health data
+        HealthDataProvider.HealthData healthData = HealthDataProvider.getHealthData(requireContext());
+        String healthSummary = healthData.getSummary();
+        Log.i(TAG, "Health data:\n" + healthSummary);
+
         // Build prompt
         StringBuilder sb = new StringBuilder();
+
+        sb.append(healthSummary).append("\n");
+
         if (!bio.isEmpty()) {
             sb.append("User preferences: ").append(bio).append("\n\n");
         }
@@ -153,14 +162,9 @@ public class RecommendedEventsFragment extends Fragment {
             sb.append("\n");
         }
 
-        if (bio.isEmpty() && interactions.isEmpty()) {
-            Log.w(TAG, "rankWithAI: No bio and no interactions — showing default order");
-            showEvents(allEvents);
-            return;
-        }
-
-        sb.append("Recommend and rank these events. Prioritize events similar to past engagement, ");
-        sb.append("but also suggest new types based on their profile.\n");
+        sb.append("Recommend and rank these events. Prioritize events that help improve this user's health metrics ");
+        sb.append("(increase steps, active minutes, reduce stress, improve sleep) ");
+        sb.append("while also considering their preferences and past engagement.\n");
         sb.append("Return ONLY a comma-separated list of event IDs (most recommended first), nothing else.\n\n");
         sb.append("Events:\n");
 

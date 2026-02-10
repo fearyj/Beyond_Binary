@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -46,7 +45,7 @@ public class ChatbotFragment extends Fragment {
     private ChatbotAdapter adapter;
     private List<Message> messageList;
     private EditText messageInput;
-    private Button sendButton;
+    private View sendButton;
     private GenerativeModelFutures generativeModel;
     private List<String> conversationHistory;
 
@@ -83,7 +82,7 @@ public class ChatbotFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Add welcome message
-        addTextMessage("👋 Hi! I'm your Beyond Binary AI assistant. I can help you discover events, create new events, answer questions about activities, or chat about anything! Ask me about events and I'll search our database for you!", false);
+        addTextMessage("Hi there! I'm AuraAI, your Beyond Binary assistant. I can help you discover events, create new events, or chat about anything! Ask me about events and I'll search our database for you!", false);
 
         sendButton.setOnClickListener(v -> {
             String messageText = messageInput.getText().toString().trim();
@@ -107,7 +106,7 @@ public class ChatbotFragment extends Fragment {
         }
 
         // System prompt to determine intent and search for events
-        String systemPrompt = "You are a helpful AI assistant for Beyond Binary, a community app that helps people discover and join local events.\n\n" +
+        String systemPrompt = "You are AuraAI, a friendly AI assistant for Beyond Binary, a community app that helps people discover and join local events.\n\n" +
                 "IMPORTANT: Analyze the user's message and determine their intent.\n\n" +
                 "If the user wants to CREATE/HOST/ORGANIZE an event WITH a description (e.g., 'looking forward to a relaxing event for small group'):\n" +
                 "- Suggest 3 event types that match their description\n" +
