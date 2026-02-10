@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="teal_200">#03DAC5</color>
+
     <!-- Primary Brand Colors -->
     <color name="primary">#2196F3</color>
     <color name="primary_dark">#1976D2</color>
@@ -15,6 +20,8 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="text_hint">#9E9E9E</color>
+    <color name="card_text">#FFFFFF</color>
+    <color name="card_subtitle">#B0BEC5</color>
 
     <!-- Status Colors -->
     <color name="success">#4CAF50</color>
@@ -24,6 +31,7 @@
     <!-- UI Elements -->
     <color name="divider">#E0E0E0</color>
     <color name="overlay">#80000000</color>
+    <color name="overlay_bg">#CC000000</color>
 
     <!-- Map specific -->
     <color name="search_bar_background">#FFFFFF</color>

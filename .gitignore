@@ -1,11 +1,15 @@
 venv/
 
-# Copy folders
+# Copy folders and backups
 Beyond_Binary - Copy/
+frontend-backup/
 
-# API Keys and Secrets
+# API Keys and Secrets (CRITICAL - DO NOT COMMIT!)
 .env
 local.properties
+*.key
+*.pem
+google-services.json
 
 # Python
 __pycache__/
@@ -48,3 +52,8 @@ captures/
 
 # Logs
 *.log
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
