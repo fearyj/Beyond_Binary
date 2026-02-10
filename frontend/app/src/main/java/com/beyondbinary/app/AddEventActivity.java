@@ -361,7 +361,7 @@ public class AddEventActivity extends AppCompatActivity {
         btnCreateEvent.setEnabled(false);
         btnCreateEvent.setText("Creating...");
 
-        // Current participants defaults to 1
+        // Current participants starts at 1 (host counts as first participant)
         int currentParticipants = 1;
 
         // Geocode location to get coordinates

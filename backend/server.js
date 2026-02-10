@@ -509,7 +509,7 @@ app.get('/api/users/:userId/events', (req, res) => {
     const { userId } = req.params;
 
     db.all(
-        `SELECT DISTINCT e.*
+        `SELECT DISTINCT e.*, ui.interaction_type
          FROM user_interactions ui
          JOIN events e ON ui.event_id = e.id
          WHERE ui.user_id = ?

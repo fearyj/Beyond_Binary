@@ -3,8 +3,10 @@ package com.beyondbinary.app;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "events")
-public class Event {
+public class Event implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 

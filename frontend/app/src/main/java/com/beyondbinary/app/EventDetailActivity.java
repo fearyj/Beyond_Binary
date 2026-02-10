@@ -39,6 +39,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private Button attendedButton;
     private Button notAttendedButton;
     private Button leaveEventButton;
+    private android.widget.ImageButton shareButton;
 
     private int eventId;
     private Event event;
@@ -58,6 +59,7 @@ public class EventDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Initialize views
+        shareButton = findViewById(R.id.btn_share);
         titleText = findViewById(R.id.event_detail_title);
         typeText = findViewById(R.id.event_detail_type);
         locationText = findViewById(R.id.event_detail_location);
@@ -80,6 +82,7 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         // Setup button listeners
+        shareButton.setOnClickListener(v -> shareEvent());
         joinButton.setOnClickListener(v -> joinEvent());
         viewOnMapButton.setOnClickListener(v -> viewOnMap());
         attendedButton.setOnClickListener(v -> markAttendance(true));
@@ -196,6 +199,19 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    private void shareEvent() {
+        if (event == null) {
+            Toast.makeText(this, "Event details not loaded yet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Open share activity to select friends
+        Intent intent = new Intent(this, ShareEventActivity.class);
+        intent.putExtra("EVENT_ID", eventId);
+        intent.putExtra("EVENT", event);
+        startActivity(intent);
     }
 
     private void viewOnMap() {
