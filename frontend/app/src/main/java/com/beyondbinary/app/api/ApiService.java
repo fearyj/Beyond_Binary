@@ -2,7 +2,7 @@ package com.beyondbinary.app.api;
 
 import com.beyondbinary.app.Event;
 
-import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -15,6 +15,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+    // Event endpoints
     @GET("events")
     Call<EventsResponse> getAllEvents();
 
@@ -42,4 +43,21 @@ public interface ApiService {
 
     @GET("stats")
     Call<StatsResponse> getStatistics();
+
+    // User endpoints
+    @POST("users")
+    Call<CreateUserResponse> createUser(@Body Map<String, String> body);
+
+    @GET("users/{id}")
+    Call<UserResponse> getUser(@Path("id") int id);
+
+    @PUT("users/{id}")
+    Call<UserResponse> updateUser(@Path("id") int id, @Body Map<String, String> body);
+
+    // Interaction endpoints
+    @POST("interactions")
+    Call<CreateInteractionResponse> createInteraction(@Body Map<String, Object> body);
+
+    @GET("interactions/{userId}")
+    Call<InteractionsResponse> getUserInteractions(@Path("userId") int userId);
 }
