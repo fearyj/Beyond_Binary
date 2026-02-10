@@ -260,6 +260,11 @@ public class RegistrationFragment extends Fragment {
     private void syncUserToLocalDb(int userId, CreateUserResponse.UserData userData) {
         if (userData == null) return;
         AppDatabaseHelper dbHelper = AppDatabaseHelper.getInstance(requireContext());
+
+        // Preserve local-only fields (e.g. profile picture path)
+        com.beyondbinary.app.data.models.User existingUser = dbHelper.getUserById(userId);
+        String existingPicPath = (existingUser != null) ? existingUser.getProfilePicturePath() : null;
+
         com.beyondbinary.app.data.models.User localUser = new com.beyondbinary.app.data.models.User();
         localUser.setId(userId);
         localUser.setEmail(userData.getEmail());
@@ -269,6 +274,7 @@ public class RegistrationFragment extends Fragment {
         localUser.setDob(userData.getDob());
         localUser.setAddress(userData.getAddress());
         localUser.setCaption(userData.getCaption());
+        localUser.setProfilePicturePath(existingPicPath);
         dbHelper.insertUser(localUser);
     }
 

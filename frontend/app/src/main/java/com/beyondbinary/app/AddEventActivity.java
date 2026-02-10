@@ -97,6 +97,8 @@ public class AddEventActivity extends AppCompatActivity {
                 eventTypes
         );
         inputEventType.setAdapter(adapter);
+        inputEventType.setThreshold(0);
+        inputEventType.setOnClickListener(v -> inputEventType.showDropDown());
 
         // Setup date picker
         inputDate.setOnClickListener(v -> showDatePicker());

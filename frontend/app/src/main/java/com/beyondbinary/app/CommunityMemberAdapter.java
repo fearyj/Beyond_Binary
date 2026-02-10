@@ -4,7 +4,6 @@ import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,37 +39,42 @@ public class CommunityMemberAdapter extends RecyclerView.Adapter<CommunityMember
 
         holder.nameText.setText(member.getName());
 
-        // Show/hide status indicators
+        // Show/hide badge pills
         if (member.hasLowSocial()) {
             holder.lowSocialText.setVisibility(View.VISIBLE);
-            holder.lowSocialText.setText("📱 " + member.getLowSocial());
+            holder.lowSocialText.setText("\uD83E\uDEAB " + member.getLowSocial());
         } else {
             holder.lowSocialText.setVisibility(View.GONE);
         }
 
         if (member.hasLowPhysical()) {
             holder.lowPhysicalText.setVisibility(View.VISIBLE);
-            holder.lowPhysicalText.setText("🏃 " + member.getLowPhysical());
+            holder.lowPhysicalText.setText("\uD83C\uDF42 " + member.getLowPhysical());
         } else {
             holder.lowPhysicalText.setVisibility(View.GONE);
         }
 
-        // Update button state
+        // Hide divider on last item
+        if (position == members.size() - 1) {
+            holder.divider.setVisibility(View.GONE);
+        } else {
+            holder.divider.setVisibility(View.VISIBLE);
+        }
+
+        // Update invite button state
         if (member.isInvited()) {
             holder.inviteButton.setText("Invited");
-            holder.inviteButton.setEnabled(false);
-            holder.inviteButton.setAlpha(0.5f);
+            holder.inviteButton.setBackgroundResource(R.drawable.bg_invite_btn_invited);
+            holder.inviteButton.setAlpha(0.7f);
         } else {
             holder.inviteButton.setText("Invite");
-            holder.inviteButton.setEnabled(true);
+            holder.inviteButton.setBackgroundResource(R.drawable.bg_invite_btn);
             holder.inviteButton.setAlpha(1.0f);
         }
 
         holder.inviteButton.setOnClickListener(v -> {
             if (!member.isInvited()) {
-                // Play invite sound
                 playInviteSound(v);
-
                 member.setInvited(true);
                 notifyItemChanged(position);
                 if (listener != null) {
@@ -87,17 +91,12 @@ public class CommunityMemberAdapter extends RecyclerView.Adapter<CommunityMember
 
     private void playInviteSound(View view) {
         try {
-            // Play custom AirDrop sound
             MediaPlayer mediaPlayer = MediaPlayer.create(view.getContext(), R.raw.airdrop_sound);
-
             if (mediaPlayer != null) {
-                mediaPlayer.setOnCompletionListener(mp -> {
-                    mp.release();
-                });
+                mediaPlayer.setOnCompletionListener(MediaPlayer::release);
                 mediaPlayer.start();
             }
         } catch (Exception e) {
-            // Silently fail if sound cannot be played
             e.printStackTrace();
         }
     }
@@ -107,7 +106,8 @@ public class CommunityMemberAdapter extends RecyclerView.Adapter<CommunityMember
         TextView nameText;
         TextView lowSocialText;
         TextView lowPhysicalText;
-        Button inviteButton;
+        TextView inviteButton;
+        View divider;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -116,6 +116,7 @@ public class CommunityMemberAdapter extends RecyclerView.Adapter<CommunityMember
             lowSocialText = itemView.findViewById(R.id.low_social_text);
             lowPhysicalText = itemView.findViewById(R.id.low_physical_text);
             inviteButton = itemView.findViewById(R.id.invite_button);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

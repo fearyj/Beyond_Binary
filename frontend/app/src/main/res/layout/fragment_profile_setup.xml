@@ -37,6 +37,42 @@
             android:textColor="#828282"
             android:textSize="14sp" />
 
+        <!-- Profile Picture Picker -->
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/profile_image_picker"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_person"
+                android:scaleType="centerCrop"
+                android:background="@drawable/profile_circle_background"
+                android:padding="20dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_add_photo"
+                android:background="@drawable/bg_avatar_circle"
+                android:padding="4dp" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Add Photo"
+            android:textColor="#828282"
+            android:textSize="12sp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="24dp" />

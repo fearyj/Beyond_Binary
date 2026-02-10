@@ -13,6 +13,7 @@ public class User {
     private String dob;
     private String address;
     private String caption;
+    private String profilePicturePath;
 
     public User() {}
 
@@ -50,6 +51,9 @@ public class User {
 
     public String getCaption() { return caption; }
     public void setCaption(String caption) { this.caption = caption; }
+
+    public String getProfilePicturePath() { return profilePicturePath; }
+    public void setProfilePicturePath(String profilePicturePath) { this.profilePicturePath = profilePicturePath; }
 
     public List<String> getInterestTagsAsList() {
         if (interestTags == null || interestTags.isEmpty()) {

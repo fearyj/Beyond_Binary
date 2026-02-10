@@ -3,12 +3,16 @@ package com.beyondbinary.app.registration;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,9 +24,14 @@ import com.beyondbinary.app.api.UserResponse;
 import com.beyondbinary.app.data.database.AppDatabaseHelper;
 import com.beyondbinary.app.data.models.User;
 import com.beyondbinary.app.onboarding.OnboardingFragment;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -43,6 +52,30 @@ public class ProfileSetupFragment extends Fragment {
     private TextInputEditText inputAddress;
     private TextInputEditText inputCaption;
     private MaterialButton btnNext;
+    private ImageView profileImagePicker;
+    private String profilePicturePath;
+
+    private ActivityResultLauncher<String> imagePickerLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        profilePicturePath = copyImageToInternalStorage(uri);
+                        if (profilePicturePath != null) {
+                            Glide.with(this)
+                                    .load(new File(profilePicturePath))
+                                    .transform(new CircleCrop())
+                                    .into(profileImagePicker);
+                            profileImagePicker.setPadding(0, 0, 0, 0);
+                        }
+                    }
+                }
+        );
+    }
 
     @Nullable
     @Override
@@ -60,9 +93,32 @@ public class ProfileSetupFragment extends Fragment {
         inputAddress = view.findViewById(R.id.input_address);
         inputCaption = view.findViewById(R.id.input_caption);
         btnNext = view.findViewById(R.id.btn_next);
+        profileImagePicker = view.findViewById(R.id.profile_image_picker);
 
+        profileImagePicker.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
         inputDob.setOnClickListener(v -> showDatePicker());
         btnNext.setOnClickListener(v -> onNextClicked());
+    }
+
+    private String copyImageToInternalStorage(Uri uri) {
+        try {
+            File dir = new File(requireContext().getFilesDir(), "profile_photos");
+            if (!dir.exists()) dir.mkdirs();
+            File destFile = new File(dir, "profile_" + System.currentTimeMillis() + ".jpg");
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(destFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+            return destFile.getAbsolutePath();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private void showDatePicker() {
@@ -114,6 +170,9 @@ public class ProfileSetupFragment extends Fragment {
         user.setDob(dob);
         user.setAddress(address);
         user.setCaption(caption);
+        if (profilePicturePath != null) {
+            user.setProfilePicturePath(profilePicturePath);
+        }
         dbHelper.insertUser(user);
 
         // Save to backend

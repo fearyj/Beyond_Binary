@@ -75,6 +75,8 @@
                     android:textColor="#757575"
                     android:textSize="15sp"
                     android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true"
                     android:gravity="center_vertical" />
 
             </LinearLayout>

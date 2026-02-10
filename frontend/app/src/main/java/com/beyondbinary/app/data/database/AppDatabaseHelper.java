@@ -11,7 +11,7 @@ import com.beyondbinary.app.data.models.User;
 public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "beyondbinary.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static AppDatabaseHelper instance;
 
@@ -36,14 +36,19 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 "username TEXT, " +
                 "dob TEXT, " +
                 "address TEXT, " +
-                "caption TEXT)");
+                "caption TEXT, " +
+                "profile_picture_path TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS events");
-        db.execSQL("DROP TABLE IF EXISTS users");
-        onCreate(db);
+        if (oldVersion < 5) {
+            try {
+                db.execSQL("ALTER TABLE users ADD COLUMN profile_picture_path TEXT");
+            } catch (Exception e) {
+                // Column may already exist
+            }
+        }
     }
 
     public long insertUser(User user) {
@@ -57,6 +62,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         values.put("dob", user.getDob());
         values.put("address", user.getAddress());
         values.put("caption", user.getCaption());
+        values.put("profile_picture_path", user.getProfilePicturePath());
         return db.insertWithOnConflict("users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -74,6 +80,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             user.setDob(cursor.getString(cursor.getColumnIndexOrThrow("dob")));
             user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
             user.setCaption(cursor.getString(cursor.getColumnIndexOrThrow("caption")));
+            user.setProfilePicturePath(cursor.getString(cursor.getColumnIndexOrThrow("profile_picture_path")));
         }
         cursor.close();
         return user;

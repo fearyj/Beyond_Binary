@@ -2,7 +2,7 @@ package com.beyondbinary.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +16,6 @@ public class EventCreatedActivity extends AppCompatActivity {
     private RecyclerView communityRecyclerView;
     private CommunityMemberAdapter adapter;
     private List<CommunityMember> communityMembers;
-    private Button doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,30 +23,38 @@ public class EventCreatedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_created);
 
         communityRecyclerView = findViewById(R.id.community_recycler_view);
-        doneButton = findViewById(R.id.done_button);
+        View doneButton = findViewById(R.id.done_button);
+        View closeButton = findViewById(R.id.btn_close_community);
 
         communityRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Hardcoded community members for demonstration
+        // Hardcoded community members
         communityMembers = new ArrayList<>();
-        communityMembers.add(new CommunityMember("Niko Castillo", "Low Social", "", "https://placeholder.com/user1"));
-        communityMembers.add(new CommunityMember("Jasper Flores", "", "Low Physical", "https://placeholder.com/user2"));
-        communityMembers.add(new CommunityMember("Jeremiah Pennington", "Low Social", "Low Physical", "https://placeholder.com/user3"));
-        communityMembers.add(new CommunityMember("Eileen Bridges", "", "Low Physical", "https://placeholder.com/user4"));
-        communityMembers.add(new CommunityMember("Sarah James", "Low Social", "", "https://placeholder.com/user5"));
-        communityMembers.add(new CommunityMember("Patrick Calhoun", "Low Social", "Low Physical", "https://placeholder.com/user6"));
-        communityMembers.add(new CommunityMember("Melissa Casey", "Low Social", "", "https://placeholder.com/user7"));
-        communityMembers.add(new CommunityMember("Celeste Floyd", "", "Low Physical", "https://placeholder.com/user8"));
+        communityMembers.add(new CommunityMember("Niko Castillo", "Low Social", "", ""));
+        communityMembers.add(new CommunityMember("Jasper Flores", "", "Low Physical", ""));
+        communityMembers.add(new CommunityMember("Jeremiah Pennington", "Low Social", "Low Physical", ""));
+        communityMembers.add(new CommunityMember("Eileen Bridges", "", "Low Physical", ""));
+        communityMembers.add(new CommunityMember("Sarah James", "Low Social", "", ""));
+        communityMembers.add(new CommunityMember("Patrick Calhoun", "Low Social", "Low Physical", ""));
+        communityMembers.add(new CommunityMember("Melissa Casey", "Low Social", "", ""));
+        communityMembers.add(new CommunityMember("Celeste Floyd", "Low Social", "", ""));
 
         adapter = new CommunityMemberAdapter(communityMembers, member -> {
-            // Handle invite click
-            // TODO: Implement invite functionality
+            // Invite click handled in adapter
         });
 
         communityRecyclerView.setAdapter(adapter);
 
-        // Done button click listener
+        // Done button → go home
         doneButton.setOnClickListener(v -> {
+            Intent intent = new Intent(EventCreatedActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
+
+        // Close button → also go home
+        closeButton.setOnClickListener(v -> {
             Intent intent = new Intent(EventCreatedActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

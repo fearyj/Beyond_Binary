@@ -1,12 +1,17 @@
 package com.beyondbinary.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.beyondbinary.app.api.ApiService;
@@ -15,8 +20,12 @@ import com.beyondbinary.app.api.DeleteEventResponse;
 import com.beyondbinary.app.api.EventResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.beyondbinary.app.api.UpdateEventResponse;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,10 +53,15 @@ public class EventDetailActivity extends AppCompatActivity {
     private View joinInviteRow;
     private ImageView shareButton;
     private ImageView backButton;
+    private LinearLayout eventPhotoContainer;
+    private ImageView eventPhoto;
+    private View uploadPromptOverlay;
+    private View btnUploadPhoto;
 
     private int eventId;
     private Event event;
     private boolean userHasJoined = false;
+    private ActivityResultLauncher<String> eventPhotoPickerLauncher;
 
     // Emoji mapping for event types
     private static final java.util.Map<String, String> EVENT_EMOJIS = new HashMap<>();
@@ -89,6 +103,21 @@ public class EventDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Register photo picker before setContentView
+        eventPhotoPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        String path = copyEventPhotoToInternalStorage(uri);
+                        if (path != null) {
+                            saveEventPhotoPath(path);
+                            displayEventPhoto(path);
+                        }
+                    }
+                }
+        );
+
         setContentView(R.layout.activity_event_detail);
 
         // Get event ID from intent
@@ -114,6 +143,24 @@ public class EventDetailActivity extends AppCompatActivity {
         attendedButton = findViewById(R.id.btn_attended);
         notAttendedButton = findViewById(R.id.btn_not_attended);
         leaveEventButton = findViewById(R.id.btn_leave_event);
+        eventPhotoContainer = findViewById(R.id.event_photo_container);
+        eventPhoto = findViewById(R.id.event_photo);
+        uploadPromptOverlay = findViewById(R.id.upload_prompt_overlay);
+        btnUploadPhoto = findViewById(R.id.btn_upload_photo);
+
+        btnUploadPhoto.setOnClickListener(v -> {
+            uploadPromptOverlay.setVisibility(View.GONE);
+            eventPhotoPickerLauncher.launch("image/*");
+        });
+
+        // Dismiss overlay when tapping outside
+        uploadPromptOverlay.setOnClickListener(v -> uploadPromptOverlay.setVisibility(View.GONE));
+
+        // Check for existing event photo
+        String existingPhotoPath = getEventPhotoPath();
+        if (existingPhotoPath != null) {
+            displayEventPhoto(existingPhotoPath);
+        }
 
         // Load event details
         if (eventId != -1) {
@@ -294,8 +341,24 @@ public class EventDetailActivity extends AppCompatActivity {
     }
 
     private void markAttendance(boolean attended) {
-        android.content.SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
         int userId = prefs.getInt("user_id", -1);
+
+        // Immediately update UI
+        if (attended) {
+            attendedButton.setEnabled(false);
+            notAttendedButton.setEnabled(true);
+            attendedButton.setAlpha(0.5f);
+            notAttendedButton.setAlpha(1.0f);
+
+            // Show upload prompt overlay immediately
+            uploadPromptOverlay.setVisibility(View.VISIBLE);
+        } else {
+            attendedButton.setEnabled(true);
+            notAttendedButton.setEnabled(false);
+            attendedButton.setAlpha(1.0f);
+            notAttendedButton.setAlpha(0.5f);
+        }
 
         if (userId != -1) {
             ApiService apiService = RetrofitClient.getApiService();
@@ -309,18 +372,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void onResponse(Call<CreateInteractionResponse> call, Response<CreateInteractionResponse> response) {
                     String message = attended ? "Marked as Attended" : "Marked as Not Attended";
                     Toast.makeText(EventDetailActivity.this, message, Toast.LENGTH_SHORT).show();
-
-                    if (attended) {
-                        attendedButton.setEnabled(false);
-                        notAttendedButton.setEnabled(true);
-                        attendedButton.setAlpha(0.5f);
-                        notAttendedButton.setAlpha(1.0f);
-                    } else {
-                        attendedButton.setEnabled(true);
-                        notAttendedButton.setEnabled(false);
-                        attendedButton.setAlpha(1.0f);
-                        notAttendedButton.setAlpha(0.5f);
-                    }
                 }
                 @Override
                 public void onFailure(Call<CreateInteractionResponse> call, Throwable t) {
@@ -328,6 +379,51 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private String copyEventPhotoToInternalStorage(Uri uri) {
+        try {
+            File dir = new File(getFilesDir(), "event_photos");
+            if (!dir.exists()) dir.mkdirs();
+            File destFile = new File(dir, "event_" + eventId + "_" + System.currentTimeMillis() + ".jpg");
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(destFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+            return destFile.getAbsolutePath();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    private void saveEventPhotoPath(String path) {
+        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+        prefs.edit().putString("event_photo_" + userId + "_" + eventId, path).apply();
+    }
+
+    private String getEventPhotoPath() {
+        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+        String path = prefs.getString("event_photo_" + userId + "_" + eventId, null);
+        if (path != null && new File(path).exists()) {
+            return path;
+        }
+        return null;
+    }
+
+    private void displayEventPhoto(String path) {
+        eventPhotoContainer.setVisibility(View.VISIBLE);
+        Glide.with(this)
+                .load(new File(path))
+                .centerCrop()
+                .into(eventPhoto);
     }
 
     private void leaveEvent() {
