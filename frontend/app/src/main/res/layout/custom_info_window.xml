@@ -3,159 +3,133 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minWidth="280dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="#00000000">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="8dp">
 
-        <!-- Emoji and Title Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+        <!-- Emoji Box on Left (60x60dp) -->
+        <FrameLayout
+            android:id="@+id/emoji_container"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/bg_emoji_box_chat">
 
             <TextView
                 android:id="@+id/info_emoji"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="🎉"
-                android:textSize="32sp"
-                android:layout_marginEnd="12dp" />
+                android:textSize="36sp" />
 
+        </FrameLayout>
+
+        <!-- Content on Right (gap-4 = 16dp margin) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/emoji_container"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            android:paddingTop="2dp">
+
+            <!-- Title (font-bold, 12px) -->
             <TextView
                 android:id="@+id/info_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Event Title"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#212121"
-                android:maxLines="2"
-                android:ellipsize="end" />
-
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Location -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📍"
-                android:textSize="16sp"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/info_location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Location"
-                android:textSize="14sp"
-                android:textColor="#616161"
+                android:text="Event Title"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
-        </LinearLayout>
-
-        <!-- Time -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🕐"
-                android:textSize="16sp"
-                android:layout_marginEnd="8dp" />
-
+            <!-- Date (font-medium, 9px) -->
             <TextView
                 android:id="@+id/info_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Time"
-                android:textSize="14sp"
-                android:textColor="#616161"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-        </LinearLayout>
-
-        <!-- Participants -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👥"
-                android:textSize="16sp"
-                android:layout_marginEnd="8dp" />
+                android:text="Time"
+                android:textSize="9sp"
+                android:textStyle="normal"
+                android:textColor="#000000"
+                android:maxLines="1"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end" />
 
+            <!-- Address (font-medium, 9px) -->
             <TextView
-                android:id="@+id/info_participants"
-                android:layout_width="0dp"
+                android:id="@+id/info_location"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0/10 participants"
-                android:textSize="14sp"
-                android:textColor="#616161" />
+                android:text="Location"
+                android:textSize="9sp"
+                android:textStyle="normal"
+                android:textColor="#000000"
+                android:maxLines="1"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end" />
+
+            <!-- Participants and Details Button in horizontal layout -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="1dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/info_participants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0/10 participants"
+                    android:textSize="9sp"
+                    android:textStyle="normal"
+                    android:textColor="#000000"
+                    android:maxLines="1" />
+
+                <Space
+                    android:layout_width="15dp"
+                    android:layout_height="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/info_details_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Details"
+                    android:textSize="7sp"
+                    android:textStyle="normal"
+                    android:textAllCaps="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    app:cornerRadius="6dp"
+                    app:backgroundTint="#000000"
+                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Description -->
+        <!-- Hidden description field (not shown in popup design) -->
         <TextView
             android:id="@+id/info_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Event description goes here..."
-            android:textSize="13sp"
-            android:textColor="#757575"
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:layout_marginTop="4dp" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
-        <!-- Tap hint -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tap to view details"
-            android:textSize="11sp"
-            android:textColor="#2196F3"
-            android:textStyle="italic"
-            android:gravity="end"
-            android:layout_marginTop="8dp" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

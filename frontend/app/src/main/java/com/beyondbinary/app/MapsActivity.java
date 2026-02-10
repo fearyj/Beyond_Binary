@@ -184,7 +184,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchButton = findViewById(R.id.search_button);
         showAllButton = findViewById(R.id.show_all_button);
 
-        // Set up search button click listener
+        // Set up search on IME action (when user presses enter/search on keyboard)
+        searchLocationInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH ||
+                (event != null && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER)) {
+                searchLocation();
+                // Hide keyboard
+                android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                return true;
+            }
+            return false;
+        });
+
+        // Set up search button click listener (hidden button, kept for compatibility)
         searchButton.setOnClickListener(v -> searchLocation());
 
         // Set up show all button click listener
@@ -223,6 +239,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Set custom info window adapter
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+
+        // Set up marker click listener to show info window on SINGLE click
+        mMap.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow();
+            return true; // Consume the event
+        });
 
         // Set up info window click listener to view event details
         mMap.setOnInfoWindowClickListener(marker -> {
@@ -359,7 +381,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(position)
                 .title(event.getTitle())
-                .icon(icon));
+                .icon(icon)
+                .infoWindowAnchor(0.5f, 0.9f)); // Position info window closer to marker
 
         // Store event reference for info window
         if (marker != null) {
@@ -379,7 +402,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Create a custom marker icon with emoji
      */
     private BitmapDescriptor createEmojiMarkerIcon(String emoji) {
-        int size = 120;
+        int size = 100;
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
@@ -388,19 +411,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         backgroundPaint.setColor(Color.WHITE);
         backgroundPaint.setStyle(Paint.Style.FILL);
         backgroundPaint.setAntiAlias(true);
-        canvas.drawCircle(size / 2f, size / 2f, size / 2f - 5, backgroundPaint);
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f - 3, backgroundPaint);
 
-        // Draw border
+        // Draw subtle border
         Paint borderPaint = new Paint();
-        borderPaint.setColor(Color.parseColor("#4285F4")); // Google blue
+        borderPaint.setColor(Color.parseColor("#E0E0E0"));
         borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(6);
+        borderPaint.setStrokeWidth(2);
         borderPaint.setAntiAlias(true);
-        canvas.drawCircle(size / 2f, size / 2f, size / 2f - 5, borderPaint);
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f - 3, borderPaint);
 
         // Draw emoji
         Paint textPaint = new Paint();
-        textPaint.setTextSize(60);
+        textPaint.setTextSize(50);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTypeface(Typeface.DEFAULT);
         textPaint.setAntiAlias(true);
@@ -441,7 +464,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             TextView locationView = view.findViewById(R.id.info_location);
             TextView timeView = view.findViewById(R.id.info_time);
             TextView participantsView = view.findViewById(R.id.info_participants);
-            TextView descriptionView = view.findViewById(R.id.info_description);
 
             emojiView.setText(emoji);
             titleView.setText(event.getTitle());
@@ -449,7 +471,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             timeView.setText(event.getTime());
             participantsView.setText(event.getCurrentParticipants() + "/" +
                     event.getMaxParticipants() + " participants");
-            descriptionView.setText(event.getDescription());
+
+            // Note: Description is hidden in new design, Details button opens EventDetailActivity
+            // The button is visual only - clicking anywhere on info window opens details
 
             return view;
         }
