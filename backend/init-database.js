@@ -240,7 +240,7 @@ const singaporeEvents = [
 console.log('🗄️  Initializing Beyond Binary Database...\n');
 
 db.serialize(() => {
-    // Create table
+    // Create tables
     console.log('Creating events table...');
     db.run(`
         CREATE TABLE IF NOT EXISTS events (
@@ -254,7 +254,32 @@ db.serialize(() => {
             eventType TEXT NOT NULL,
             latitude REAL,
             longitude REAL,
+            creatorUserId INTEGER,
             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    console.log('Creating users table...');
+    db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            bio TEXT,
+            interest_tags TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    console.log('Creating user_interactions table...');
+    db.run(`
+        CREATE TABLE IF NOT EXISTS user_interactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            event_id INTEGER NOT NULL,
+            interaction_type TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (event_id) REFERENCES events(id)
         )
     `);
 
