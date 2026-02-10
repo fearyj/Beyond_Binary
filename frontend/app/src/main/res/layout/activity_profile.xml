@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary"
-            app:title="Community"
+            app:title="Profile"
             app:titleTextColor="#FFFFFF"
             app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel" />
 

@@ -3,13 +3,12 @@ package com.beyondbinary.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.beyondbinary.app.chatbot.ChatbotFragment;
 import com.beyondbinary.app.onboarding.OnboardingFragment;
+import com.beyondbinary.app.registration.RegistrationFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,16 +21,24 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Check if we should open the chatbot directly
         boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
             SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+            int userId = prefs.getInt("user_id", -1);
             onboardingDone = prefs.getBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, false);
 
-            if (!onboardingDone) {
+            if (userId == -1) {
+                // No user registered — show registration
+                bottomNav.setVisibility(android.view.View.GONE);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new RegistrationFragment())
+                        .commit();
+            } else if (!onboardingDone) {
+                // User registered but hasn't completed onboarding
                 bottomNav.setVisibility(android.view.View.GONE);
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -52,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigation();
 
-        // Set the correct bottom nav selection based on intent
         if (onboardingDone && openChatbot) {
             bottomNav.setSelectedItemId(R.id.nav_chatbot);
         }
@@ -100,12 +106,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Re-select home when returning to MainActivity (unless opening chatbot from intent)
         boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         if (bottomNav != null && onboardingDone && !openChatbot) {
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
-
 }

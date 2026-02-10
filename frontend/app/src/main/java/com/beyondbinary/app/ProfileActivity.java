@@ -1,7 +1,9 @@
 package com.beyondbinary.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -29,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Community");
+            getSupportActionBar().setTitle("Profile");
         }
 
         // Setup tabs
@@ -113,11 +115,33 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if (item.getItemId() == R.id.action_sign_out) {
+            signOut();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void signOut() {
+        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        prefs.edit()
+                .putInt("user_id", -1)
+                .putBoolean("onboarding_completed", false)
+                .apply();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
