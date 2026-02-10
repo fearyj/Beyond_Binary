@@ -83,7 +83,7 @@ public class ChatbotFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Add welcome message
-        addTextMessage("👋 Hi! I'm your Beyond Binary AI assistant. I can help you discover events, answer questions about activities, or chat about anything! Ask me about events and I'll search our database for you!", false);
+        addTextMessage("👋 Hi! I'm your Beyond Binary AI assistant. I can help you discover events, create new events, answer questions about activities, or chat about anything! Ask me about events and I'll search our database for you!", false);
 
         sendButton.setOnClickListener(v -> {
             String messageText = messageInput.getText().toString().trim();
