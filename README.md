@@ -1,6 +1,6 @@
 # Beyond Binary
 
-A community-driven Android application that helps isolated individuals connect through AI-powered event recommendations, interactive maps, and engaging video content.
+A community-driven Android application that helps isolated individuals connect through AI-powered event recommendations, interactive maps, and personalized event discovery.
 
 ## 🎯 Mission
 
@@ -8,16 +8,26 @@ Beyond Binary creates a platform where people can discover events through person
 
 ## ✨ Features
 
-### 🎥 AI-Powered Video Feed (For You Page)
-- **Personalized & Recommended Tabs**: Swipe between curated content streams
+### 🏠 Event Discovery Home
+- **Personalized & Recommended Tabs**: Swipe between curated event feeds
 - **Google Gemini AI Integration**: Intelligent event ranking based on your profile
-- **Health Data Integration**: Recommendations tailored to your activity levels
-- **ExoPlayer Video Playback**: Smooth, fullscreen video experiences
-- **20+ Seeded Events**: Pre-loaded mock events for testing
+- **Clean List Interface**: Browse events with titles, locations, times, and participant counts
+- **Event Detail View**: Tap any event to see full details, join, or view on map
+- **Quick Event Creation**: Floating Action Button for instant event creation
+- **Bottom Navigation**: Consistent navigation across all screens
+
+### 📋 Event Detail Page
+- **Full Event Information**: Complete details including description, time, location, participants
+- **Join Events**: One-tap joining with real-time participant tracking
+- **Map Integration**: "View on Map" button with auto-zoom to event location
+- **Event Type Badges**: Visual category indicators
+- **Bottom Navigation**: Navigate anywhere without going back
 
 ### 🗺️ Interactive Event Map
 - **Google Maps Integration**: Explore events on an interactive map
-- **Custom Markers**: Visual event type indicators
+- **Custom Emoji Markers**: Visual event type indicators (⚽🏀🎾☕🍣🎨📚)
+- **Tap to View Details**: Click map markers to navigate to full event details
+- **Auto-Zoom Feature**: Navigate from event details to see exact location
 - **70+ Event Categories** including:
   - 🏀 Sports: Soccer, Basketball, Yoga, Running, Tennis
   - 🥾 Outdoor: Hiking, Camping, Rock Climbing, Beach activities
@@ -25,20 +35,24 @@ Beyond Binary creates a platform where people can discover events through person
   - 🍣 Dining: Sushi, BBQ, Pizza, Wine Tasting, Cooking Classes
   - 🎨 Arts: Painting, Photography, Museum visits, Theater
   - 📚 Learning: Book Clubs, Language Exchange, Workshops
-- **Real-time Event Details**: View participant count, time, location
+- **Real-time Event Details**: View participant count, time, location in info windows
 - **Address Geocoding**: Automatic address-to-coordinate conversion
+- **Location Search**: Find events near specific locations
 
 ### ➕ Event Creation
 - **Easy Event Posting**: Create events with title, location, time, description
 - **Category Selection**: Choose from 70+ specific event types
+- **Date & Time Pickers**: Intuitive date/time selection
 - **Participant Management**: Set and track participant limits
 - **Backend Integration**: Events synced to SQLite database
+- **Form Validation**: Ensures all required fields are filled
 
 ### 👥 Community Profile
 - **Instagram-Style Design**: Clean, modern profile interface
-- **User Stats**: Track events attended and friend connections
+- **User Stats**: Track events attended, events hosted, and friend connections
 - **Events Photos Tab**: View photos from attended events
 - **Community Tab**: Social features and connections
+- **Profile Editing**: Customize your profile
 
 ### 🤖 AI Chatbot (Coming Soon)
 - Smart event recommendations and queries
@@ -49,11 +63,12 @@ Beyond Binary creates a platform where people can discover events through person
 - **Java** with Android SDK
 - **Google Maps API** - Interactive map visualization
 - **Google Gemini 2.0 Flash** - AI-powered event ranking
-- **ExoPlayer** - High-quality video playback
 - **Room Database** - Local data persistence
 - **Retrofit** - REST API communication
 - **Material Design 3** - Modern UI components
 - **ViewPager2** - Swipeable content tabs
+- **RecyclerView** - Efficient list rendering
+- **CoordinatorLayout** - Advanced UI behaviors
 
 ### Backend (Node.js)
 - **Express.js** - REST API server
@@ -71,7 +86,7 @@ Beyond Binary creates a platform where people can discover events through person
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/fearyj/Beyond_Binary.git
 cd Beyond_Binary
 ```
 
@@ -176,31 +191,45 @@ Beyond_Binary/
 │   ├── app/
 │   │   ├── src/main/
 │   │   │   ├── java/com/beyondbinary/app/
-│   │   │   │   ├── MainActivity.java           # Main entry point with bottom nav
+│   │   │   │   ├── MainActivity.java           # Main entry with bottom nav
+│   │   │   │   ├── HomeFragment.java           # Event discovery with tabs
+│   │   │   │   ├── EventListFragment.java      # Personalized events list
+│   │   │   │   ├── RecommendedEventsFragment.java  # Recommended events
+│   │   │   │   ├── EventDetailActivity.java    # Full event details page
+│   │   │   │   ├── EventListAdapter.java       # RecyclerView adapter
+│   │   │   │   ├── HomePagerAdapter.java       # Tab management
 │   │   │   │   ├── MapsActivity.java           # Interactive event map
 │   │   │   │   ├── AddEventActivity.java       # Create new events
 │   │   │   │   ├── ProfileActivity.java        # User profile/community
-│   │   │   │   ├── fyp/                         # For You Page (video feed)
-│   │   │   │   │   ├── FypFragment.java
-│   │   │   │   │   ├── PersonalizedFragment.java
-│   │   │   │   │   ├── RecommendedFragment.java
-│   │   │   │   │   └── ExoPlayerManager.java
 │   │   │   │   ├── agents/
 │   │   │   │   │   └── EventRankingAgent.java  # Gemini AI integration
 │   │   │   │   ├── api/                         # Backend API clients
+│   │   │   │   │   ├── ApiService.java
+│   │   │   │   │   ├── RetrofitClient.java
+│   │   │   │   │   └── *Response.java
 │   │   │   │   ├── data/                        # Data models & providers
-│   │   │   │   └── ...
-│   │   │   └── res/                             # UI layouts, drawables, etc.
-│   │   └── build.gradle                         # Dependencies configuration
+│   │   │   │   ├── Event.java                   # Event model
+│   │   │   │   ├── EventDao.java                # Room DAO
+│   │   │   │   └── EventDatabase.java           # Room database
+│   │   │   └── res/                             # UI layouts, drawables
+│   │   │       ├── layout/
+│   │   │       │   ├── activity_main.xml
+│   │   │       │   ├── fragment_home_with_tabs.xml
+│   │   │       │   ├── activity_event_detail.xml
+│   │   │       │   ├── fragment_event_list.xml
+│   │   │       │   ├── item_event_list.xml
+│   │   │       │   └── ...
+│   │   │       └── ...
+│   │   └── build.gradle                         # Dependencies
 │   └── local.properties                         # API keys (gitignored)
 │
 ├── backend/                            # Node.js REST API
 │   ├── server.js                       # Express server
 │   ├── init-database.js                # Database seeder
 │   ├── database/
-│   │   └── events.db                   # SQLite database
+│   │   └── events.db                   # SQLite database (gitignored)
 │   ├── package.json                    # Node dependencies
-│   └── .env                            # Environment variables (gitignored)
+│   └── .env                            # Environment vars (gitignored)
 │
 └── README.md                           # This file
 ```
@@ -223,25 +252,34 @@ NODE_ENV=development
 
 ## 🎮 How to Use
 
-### 1. Home - For You Page
-- Swipe between **Personalized** and **Recommended** tabs
-- Videos are ranked by Gemini AI based on your profile
-- Tap anywhere to pause/play
+### 1. Home - Event Discovery
+- Browse events in **Personalized** and **Recommended** tabs
+- Tap any event card to view full details
+- Use the floating "+" button to quickly create events
 - Bottom navigation always accessible
 
-### 2. Map View
-- Explore events on interactive Google Maps
-- Tap markers to see event details
-- Click "Join" to increase participant count
+### 2. Event Details
+- View complete event information
+- Tap **Join Event** to participate
+- Tap **View on Map** to see exact location
+- Navigate using bottom navigation bar
 
-### 3. Add Event
+### 3. Map View
+- Explore events on interactive Google Maps
+- Tap emoji markers to see event info windows
+- Tap info windows to view full event details
+- Auto-zooms when navigating from event details
+- Search for events near specific locations
+
+### 4. Add Event
 - Fill in event details (title, location, description, time)
-- Select event category
+- Select event category from dropdown
+- Choose date and time with pickers
 - Set participant limits
 - Submit to backend database
 
-### 4. Profile/Community
-- View your stats (events attended, friends)
+### 5. Profile/Community
+- View your stats (events attended, events hosted, friends)
 - Browse **Events Photos** tab
 - Explore **Community** connections
 
@@ -255,14 +293,15 @@ The backend runs on `http://localhost:3000` (maps to `http://10.0.2.2:3000` in A
 - `GET /api/events/:id` - Get specific event
 - `PUT /api/events/:id` - Update event
 - `DELETE /api/events/:id` - Delete event
+- `GET /api/events/nearby` - Find events near location
 - `GET /api/stats` - Get system statistics
 
 ### Mock Data
 The app includes:
-- 20 pre-seeded events in the database
-- Mock health data from JSON files
+- 20+ pre-seeded events in the database
+- Mock health data for AI ranking
 - Sample user profiles
-- Test video URLs for the feed
+- Various event categories and types
 
 ## 🐛 Troubleshooting
 
@@ -281,16 +320,21 @@ The app includes:
 - Check it's on port 3000
 - For emulator, use `10.0.2.2:3000` not `localhost:3000`
 
-### Video Feed Not Playing
-- Check `geminiApiKey` in `local.properties`
-- Verify internet connection for video URLs
-- Check ExoPlayer dependencies in `build.gradle`
+### Events Not Loading
+- Verify backend is running and database is initialized
+- Check Retrofit API configuration in `RetrofitClient.java`
+- Check Android logs for API errors
+
+### UI Elements Cut Off (Pixel 9)
+- The app uses `fitsSystemWindows="true"` for proper spacing
+- Should work correctly on devices with notches/punch holes
 
 ## 🔐 Security Notes
 
 **Never commit these files:**
 - `frontend/local.properties` - Contains API keys
 - `backend/.env` - Contains secrets
+- `backend/database/events.db` - Database file
 - `backend/node_modules/` - Large dependencies
 - `frontend/build/` - Build artifacts
 
@@ -312,9 +356,9 @@ The APK will be in: `frontend/app/build/outputs/apk/release/`
 {
   "id": 1,
   "title": "Morning Yoga at Marina Bay",
-  "location": "Marina Bay Sands",
+  "location": "Marina Bay Sands, Singapore",
   "description": "Relaxing yoga session with sea views",
-  "time": "2024-02-15 08:00",
+  "time": "Thu, Feb 15, 2024 • 8:00 AM - 9:30 AM",
   "currentParticipants": 5,
   "maxParticipants": 20,
   "eventType": "Yoga",
@@ -322,6 +366,48 @@ The APK will be in: `frontend/app/build/outputs/apk/release/`
   "longitude": 103.8607
 }
 ```
+
+### Create Event Request
+```json
+{
+  "title": "Event Title",
+  "location": "Location Name",
+  "description": "Event description",
+  "time": "Formatted time string",
+  "currentParticipants": 1,
+  "maxParticipants": 20,
+  "eventType": "Soccer",
+  "latitude": 1.2834,
+  "longitude": 103.8607
+}
+```
+
+## 📱 App Navigation Flow
+
+```
+MainActivity (Home)
+├── HomeFragment (with tabs)
+│   ├── EventListFragment (Personalized)
+│   │   └── EventDetailActivity → MapsActivity
+│   └── RecommendedEventsFragment
+│       └── EventDetailActivity → MapsActivity
+├── MapsActivity
+│   └── Marker click → EventDetailActivity
+├── AddEventActivity
+├── ProfileActivity
+└── AI Chatbot (Coming Soon)
+```
+
+## 🎨 UI/UX Features
+
+- **Material Design 3**: Modern, clean interface
+- **Bottom Navigation**: Persistent navigation across all screens
+- **Floating Action Button**: Quick access to event creation
+- **RecyclerView**: Smooth, efficient scrolling
+- **Tab Layout**: Easy switching between event feeds
+- **Custom Info Windows**: Rich map marker details
+- **Responsive Layouts**: Works on all screen sizes
+- **System Insets**: Proper handling of notches and navigation bars
 
 ## 🤝 Contributing
 
