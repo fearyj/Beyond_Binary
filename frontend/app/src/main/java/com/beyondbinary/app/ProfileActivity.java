@@ -86,7 +86,10 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
 
             } else if (itemId == R.id.nav_chatbot) {
-                Toast.makeText(this, "AI Chatbot - Coming Soon!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_CHATBOT", true);
+                startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_add_event) {

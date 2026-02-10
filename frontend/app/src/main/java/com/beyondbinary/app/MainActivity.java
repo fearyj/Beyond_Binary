@@ -14,38 +14,55 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean onboardingDone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+        // Check if we should open the chatbot directly
+        boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
             SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
-            boolean onboardingDone = prefs.getBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, false);
+            onboardingDone = prefs.getBoolean(OnboardingFragment.KEY_ONBOARDING_COMPLETED, false);
 
-            if (onboardingDone) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
-                        .commit();
-            } else {
+            if (!onboardingDone) {
                 bottomNav.setVisibility(android.view.View.GONE);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, new OnboardingFragment())
                         .commit();
+            } else if (openChatbot) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new ChatbotFragment())
+                        .commit();
+            } else {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
             }
         }
 
         setupBottomNavigation();
+
+        // Set the correct bottom nav selection based on intent
+        if (onboardingDone && openChatbot) {
+            bottomNav.setSelectedItemId(R.id.nav_chatbot);
+        }
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_home);
+        if (onboardingDone) {
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
 
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -83,9 +100,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Re-select home when returning to MainActivity
+        // Re-select home when returning to MainActivity (unless opening chatbot from intent)
+        boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        if (bottomNav != null) {
+        if (bottomNav != null && onboardingDone && !openChatbot) {
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
