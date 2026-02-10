@@ -14,26 +14,68 @@
         android:orientation="vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:paddingTop="24dp"
+        android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:background="@color/primary">
+        android:background="@color/white">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Search Bar with Message Icon -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Discover Events"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/white" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Find activities near you"
-            android:textSize="14sp"
-            android:textColor="@color/white"
-            android:alpha="0.9"
-            android:layout_marginTop="4dp" />
+            <!-- Search Bar -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔍"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/search_hint"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Search"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Message Icon -->
+            <ImageView
+                android:id="@+id/message_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:padding="12dp"
+                android:src="@android:drawable/ic_dialog_email"
+                android:tint="@color/text_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Messages" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

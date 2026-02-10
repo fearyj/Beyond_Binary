@@ -53,6 +53,13 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+        // Setup message icon click listener
+        View messageIcon = view.findViewById(R.id.message_icon);
+        messageIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MessagesActivity.class);
+            startActivity(intent);
+        });
+
         return view;
     }
 }

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.beyondbinary.app.utils.EventCategoryHelper;
+
 import java.util.List;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.EventViewHolder> {
@@ -44,29 +46,77 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     }
 
     static class EventViewHolder extends RecyclerView.ViewHolder {
+        private TextView emojiText;
         private TextView titleText;
+        private TextView categoryText;
+        private TextView dateText;
         private TextView locationText;
-        private TextView typeText;
         private TextView timeText;
-        private TextView participantsText;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
+            emojiText = itemView.findViewById(R.id.event_emoji);
             titleText = itemView.findViewById(R.id.event_title);
+            categoryText = itemView.findViewById(R.id.event_category);
+            dateText = itemView.findViewById(R.id.event_date);
             locationText = itemView.findViewById(R.id.event_location);
-            typeText = itemView.findViewById(R.id.event_type);
             timeText = itemView.findViewById(R.id.event_time);
-            participantsText = itemView.findViewById(R.id.event_participants);
         }
 
         public void bind(Event event, OnEventClickListener listener) {
+            // Set emoji based on event type category
+            String emoji = EventCategoryHelper.getEmojiForEventType(event.getEventType());
+            emojiText.setText(emoji);
+
+            // Set title
             titleText.setText(event.getTitle());
+
+            // Set category
+            String category = EventCategoryHelper.getCategoryForEventType(event.getEventType());
+            categoryText.setText(category);
+
+            // Parse and format date from time string (e.g., "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM")
+            String dateFormatted = extractDate(event.getTime());
+            dateText.setText(dateFormatted);
+
+            // Set location
             locationText.setText(event.getLocation());
-            typeText.setText(event.getEventType());
-            timeText.setText(event.getTime());
-            participantsText.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants());
+
+            // Extract just the time portion
+            String timeFormatted = extractTime(event.getTime());
+            timeText.setText(timeFormatted);
 
             itemView.setOnClickListener(v -> listener.onEventClick(event));
+        }
+
+        private String extractDate(String timeString) {
+            if (timeString == null || timeString.isEmpty()) {
+                return "Date TBD";
+            }
+
+            // Parse "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM"
+            if (timeString.contains("•")) {
+                String datePart = timeString.split("•")[0].trim();
+                return datePart;
+            }
+
+            return timeString;
+        }
+
+        private String extractTime(String timeString) {
+            if (timeString == null || timeString.isEmpty()) {
+                return "Time TBD";
+            }
+
+            // Parse "Mon, Jan 27, 2025 • 6:00 PM - 8:00 PM"
+            if (timeString.contains("•")) {
+                String[] parts = timeString.split("•");
+                if (parts.length > 1) {
+                    return parts[1].trim();
+                }
+            }
+
+            return timeString;
         }
     }
 }
