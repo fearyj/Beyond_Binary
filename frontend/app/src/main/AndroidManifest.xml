@@ -58,6 +58,12 @@
             android:label="Chat"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".EventCreatedActivity"
+            android:exported="false"
+            android:label="Event Created"
+            android:screenOrientation="portrait" />
+
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

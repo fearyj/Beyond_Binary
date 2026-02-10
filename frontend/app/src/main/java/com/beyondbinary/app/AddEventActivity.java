@@ -465,10 +465,9 @@ public class AddEventActivity extends AppCompatActivity {
                         });
                     }
 
-                    Toast.makeText(AddEventActivity.this,
-                            "Event created successfully!",
-                            Toast.LENGTH_LONG).show();
-
+                    // Navigate to Event Created success screen
+                    Intent intent = new Intent(AddEventActivity.this, EventCreatedActivity.class);
+                    startActivity(intent);
                     finish();
 
                 } else {
