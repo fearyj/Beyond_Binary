@@ -116,6 +116,39 @@ public class AddEventActivity extends AppCompatActivity {
 
         // Setup bottom navigation
         setupBottomNavigation();
+
+        // Pre-fill form from chatbot suggestions if available
+        preFillFormFromIntent();
+    }
+
+    private void preFillFormFromIntent() {
+        Intent intent = getIntent();
+        if (intent == null) return;
+
+        // Pre-fill event type
+        String eventType = intent.getStringExtra("EVENT_TYPE");
+        if (eventType != null && !eventType.isEmpty()) {
+            inputEventType.setText(eventType, false); // false = don't filter
+            inputEventType.setSelection(eventType.length()); // Move cursor to end
+        }
+
+        // Pre-fill title (if provided)
+        String title = intent.getStringExtra("EVENT_TITLE");
+        if (title != null && !title.isEmpty()) {
+            inputTitle.setText(title);
+        }
+
+        // Pre-fill max participants
+        int maxParticipants = intent.getIntExtra("MAX_PARTICIPANTS", 0);
+        if (maxParticipants > 0) {
+            inputMaxParticipants.setText(String.valueOf(maxParticipants));
+        }
+
+        // Pre-fill description hint
+        String description = intent.getStringExtra("EVENT_DESCRIPTION");
+        if (description != null && !description.isEmpty()) {
+            inputDescription.setText(description);
+        }
     }
 
     private void setupBottomNavigation() {
@@ -134,7 +167,10 @@ public class AddEventActivity extends AppCompatActivity {
                 return true;
 
             } else if (itemId == R.id.nav_chatbot) {
-                Toast.makeText(this, "AI Chatbot - Coming Soon!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("OPEN_CHATBOT", true);
+                startActivity(intent);
+                finish();
                 return true;
 
             } else if (itemId == R.id.nav_add_event) {

@@ -21,8 +21,18 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_BOT = 2;
     private static final int VIEW_TYPE_EVENTS = 3;
+    private static final int VIEW_TYPE_SUGGESTIONS = 4;
 
     private List<Message> messageList;
+    private OnSuggestionClickListener suggestionClickListener;
+
+    public interface OnSuggestionClickListener {
+        void onSuggestionClick(String eventType, int maxParticipants, String descriptionHint, String userContext);
+    }
+
+    public void setOnSuggestionClickListener(OnSuggestionClickListener listener) {
+        this.suggestionClickListener = listener;
+    }
 
     public ChatbotAdapter(List<Message> messageList) {
         this.messageList = messageList;
@@ -35,6 +45,8 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return VIEW_TYPE_USER;
         } else if (message.getMessageType() == Message.TYPE_EVENTS) {
             return VIEW_TYPE_EVENTS;
+        } else if (message.getMessageType() == Message.TYPE_SUGGESTIONS) {
+            return VIEW_TYPE_SUGGESTIONS;
         } else {
             return VIEW_TYPE_BOT;
         }
@@ -50,6 +62,9 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (viewType == VIEW_TYPE_EVENTS) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_event, parent, false);
             return new EventMessageViewHolder(view);
+        } else if (viewType == VIEW_TYPE_SUGGESTIONS) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_suggestions, parent, false);
+            return new SuggestionMessageViewHolder(view);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bot_message, parent, false);
             return new TextMessageViewHolder(view);
@@ -64,6 +79,8 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((TextMessageViewHolder) holder).bind(message);
         } else if (holder instanceof EventMessageViewHolder) {
             ((EventMessageViewHolder) holder).bind(message);
+        } else if (holder instanceof SuggestionMessageViewHolder) {
+            ((SuggestionMessageViewHolder) holder).bind(message);
         }
     }
 
@@ -130,6 +147,45 @@ public class ChatbotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     });
 
                     eventsContainer.addView(eventCard);
+                }
+            }
+        }
+    }
+
+    // ViewHolder for event suggestions
+    class SuggestionMessageViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout suggestionsContainer;
+
+        SuggestionMessageViewHolder(View view) {
+            super(view);
+            suggestionsContainer = view.findViewById(R.id.suggestions_container);
+        }
+
+        void bind(Message message) {
+            suggestionsContainer.removeAllViews();
+
+            List<String> suggestions = message.getEventTypeSuggestions();
+            if (suggestions != null) {
+                for (String eventType : suggestions) {
+                    View suggestionCard = LayoutInflater.from(itemView.getContext())
+                            .inflate(R.layout.item_chat_suggestion_card, suggestionsContainer, false);
+
+                    TextView title = suggestionCard.findViewById(R.id.suggestion_title);
+                    title.setText(eventType);
+
+                    // Click listener to create event with this suggestion
+                    suggestionCard.setOnClickListener(v -> {
+                        if (suggestionClickListener != null) {
+                            suggestionClickListener.onSuggestionClick(
+                                    eventType,
+                                    message.getSuggestedMaxParticipants(),
+                                    message.getDescriptionHint(),
+                                    message.getUserContext()
+                            );
+                        }
+                    });
+
+                    suggestionsContainer.addView(suggestionCard);
                 }
             }
         }
