@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/grid_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:contentDescription="Event photo" />
+
+    <!-- Multi-photo indicator icon (top-right) -->
+    <ImageView
+        android:id="@+id/multi_photo_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="6dp"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:visibility="visible"
+        android:contentDescription="Multiple photos"
+        android:alpha="0.8"
+        app:tint="#FFFFFF"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+</FrameLayout>

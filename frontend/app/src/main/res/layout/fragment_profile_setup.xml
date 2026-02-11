@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_form_padding">
+
+        <!-- Top spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="32dp" />
+
+        <!-- Heading -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set up your profile"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_title_screen"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tell us a bit about yourself"
+            android:textColor="#828282"
+            android:textSize="@dimen/text_size_body_default" />
+
+        <!-- Profile Picture Picker -->
+        <FrameLayout
+            android:layout_width="@dimen/profile_photo_setup_size"
+            android:layout_height="@dimen/profile_photo_setup_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/profile_image_picker"
+                android:layout_width="@dimen/profile_photo_setup_size"
+                android:layout_height="@dimen/profile_photo_setup_size"
+                android:src="@drawable/ic_person"
+                android:scaleType="centerCrop"
+                android:background="@drawable/profile_circle_background"
+                android:padding="@dimen/profile_photo_setup_padding"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <ImageView
+                android:layout_width="@dimen/profile_setup_add_photo_icon"
+                android:layout_height="@dimen/profile_setup_add_photo_icon"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_add_photo"
+                android:background="@drawable/bg_avatar_circle"
+                android:padding="4dp" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Add Photo"
+            android:textColor="#828282"
+            android:textSize="@dimen/text_size_body_small" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="24dp" />
+
+        <!-- Username -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="#828282">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_username"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_standard"
+                android:inputType="text"
+                android:textSize="@dimen/text_size_body_default" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <!-- Date of Birth -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date of Birth"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="#828282">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_dob"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_standard"
+                android:focusable="false"
+                android:clickable="true"
+                android:textSize="@dimen/text_size_body_default" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <!-- Address -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="#828282">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_address"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_standard"
+                android:inputType="textPostalAddress"
+                android:textSize="@dimen/text_size_body_default" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <!-- Caption -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Caption (your tagline)"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="#828282">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_caption"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_standard"
+                android:inputType="text"
+                android:textSize="@dimen/text_size_body_default" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="24dp" />
+
+        <!-- Next button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_standard"
+            android:text="Next"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_body_default"
+            app:backgroundTint="@color/black"
+            app:cornerRadius="12dp" />
+
+    </LinearLayout>
+</ScrollView>

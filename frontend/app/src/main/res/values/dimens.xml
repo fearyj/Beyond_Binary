@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ==================== HEADERS ==================== -->
+    <dimen name="header_height">48dp</dimen>
+    <dimen name="header_padding_top">48dp</dimen>
+    <dimen name="header_padding_bottom">12dp</dimen>
+    <dimen name="header_padding_horizontal">21dp</dimen>
+    <dimen name="bottom_nav_margin">56dp</dimen>
+
+    <!-- ==================== BUTTONS ==================== -->
+    <dimen name="button_height_large">49dp</dimen>
+    <dimen name="button_height_medium">48dp</dimen>
+    <dimen name="button_height_standard">46dp</dimen>
+    <dimen name="button_height_small">44dp</dimen>
+    <dimen name="button_height_upload">40dp</dimen>
+    <dimen name="button_height_tab_bar">38dp</dimen>
+    <dimen name="button_height_invite">36dp</dimen>
+    <dimen name="button_height_edit_profile">32dp</dimen>
+    <dimen name="button_height_tab">30dp</dimen>
+    <dimen name="button_height_action_small">22dp</dimen>
+
+    <!-- ==================== INPUT FIELDS ==================== -->
+    <dimen name="input_height_standard">48dp</dimen>
+    <dimen name="input_height_bordered">44dp</dimen>
+    <dimen name="input_min_height_description">130dp</dimen>
+    <dimen name="input_time_width">80dp</dimen>
+
+    <!-- ==================== TEXT SIZES ==================== -->
+    <!-- Title text sizes -->
+    <dimen name="text_size_title_xlarge">40sp</dimen>
+    <dimen name="text_size_title_large">28sp</dimen>
+    <dimen name="text_size_title_home">26sp</dimen>
+    <dimen name="text_size_title_screen">24sp</dimen>
+    <dimen name="text_size_title_chatbot">22sp</dimen>
+    <dimen name="text_size_title_section">20sp</dimen>
+
+    <!-- Body text sizes -->
+    <dimen name="text_size_body_large">18sp</dimen>
+    <dimen name="text_size_body_post_title">17sp</dimen>
+    <dimen name="text_size_body_medium">16sp</dimen>
+    <dimen name="text_size_body_standard">15sp</dimen>
+    <dimen name="text_size_body_default">14sp</dimen>
+    <dimen name="text_size_body_chat_btn">13sp</dimen>
+    <dimen name="text_size_body_small">12sp</dimen>
+
+    <!-- Caption/detail text sizes -->
+    <dimen name="text_size_caption">11sp</dimen>
+    <dimen name="text_size_detail">10sp</dimen>
+    <dimen name="text_size_label_small">9sp</dimen>
+    <dimen name="text_size_badge">8sp</dimen>
+    <dimen name="text_size_info_window_btn">7sp</dimen>
+
+    <!-- ==================== EMOJI SIZES ==================== -->
+    <dimen name="text_size_emoji_xlarge">56sp</dimen>
+    <dimen name="text_size_emoji_large">36sp</dimen>
+    <dimen name="text_size_emoji_medium">28sp</dimen>
+    <dimen name="text_size_emoji_small">22sp</dimen>
+
+    <!-- ==================== ICONS ==================== -->
+    <dimen name="icon_size_standard">24dp</dimen>
+    <dimen name="icon_size_form">28dp</dimen>
+    <dimen name="icon_size_detail_section">30dp</dimen>
+    <dimen name="icon_size_social">20dp</dimen>
+    <dimen name="icon_size_send_arrow">22dp</dimen>
+    <dimen name="icon_size_tab_small">14dp</dimen>
+    <dimen name="icon_size_tab_list_width">12dp</dimen>
+    <dimen name="icon_size_coin">14dp</dimen>
+    <dimen name="icon_size_search_emoji">24sp</dimen>
+
+    <!-- ==================== PROFILE ==================== -->
+    <dimen name="profile_photo_size">90dp</dimen>
+    <dimen name="profile_photo_padding">18dp</dimen>
+    <dimen name="profile_photo_setup_size">100dp</dimen>
+    <dimen name="profile_photo_setup_padding">20dp</dimen>
+    <dimen name="profile_photo_dialog_size">80dp</dimen>
+    <dimen name="profile_photo_dialog_padding">16dp</dimen>
+    <dimen name="profile_edit_overlay_size">26dp</dimen>
+    <dimen name="profile_edit_overlay_icon">14dp</dimen>
+    <dimen name="profile_setup_add_photo_icon">28dp</dimen>
+    <dimen name="profile_stat_divider_height">26dp</dimen>
+    <dimen name="profile_sign_out_icon">36dp</dimen>
+    <dimen name="profile_header_text_size">18sp</dimen>
+
+    <!-- ==================== ACHIEVEMENT ROAD ==================== -->
+    <dimen name="achievement_road_width">700dp</dimen>
+    <dimen name="achievement_road_height">22dp</dimen>
+    <dimen name="achievement_road_dashed_height">1dp</dimen>
+    <dimen name="achievement_house_small_width">140dp</dimen>
+    <dimen name="achievement_house_small_height">170dp</dimen>
+    <dimen name="achievement_house_large_width">190dp</dimen>
+    <dimen name="achievement_house_large_height">210dp</dimen>
+    <dimen name="achievement_traffic_light_width">34dp</dimen>
+    <dimen name="achievement_traffic_light_height">86dp</dimen>
+    <dimen name="achievement_fab_size">56dp</dimen>
+    <dimen name="achievement_username_text_size">14sp</dimen>
+
+    <!-- ==================== EVENT DETAIL ==================== -->
+    <dimen name="event_detail_emoji_box_width">107dp</dimen>
+    <dimen name="event_detail_emoji_box_height">105dp</dimen>
+    <dimen name="event_detail_icon_box_size">48dp</dimen>
+    <dimen name="event_detail_share_icon">26dp</dimen>
+    <dimen name="event_detail_upload_prompt_width">280dp</dimen>
+    <dimen name="event_detail_photo_height">200dp</dimen>
+    <dimen name="event_detail_map_icon">24dp</dimen>
+
+    <!-- ==================== HOME / EVENT LIST ==================== -->
+    <dimen name="home_event_emoji_box_size">70dp</dimen>
+    <dimen name="home_fab_size">65dp</dimen>
+
+    <!-- ==================== CHAT ==================== -->
+    <dimen name="chat_message_max_width">250dp</dimen>
+    <dimen name="chatbot_message_max_width">260dp</dimen>
+    <dimen name="chat_input_height">48dp</dimen>
+    <dimen name="chat_send_button_size">48dp</dimen>
+    <dimen name="chat_bot_avatar_size">32dp</dimen>
+    <dimen name="chatbot_header_avatar_size">41dp</dimen>
+    <dimen name="chat_profile_emoji_size">40dp</dimen>
+    <dimen name="chat_back_button_size">48dp</dimen>
+
+    <!-- ==================== CHAT EVENT CARDS ==================== -->
+    <dimen name="chat_event_emoji_box_size">64dp</dimen>
+    <dimen name="chat_event_button_height">38dp</dimen>
+
+    <!-- ==================== INFO WINDOW (MAP) ==================== -->
+    <dimen name="info_window_emoji_box_size">60dp</dimen>
+    <dimen name="info_window_search_height">38dp</dimen>
+
+    <!-- ==================== MY EVENTS ==================== -->
+    <dimen name="my_event_icon_size">70dp</dimen>
+    <dimen name="my_event_min_height">165dp</dimen>
+
+    <!-- ==================== COMMUNITY / MESSAGING ==================== -->
+    <dimen name="community_avatar_size">50dp</dimen>
+    <dimen name="message_conversation_avatar_size">48dp</dimen>
+    <dimen name="message_icon_circle_size">32dp</dimen>
+
+    <!-- ==================== SHOP ==================== -->
+    <dimen name="shop_item_icon_size">90dp</dimen>
+    <dimen name="shop_buy_button_width">72dp</dimen>
+    <dimen name="shop_buy_button_height">52dp</dimen>
+    <dimen name="shop_close_button_size">40dp</dimen>
+    <dimen name="shop_header_height">36dp</dimen>
+
+    <!-- ==================== SPLASH ==================== -->
+    <dimen name="splash_logo_width">280dp</dimen>
+    <dimen name="splash_logo_height">180dp</dimen>
+
+    <!-- ==================== EVENT CREATED ==================== -->
+    <dimen name="event_created_checkmark_size">69dp</dimen>
+    <dimen name="event_created_subtitle_max_width">283dp</dimen>
+
+    <!-- ==================== EVENT POST DETAIL ==================== -->
+    <dimen name="post_detail_bar_height">44dp</dimen>
+    <dimen name="post_detail_back_button_size">40dp</dimen>
+    <dimen name="post_detail_carousel_height">400dp</dimen>
+    <dimen name="post_detail_header_profile_pic">32dp</dimen>
+    <dimen name="post_detail_more_button">32dp</dimen>
+
+    <!-- ==================== SHARE EVENT ==================== -->
+    <dimen name="share_user_avatar_size">48dp</dimen>
+    <dimen name="share_send_button_height">56dp</dimen>
+
+    <!-- ==================== ONBOARDING ==================== -->
+    <dimen name="onboarding_button_height">56dp</dimen>
+
+    <!-- ==================== COMMON SPACING ==================== -->
+    <dimen name="spacing_page_horizontal">20dp</dimen>
+    <dimen name="spacing_section_horizontal">33dp</dimen>
+    <dimen name="spacing_detail_horizontal">30dp</dimen>
+    <dimen name="spacing_card_horizontal">21dp</dimen>
+    <dimen name="spacing_card_padding">12dp</dimen>
+    <dimen name="spacing_content_padding">16dp</dimen>
+    <dimen name="spacing_form_padding">32dp</dimen>
+
+    <!-- ==================== TAGS (Java code) ==================== -->
+    <dimen name="tag_padding_horizontal">12dp</dimen>
+    <dimen name="tag_padding_vertical">6dp</dimen>
+    <dimen name="tag_margin">3dp</dimen>
+    <dimen name="tag_text_size">11sp</dimen>
+
+    <!-- ==================== DOT INDICATORS (Java code) ==================== -->
+    <dimen name="dot_indicator_size">6dp</dimen>
+    <dimen name="dot_indicator_margin">3dp</dimen>
+
+</resources>

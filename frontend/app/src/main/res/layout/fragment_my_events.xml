@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Page Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Events"
+            android:textSize="@dimen/text_size_title_screen"
+            android:textStyle="bold"
+            android:textColor="#E6000000"
+            android:paddingStart="@dimen/spacing_page_horizontal"
+            android:paddingEnd="@dimen/spacing_page_horizontal"
+            android:paddingTop="32dp"
+            android:paddingBottom="24dp" />
+
+        <!-- Event Cards -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_my_events"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/spacing_page_horizontal"
+            android:paddingEnd="@dimen/spacing_page_horizontal"
+            android:paddingBottom="16dp" />
+
+    </LinearLayout>
+
+    <!-- Progress bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="No events yet.\nJoin or create an event to see it here!"
+        android:textSize="@dimen/text_size_body_medium"
+        android:textColor="#757575"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

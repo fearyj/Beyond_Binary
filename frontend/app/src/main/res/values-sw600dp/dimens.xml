@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tablets (sw600dp) — scale up key dimensions -->
+
+    <!-- Headers -->
+    <dimen name="header_height">56dp</dimen>
+    <dimen name="header_padding_top">56dp</dimen>
+
+    <!-- Buttons -->
+    <dimen name="button_height_large">56dp</dimen>
+    <dimen name="button_height_medium">56dp</dimen>
+    <dimen name="onboarding_button_height">64dp</dimen>
+
+    <!-- Title text sizes (scaled up 4-6sp) -->
+    <dimen name="text_size_title_xlarge">48sp</dimen>
+    <dimen name="text_size_title_large">34sp</dimen>
+    <dimen name="text_size_title_home">32sp</dimen>
+    <dimen name="text_size_title_screen">28sp</dimen>
+    <dimen name="text_size_title_chatbot">26sp</dimen>
+    <dimen name="text_size_title_section">24sp</dimen>
+    <dimen name="text_size_body_large">20sp</dimen>
+    <dimen name="text_size_body_medium">18sp</dimen>
+
+    <!-- Emoji sizes -->
+    <dimen name="text_size_emoji_xlarge">68sp</dimen>
+    <dimen name="text_size_emoji_large">44sp</dimen>
+
+    <!-- Profile -->
+    <dimen name="profile_photo_size">110dp</dimen>
+    <dimen name="profile_photo_setup_size">120dp</dimen>
+    <dimen name="profile_photo_dialog_size">96dp</dimen>
+
+    <!-- Event detail -->
+    <dimen name="event_detail_emoji_box_width">130dp</dimen>
+    <dimen name="event_detail_emoji_box_height">128dp</dimen>
+    <dimen name="event_detail_upload_prompt_width">360dp</dimen>
+    <dimen name="event_detail_photo_height">260dp</dimen>
+
+    <!-- Chat -->
+    <dimen name="chat_message_max_width">380dp</dimen>
+    <dimen name="chatbot_message_max_width">400dp</dimen>
+
+    <!-- Home -->
+    <dimen name="home_event_emoji_box_size">86dp</dimen>
+    <dimen name="home_fab_size">76dp</dimen>
+
+    <!-- Chat event cards -->
+    <dimen name="chat_event_emoji_box_size">78dp</dimen>
+
+    <!-- Achievement road -->
+    <dimen name="achievement_road_width">900dp</dimen>
+    <dimen name="achievement_house_small_width">180dp</dimen>
+    <dimen name="achievement_house_small_height">210dp</dimen>
+    <dimen name="achievement_house_large_width">240dp</dimen>
+    <dimen name="achievement_house_large_height">260dp</dimen>
+
+    <!-- Splash -->
+    <dimen name="splash_logo_width">360dp</dimen>
+    <dimen name="splash_logo_height">230dp</dimen>
+
+    <!-- Post detail -->
+    <dimen name="post_detail_carousel_height">500dp</dimen>
+
+    <!-- My events -->
+    <dimen name="my_event_min_height">200dp</dimen>
+
+    <!-- Shop -->
+    <dimen name="shop_item_icon_size">110dp</dimen>
+
+    <!-- Community -->
+    <dimen name="community_avatar_size">60dp</dimen>
+
+    <!-- Info window -->
+    <dimen name="info_window_emoji_box_size">72dp</dimen>
+
+    <!-- Message -->
+    <dimen name="message_conversation_avatar_size">56dp</dimen>
+
+    <!-- Share -->
+    <dimen name="share_user_avatar_size">56dp</dimen>
+
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_event_card_pink"
+    android:orientation="horizontal"
+    android:padding="14dp"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Activity Emoji -->
+    <TextView
+        android:id="@+id/suggestion_emoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&#127881;"
+        android:textSize="@dimen/text_size_emoji_small"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Event Type Title -->
+    <TextView
+        android:id="@+id/suggestion_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="@dimen/text_size_body_medium"
+        android:textStyle="bold"
+        android:textColor="#343149" />
+
+    <!-- Arrow Icon -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&#8594;"
+        android:textSize="@dimen/text_size_body_large"
+        android:textColor="#7A7CEC" />
+
+</LinearLayout>

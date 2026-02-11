@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_form_padding">
+
+    <!-- Top spacer -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <!-- App name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Buddeee"
+        android:fontFamily="@font/itim"
+        android:textColor="#343149"
+        android:textSize="@dimen/text_size_title_screen"
+        android:textStyle="bold"
+        android:letterSpacing="-0.02" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Create an account heading -->
+    <TextView
+        android:id="@+id/text_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Create an account"
+        android:textColor="#343149"
+        android:textSize="@dimen/text_size_body_medium"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="4dp" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/text_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Enter your email to sign up for this app"
+        android:textColor="#6E6B7B"
+        android:textSize="@dimen/text_size_body_default" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
+
+    <!-- Email input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="email@domain.com"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#343149"
+        app:hintTextColor="#828282">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_standard"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/text_size_body_default" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="8dp" />
+
+    <!-- Password input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#343149"
+        app:hintTextColor="#828282"
+        app:endIconMode="password_toggle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_standard"
+            android:inputType="textPassword"
+            android:textSize="@dimen/text_size_body_default" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="12dp" />
+
+    <!-- Continue button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_continue"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/input_height_standard"
+        android:text="Continue"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_body_default"
+        app:backgroundTint="#343149"
+        app:cornerRadius="12dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
+
+    <!-- Or divider -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="or"
+            android:textColor="#828282"
+            android:textSize="@dimen/text_size_body_default" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
+
+    <!-- Continue with Google -->
+    <LinearLayout
+        android:id="@+id/btn_google"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_small"
+        android:background="@drawable/bg_social_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size_social"
+            android:layout_height="@dimen/icon_size_social"
+            android:src="@drawable/ic_google"
+            android:contentDescription="Google" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue with Google"
+            android:textColor="#343149"
+            android:textSize="@dimen/text_size_body_default"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="8dp" />
+
+    <!-- Continue with Apple -->
+    <LinearLayout
+        android:id="@+id/btn_apple"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_small"
+        android:background="@drawable/bg_social_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size_social"
+            android:layout_height="@dimen/icon_size_social"
+            android:src="@drawable/ic_apple"
+            android:contentDescription="Apple" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue with Apple"
+            android:textColor="#343149"
+            android:textSize="@dimen/text_size_body_default"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Bottom spacer -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Terms text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="By clicking continue, you agree to our Terms of Service and Privacy Policy"
+        android:textColor="#828282"
+        android:textSize="@dimen/text_size_body_small" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="12dp" />
+
+    <!-- Sign-in / Sign-up toggle -->
+    <TextView
+        android:id="@+id/text_toggle_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Already have an account? Sign In"
+        android:textColor="#343149"
+        android:textSize="@dimen/text_size_body_default"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

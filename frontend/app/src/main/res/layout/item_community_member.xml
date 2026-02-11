@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <!-- Avatar Circle -->
+        <TextView
+            android:id="@+id/profile_emoji"
+            android:layout_width="@dimen/community_avatar_size"
+            android:layout_height="@dimen/community_avatar_size"
+            android:gravity="center"
+            android:text="\uD83D\uDC64"
+            android:textSize="@dimen/text_size_title_screen"
+            android:background="@drawable/bg_avatar_circle"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Name + Badges -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Member Name"
+                android:textSize="@dimen/text_size_body_default"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="3dp" />
+
+            <!-- Badge Row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/low_social_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\uD83E\uDEAB Low Social"
+                    android:textSize="@dimen/text_size_badge"
+                    android:textColor="#A8A59F"
+                    android:background="@drawable/bg_badge_pill"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:elevation="1dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/low_physical_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\uD83C\uDF42 Low Physical"
+                    android:textSize="@dimen/text_size_badge"
+                    android:textColor="#A8A59F"
+                    android:background="@drawable/bg_badge_pill"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:elevation="1dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Invite Button -->
+        <TextView
+            android:id="@+id/invite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height_invite"
+            android:background="@drawable/bg_invite_btn"
+            android:text="Invite"
+            android:textSize="@dimen/text_size_body_chat_btn"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#1AE0E0E0"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" />
+
+</LinearLayout>

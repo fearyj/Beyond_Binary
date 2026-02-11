@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".BeyondBinaryApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".MapsActivity"
+            android:exported="false"
+            android:label="Map"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".AddEventActivity"
+            android:exported="false"
+            android:label="Add Event"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:label="Community"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".EventDetailActivity"
+            android:exported="false"
+            android:label="Event Details"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ShareEventActivity"
+            android:exported="false"
+            android:label="Share Event"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".EventPostDetailActivity"
+            android:exported="false"
+            android:label="Post"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".MessagesActivity"
+            android:exported="false"
+            android:label="Messages"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".messaging.ChatActivity"
+            android:exported="false"
+            android:label="Chat"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".EventCreatedActivity"
+            android:exported="false"
+            android:label="Event Created"
+            android:screenOrientation="portrait" />
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${mapsApiKey}" />
+
+    </application>
+
+</manifest>

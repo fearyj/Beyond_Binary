@@ -1,18 +1,62 @@
 venv/
 
+# Copy folders and backups
+Beyond_Binary - Copy/
+frontend-backup/
+
+# API Keys and Secrets (CRITICAL - DO NOT COMMIT!)
 .env
-.claude/
+local.properties
+*.key
+*.pem
+google-services.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+.eggs/
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Android
-*.iml
-.gradle/
-local.properties
-.idea/
-build/
-app/build/
 *.apk
-*.aab
 *.ap_
-captures/
-.externalNativeBuild/
+*.dex
+*.class
+bin/
+gen/
+out/
+build/
+.gradle/
+gradle-app.setting
 .cxx/
+local.properties
+
+# Claude Code
+.claude/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild
+.navigation/
+.vscode/
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.db-shm
+*.db-wal

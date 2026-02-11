@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|bottom"
+    android:paddingStart="12dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <!-- Bot Avatar -->
+    <ImageView
+        android:layout_width="@dimen/chat_bot_avatar_size"
+        android:layout_height="@dimen/chat_bot_avatar_size"
+        android:src="@drawable/ic_bot_avatar"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Intro Text in pink bubble -->
+        <TextView
+            android:id="@+id/event_intro_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bot_bubble"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textColor="#343149"
+            android:textSize="@dimen/text_size_body_standard"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Event Cards Container -->
+        <LinearLayout
+            android:id="@+id/events_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+</LinearLayout>

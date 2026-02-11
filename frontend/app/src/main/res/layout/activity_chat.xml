@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Header with back button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:elevation="2dp">
+
+        <!-- Back Button -->
+        <TextView
+            android:id="@+id/back_button"
+            android:layout_width="@dimen/chat_back_button_size"
+            android:layout_height="@dimen/chat_back_button_size"
+            android:text="←"
+            android:textSize="32sp"
+            android:textColor="@color/text_primary"
+            android:gravity="center"
+            android:contentDescription="Back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginEnd="4dp" />
+
+        <!-- Profile Picture -->
+        <TextView
+            android:id="@+id/chat_profile_emoji"
+            android:layout_width="@dimen/chat_profile_emoji_size"
+            android:layout_height="@dimen/chat_profile_emoji_size"
+            android:gravity="center"
+            android:text="👤"
+            android:textSize="@dimen/text_size_title_screen"
+            android:background="@color/background"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Contact Name -->
+        <TextView
+            android:id="@+id/chat_contact_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Contact Name"
+            android:textSize="@dimen/text_size_body_large"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary" />
+
+    </LinearLayout>
+
+    <!-- Chat Messages -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/spacing_content_padding" />
+
+    <!-- Message Input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:elevation="4dp">
+
+        <EditText
+            android:id="@+id/message_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Type a message..."
+            android:padding="@dimen/spacing_card_padding"
+            android:background="@color/background"
+            android:layout_marginEnd="8dp"
+            android:maxLines="4" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_send"
+            app:fabSize="mini"
+            app:tint="@color/white"
+            app:backgroundTint="@color/primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

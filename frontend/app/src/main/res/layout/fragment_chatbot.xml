@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- Gradient Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_chatbot_header"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="@dimen/header_padding_top"
+        android:paddingBottom="16dp">
+
+        <!-- Bot Avatar -->
+        <ImageView
+            android:layout_width="@dimen/chatbot_header_avatar_size"
+            android:layout_height="@dimen/chatbot_header_avatar_size"
+            android:src="@drawable/ic_bot_avatar"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buddeee AI"
+            android:textSize="@dimen/text_size_title_chatbot"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- Chat Messages -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_chatbot"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:background="#FFFFFF" />
+
+    <!-- Message Input Area -->
+    <LinearLayout
+        android:id="@+id/message_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp"
+        android:background="#FFFFFF">
+
+        <!-- Pill-shaped input -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/chat_input_height"
+            android:layout_weight="1"
+            android:background="@drawable/bg_chat_input_pill"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp">
+
+            <EditText
+                android:id="@+id/message_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Type something..."
+                android:textColorHint="#A1A1AA"
+                android:textColor="#09090B"
+                android:textSize="@dimen/text_size_body_default"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:singleLine="false" />
+
+            <ImageView
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:src="@drawable/ic_microphone"
+                android:layout_marginStart="4dp" />
+
+        </LinearLayout>
+
+        <!-- Gradient Send Button -->
+        <FrameLayout
+            android:id="@+id/send_button"
+            android:layout_width="@dimen/chat_send_button_size"
+            android:layout_height="@dimen/chat_send_button_size"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_send_gradient"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="@dimen/icon_size_send_arrow"
+                android:layout_height="@dimen/icon_size_send_arrow"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_send_arrow" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

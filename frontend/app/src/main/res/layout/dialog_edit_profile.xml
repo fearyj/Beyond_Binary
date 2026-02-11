@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_page_horizontal"
+    android:background="#FFFFFF">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textSize="@dimen/text_size_body_large"
+        android:textStyle="bold"
+        android:textColor="#343149"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Profile Picture -->
+    <FrameLayout
+        android:layout_width="@dimen/profile_photo_dialog_size"
+        android:layout_height="@dimen/profile_photo_dialog_size"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/edit_profile_picture"
+            android:layout_width="@dimen/profile_photo_dialog_size"
+            android:layout_height="@dimen/profile_photo_dialog_size"
+            android:src="@drawable/ic_person"
+            android:scaleType="centerCrop"
+            android:background="@drawable/profile_circle_background"
+            android:padding="@dimen/profile_photo_dialog_padding" />
+
+        <FrameLayout
+            android:id="@+id/btn_change_photo"
+            android:layout_width="@dimen/profile_edit_overlay_size"
+            android:layout_height="@dimen/profile_edit_overlay_size"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/bg_edit_photo_overlay"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="@dimen/profile_edit_overlay_icon"
+                android:layout_height="@dimen/profile_edit_overlay_icon"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_edit_pencil" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <!-- Username -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="#343149">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:inputType="text"
+            android:textSize="@dimen/text_size_body_default" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Caption -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="#343149">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Caption (your tagline)"
+            android:inputType="text"
+            android:textSize="@dimen/text_size_body_default" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Date of Birth -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="#343149">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date of Birth"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:textSize="@dimen/text_size_body_default" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Address -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="#343149">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:inputType="textPostalAddress"
+            android:textSize="@dimen/text_size_body_default" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Save Button -->
+    <TextView
+        android:id="@+id/btn_save_profile"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_small"
+        android:background="@drawable/bg_edit_profile_btn"
+        android:text="Save Changes"
+        android:textSize="@dimen/text_size_body_default"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#343149"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|bottom"
+    android:paddingStart="12dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <!-- Bot Avatar -->
+    <ImageView
+        android:layout_width="@dimen/chat_bot_avatar_size"
+        android:layout_height="@dimen/chat_bot_avatar_size"
+        android:src="@drawable/ic_bot_avatar"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp" />
+
+    <!-- Suggestion Cards Container -->
+    <LinearLayout
+        android:id="@+id/suggestions_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+
+</LinearLayout>
