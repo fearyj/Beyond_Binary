@@ -218,6 +218,3 @@ MainActivity
 | Events not loading | Check backend logs; verify Retrofit config |
 | Chatbot not responding | Check `GEMINI_API_KEY` in backend `.env` |
 
-## License
-
-MIT
