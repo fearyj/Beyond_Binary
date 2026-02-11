@@ -2,6 +2,17 @@
 
 A community-driven Android application that helps isolated individuals connect through AI-powered event recommendations, interactive maps, and personalized event discovery.
 
+## Team Inherit The Past
+
+| Name |
+|------|
+|Tan Yoong Ken      |
+|Ting Ruo Chee      |   
+|Rachel Phuar Yi Ling      |      
+|Samantha Oh Jing Yi      |      
+|See Shao Xin      |   
+ 
+
 ## Architecture
 
 ```
