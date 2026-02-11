@@ -35,5 +35,5 @@
 
     <!-- Map specific -->
     <color name="search_bar_background">#FFFFFF</color>
-    <color name="fab_background">#2196F3</color>
+    <color name="fab_background">#343149</color>
 </resources>

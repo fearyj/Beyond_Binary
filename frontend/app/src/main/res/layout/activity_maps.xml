@@ -90,8 +90,8 @@
         android:layout_marginBottom="80dp"
         android:contentDescription="My Location"
         app:srcCompat="@android:drawable/ic_menu_mylocation"
-        app:tint="#FFFFFF"
-        app:backgroundTint="#2196F3"
+        app:tint="@color/primary"
+        app:backgroundTint="#FFFFFF"
         app:elevation="6dp" />
 
     <!-- Bottom Navigation Bar -->
