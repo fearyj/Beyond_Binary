@@ -21,6 +21,9 @@ __pycache__/
 dist/
 .eggs/
 
+# User-uploaded photos
+backend/public/uploads/
+
 # Node modules
 node_modules/
 npm-debug.log*
