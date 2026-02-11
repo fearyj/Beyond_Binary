@@ -19,14 +19,14 @@
 
         <!-- Message icon circle -->
         <FrameLayout
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/message_icon_circle_size"
+            android:layout_height="@dimen/message_icon_circle_size"
             android:background="@drawable/bg_message_icon"
             android:layout_marginEnd="12dp">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/icon_size_social"
+                android:layout_height="@dimen/icon_size_social"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_message_circle"
                 app:tint="#09090B" />
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Messages"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_size_title_screen"
             android:textStyle="bold"
             android:textColor="#09090B" />
 

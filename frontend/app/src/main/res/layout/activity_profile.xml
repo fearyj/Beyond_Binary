@@ -8,7 +8,7 @@
     <!-- Purple Header Bar with Buddee title + Sign Out -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/header_height"
         android:background="#343149">
 
         <TextView
@@ -16,15 +16,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Buddeee"
-            android:textSize="18sp"
+            android:textSize="@dimen/profile_header_text_size"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:fontFamily="@font/itim" />
 
         <ImageView
             android:id="@+id/btn_sign_out"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/profile_sign_out_icon"
+            android:layout_height="@dimen/profile_sign_out_icon"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_sign_out"
@@ -40,8 +40,8 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginTop="@dimen/header_height"
+        android:layout_marginBottom="@dimen/bottom_nav_margin"
         android:fillViewport="true"
         android:background="#FFFFFF">
 
@@ -62,32 +62,32 @@
                 <!-- Profile Photo with Edit Overlay -->
                 <FrameLayout
                     android:id="@+id/profile_photo_container"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
+                    android:layout_width="@dimen/profile_photo_size"
+                    android:layout_height="@dimen/profile_photo_size"
                     android:layout_alignParentStart="true">
 
                     <ImageView
                         android:id="@+id/profile_picture"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
+                        android:layout_width="@dimen/profile_photo_size"
+                        android:layout_height="@dimen/profile_photo_size"
                         android:src="@drawable/ic_person"
                         android:scaleType="centerCrop"
                         android:background="@drawable/profile_circle_background"
-                        android:padding="18dp" />
+                        android:padding="@dimen/profile_photo_padding" />
 
                     <!-- Edit overlay button -->
                     <FrameLayout
                         android:id="@+id/btn_edit_photo"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
+                        android:layout_width="@dimen/profile_edit_overlay_size"
+                        android:layout_height="@dimen/profile_edit_overlay_size"
                         android:layout_gravity="bottom|end"
                         android:background="@drawable/bg_edit_photo_overlay"
                         android:clickable="true"
                         android:focusable="true">
 
                         <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
+                            android:layout_width="@dimen/profile_edit_overlay_icon"
+                            android:layout_height="@dimen/profile_edit_overlay_icon"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_edit_pencil" />
 
@@ -110,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_body_standard"
                         android:textStyle="bold"
                         android:textColor="#212121"
                         android:layout_marginBottom="6dp" />
@@ -136,7 +136,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="15sp"
+                                android:textSize="@dimen/text_size_body_standard"
                                 android:textStyle="bold"
                                 android:textColor="#212121" />
 
@@ -144,7 +144,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Events"
-                                android:textSize="9sp"
+                                android:textSize="@dimen/text_size_label_small"
                                 android:textColor="#757575" />
 
                         </LinearLayout>
@@ -152,7 +152,7 @@
                         <!-- Divider -->
                         <View
                             android:layout_width="1dp"
-                            android:layout_height="26dp"
+                            android:layout_height="@dimen/profile_stat_divider_height"
                             android:background="#E0E0E0" />
 
                         <!-- Stat 2 -->
@@ -168,7 +168,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="15sp"
+                                android:textSize="@dimen/text_size_body_standard"
                                 android:textStyle="bold"
                                 android:textColor="#212121" />
 
@@ -176,7 +176,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Hosted"
-                                android:textSize="9sp"
+                                android:textSize="@dimen/text_size_label_small"
                                 android:textColor="#757575" />
 
                         </LinearLayout>
@@ -184,7 +184,7 @@
                         <!-- Divider -->
                         <View
                             android:layout_width="1dp"
-                            android:layout_height="26dp"
+                            android:layout_height="@dimen/profile_stat_divider_height"
                             android:background="#E0E0E0" />
 
                         <!-- Stat 3 -->
@@ -200,7 +200,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="15sp"
+                                android:textSize="@dimen/text_size_body_standard"
                                 android:textStyle="bold"
                                 android:textColor="#212121" />
 
@@ -208,7 +208,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Friends"
-                                android:textSize="9sp"
+                                android:textSize="@dimen/text_size_label_small"
                                 android:textColor="#757575" />
 
                         </LinearLayout>
@@ -221,7 +221,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textSize="10sp"
+                        android:textSize="@dimen/text_size_detail"
                         android:textColor="#333333"
                         android:lineSpacingExtra="2dp" />
 
@@ -233,12 +233,12 @@
             <TextView
                 android:id="@+id/btn_edit_profile"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="@dimen/button_height_edit_profile"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_edit_profile_btn"
                 android:text="Edit Profile"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_body_small"
                 android:textStyle="bold"
                 android:textColor="#343149"
                 android:gravity="center"
@@ -265,7 +265,7 @@
             <!-- Gallery / Profile Tab Bar (Instagram style, below tags) -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="@dimen/button_height_tab_bar"
                 android:orientation="horizontal"
                 android:layout_marginTop="6dp"
                 android:background="#343149">
@@ -282,8 +282,8 @@
 
                     <ImageView
                         android:id="@+id/tab_grid_icon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_size_standard"
+                        android:layout_height="@dimen/icon_size_standard"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_grid_active" />
 
@@ -307,8 +307,8 @@
 
                     <ImageView
                         android:id="@+id/tab_person_icon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_size_standard"
+                        android:layout_height="@dimen/icon_size_standard"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_person_outline" />
 
@@ -343,29 +343,29 @@
 
                 <!-- === ROAD PAIR 1 (upper crossing) === -->
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="60dp"
                     android:rotation="-22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="60dp"
                     android:rotation="22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="70dp"
                     android:rotation="-22"
                     android:background="@drawable/bg_road_dashed" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="70dp"
                     android:rotation="22"
@@ -373,29 +373,29 @@
 
                 <!-- === ROAD PAIR 2 (middle crossing at traffic light) === -->
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="210dp"
                     android:rotation="-22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="210dp"
                     android:rotation="22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="220dp"
                     android:rotation="-22"
                     android:background="@drawable/bg_road_dashed" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="220dp"
                     android:rotation="22"
@@ -403,29 +403,29 @@
 
                 <!-- === ROAD PAIR 3 (lower crossing) === -->
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="30dp"
                     android:rotation="-22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_height"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="30dp"
                     android:rotation="22"
                     android:background="#FFFFFF" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="40dp"
                     android:rotation="-22"
                     android:background="@drawable/bg_road_dashed" />
                 <View
-                    android:layout_width="700dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/achievement_road_width"
+                    android:layout_height="@dimen/achievement_road_dashed_height"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="40dp"
                     android:rotation="22"
@@ -433,8 +433,8 @@
 
                 <!-- Small House (upper-right corner, further apart) -->
                 <ImageView
-                    android:layout_width="140dp"
-                    android:layout_height="170dp"
+                    android:layout_width="@dimen/achievement_house_small_width"
+                    android:layout_height="@dimen/achievement_house_small_height"
                     android:layout_gravity="end|top"
                     android:layout_marginEnd="-55dp"
                     android:layout_marginTop="0dp"
@@ -444,8 +444,8 @@
 
                 <!-- Large House with car (center-left, upper area) -->
                 <ImageView
-                    android:layout_width="190dp"
-                    android:layout_height="210dp"
+                    android:layout_width="@dimen/achievement_house_large_width"
+                    android:layout_height="@dimen/achievement_house_large_height"
                     android:layout_gravity="start|top"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="5dp"
@@ -462,7 +462,7 @@
                     android:layout_marginStart="60dp"
                     android:layout_marginTop="175dp"
                     android:text=""
-                    android:textSize="14sp"
+                    android:textSize="@dimen/achievement_username_text_size"
                     android:textStyle="bold"
                     android:textColor="#333333"
                     android:shadowColor="#40000000"
@@ -472,8 +472,8 @@
 
                 <!-- Traffic Light (center, at road intersection, slightly larger) -->
                 <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="86dp"
+                    android:layout_width="@dimen/achievement_traffic_light_width"
+                    android:layout_height="@dimen/achievement_traffic_light_height"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginTop="200dp"
                     android:src="@drawable/ic_traffic_light"
@@ -483,8 +483,8 @@
                 <!-- Shopping Bag FAB (bottom-right) -->
                 <FrameLayout
                     android:id="@+id/fab_shopping"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="@dimen/achievement_fab_size"
+                    android:layout_height="@dimen/achievement_fab_size"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
@@ -494,8 +494,8 @@
                     android:focusable="true">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_size_standard"
+                        android:layout_height="@dimen/icon_size_standard"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_shopping_bag"
                         android:contentDescription="Shopping bag" />

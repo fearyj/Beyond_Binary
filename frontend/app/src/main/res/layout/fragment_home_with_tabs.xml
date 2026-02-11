@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="21dp"
+        android:paddingStart="@dimen/header_padding_horizontal"
         android:paddingEnd="16dp"
-        android:paddingTop="48dp"
+        android:paddingTop="@dimen/header_padding_top"
         android:paddingBottom="12dp">
 
         <TextView
@@ -22,15 +22,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Buddeee"
-            android:textSize="26sp"
+            android:textSize="@dimen/text_size_title_home"
             android:textStyle="bold"
             android:textColor="#000000"
             android:fontFamily="@font/itim" />
 
         <ImageView
             android:id="@+id/btn_search"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
             android:src="@drawable/ic_search"
             android:clickable="true"
             android:focusable="true"
@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/message_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
             android:src="@drawable/ic_message_bubble"
             android:clickable="true"
             android:focusable="true" />
@@ -58,7 +58,7 @@
         <LinearLayout
             android:id="@+id/tab_personalised"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/button_height_tab"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/bg_tab_active"
@@ -69,8 +69,8 @@
             android:layout_marginEnd="10dp">
 
             <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="@dimen/icon_size_tab_small"
+                android:layout_height="@dimen/icon_size_tab_small"
                 android:src="@drawable/ic_tab_heart"
                 android:layout_marginEnd="4dp" />
 
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Personalised"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_body_small"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:alpha="0.9"
@@ -90,7 +90,7 @@
         <LinearLayout
             android:id="@+id/tab_recommended"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/button_height_tab"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/bg_tab_inactive"
@@ -100,8 +100,8 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="14dp"
+                android:layout_width="@dimen/icon_size_tab_list_width"
+                android:layout_height="@dimen/icon_size_tab_small"
                 android:src="@drawable/ic_tab_list"
                 android:layout_marginEnd="4dp" />
 
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recommended"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_body_small"
                 android:textStyle="bold"
                 android:textColor="#1A1A1A"
                 android:singleLine="true" />
@@ -131,10 +131,10 @@
         <!-- Floating Action Button -->
         <FrameLayout
             android:id="@+id/fab_create_event"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="@dimen/home_fab_size"
+            android:layout_height="@dimen/home_fab_size"
             android:layout_gravity="bottom|end"
-            android:layout_marginEnd="21dp"
+            android:layout_marginEnd="@dimen/spacing_card_horizontal"
             android:layout_marginBottom="24dp"
             android:background="@drawable/bg_fab_create"
             android:elevation="4dp"
@@ -142,8 +142,8 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_fab_calendar_plus" />
 

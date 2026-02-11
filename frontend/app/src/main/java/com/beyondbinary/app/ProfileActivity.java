@@ -1,14 +1,18 @@
 package com.beyondbinary.app;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.beyondbinary.app.api.ApiService;
+import com.beyondbinary.app.api.AttendedGalleriesResponse;
 import com.beyondbinary.app.api.InteractionsResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.beyondbinary.app.api.UserResponse;
@@ -26,11 +31,18 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -55,15 +67,40 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView tabGridIcon;
     private ImageView tabPersonIcon;
 
-    // Hardcoded grid thumbnails
-    private final List<String> gridThumbnails = Arrays.asList(
-            "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?w=400&h=400&fit=crop"
-    );
+    // Dynamic gallery data fetched from server
+    private final List<AttendedGalleriesResponse.EventGallery> galleries = new ArrayList<>();
+    private final List<String> gridThumbnails = new ArrayList<>();
+    private EventPhotoGridAdapter gridAdapter;
+
+    // Edit profile photo picker
+    private ActivityResultLauncher<String> editPhotoPickerLauncher;
+    private ImageView editDialogProfilePic;
+    private String pendingProfilePicPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Register photo picker before setContentView
+        editPhotoPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        String path = copyPhotoToInternalStorage(uri);
+                        if (path != null) {
+                            pendingProfilePicPath = path;
+                            if (editDialogProfilePic != null) {
+                                editDialogProfilePic.setPadding(0, 0, 0, 0);
+                                Glide.with(this)
+                                        .load(new File(path))
+                                        .transform(new CircleCrop())
+                                        .into(editDialogProfilePic);
+                            }
+                        }
+                    }
+                }
+        );
+
         setContentView(R.layout.activity_profile);
 
         // Initialize views
@@ -91,6 +128,9 @@ public class ProfileActivity extends AppCompatActivity {
         // Shopping bag FAB
         findViewById(R.id.fab_shopping).setOnClickListener(v -> showShopDialog());
 
+        // Edit Profile button
+        findViewById(R.id.btn_edit_profile).setOnClickListener(v -> showEditProfileDialog());
+
         // Setup tabs
         setupTabs();
 
@@ -109,14 +149,18 @@ public class ProfileActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         photoGrid.setLayoutManager(gridLayoutManager);
 
-        EventPhotoGridAdapter adapter = new EventPhotoGridAdapter(gridThumbnails, position -> {
-            if (position == 0) {
+        gridAdapter = new EventPhotoGridAdapter(gridThumbnails, position -> {
+            if (position < galleries.size()) {
+                AttendedGalleriesResponse.EventGallery gallery = galleries.get(position);
                 Intent intent = new Intent(ProfileActivity.this, EventPostDetailActivity.class);
+                intent.putStringArrayListExtra("IMAGE_URLS", new ArrayList<>(gallery.getImageUrls()));
+                intent.putExtra("EVENT_TITLE", gallery.getTitle());
+                intent.putExtra("EVENT_TYPE", gallery.getEventType());
                 startActivity(intent);
             }
         });
 
-        photoGrid.setAdapter(adapter);
+        photoGrid.setAdapter(gridAdapter);
     }
 
     private void loadUserProfile() {
@@ -218,17 +262,17 @@ public class ProfileActivity extends AppCompatActivity {
 
             TextView tagView = new TextView(this);
             tagView.setText(trimmed);
-            tagView.setTextSize(11);
+            tagView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.tag_text_size));
             tagView.setTextColor(0x80000000); // black with 50% alpha
             tagView.setBackgroundResource(R.drawable.bg_trait_tag);
-            int hPad = (int) (12 * getResources().getDisplayMetrics().density);
-            int vPad = (int) (6 * getResources().getDisplayMetrics().density);
+            int hPad = (int) getResources().getDimension(R.dimen.tag_padding_horizontal);
+            int vPad = (int) getResources().getDimension(R.dimen.tag_padding_vertical);
             tagView.setPadding(hPad, vPad, hPad, vPad);
 
             FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(
                     FlexboxLayout.LayoutParams.WRAP_CONTENT,
                     FlexboxLayout.LayoutParams.WRAP_CONTENT);
-            int margin = (int) (3 * getResources().getDisplayMetrics().density);
+            int margin = (int) getResources().getDimension(R.dimen.tag_margin);
             lp.setMargins(0, margin, margin, margin);
             tagView.setLayoutParams(lp);
 
@@ -242,6 +286,8 @@ public class ProfileActivity extends AppCompatActivity {
         if (userId == -1) return;
 
         ApiService apiService = RetrofitClient.getApiService();
+
+        // Load interaction stats
         apiService.getUserInteractions(userId).enqueue(new retrofit2.Callback<InteractionsResponse>() {
             @Override
             public void onResponse(@NonNull retrofit2.Call<InteractionsResponse> call,
@@ -266,6 +312,45 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull retrofit2.Call<InteractionsResponse> call, @NonNull Throwable t) {
                 // Keep defaults
+            }
+        });
+
+        // Load attended event galleries for the photo grid
+        loadAttendedGalleries(userId);
+    }
+
+    private void loadAttendedGalleries(int userId) {
+        ApiService apiService = RetrofitClient.getApiService();
+        String baseUrl = com.beyondbinary.app.BuildConfig.API_BASE_URL.replace("/api/", "");
+
+        apiService.getAttendedGalleries(userId).enqueue(new retrofit2.Callback<AttendedGalleriesResponse>() {
+            @Override
+            public void onResponse(@NonNull retrofit2.Call<AttendedGalleriesResponse> call,
+                                   @NonNull retrofit2.Response<AttendedGalleriesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    galleries.clear();
+                    gridThumbnails.clear();
+
+                    List<AttendedGalleriesResponse.EventGallery> fetched = response.body().getGalleries();
+                    if (fetched != null) {
+                        for (AttendedGalleriesResponse.EventGallery gallery : fetched) {
+                            // Only show events that have at least one photo
+                            if (gallery.getImageUrls() != null && !gallery.getImageUrls().isEmpty()) {
+                                galleries.add(gallery);
+                                gridThumbnails.add(baseUrl + gallery.getImageUrls().get(0));
+                            }
+                        }
+                    }
+
+                    if (gridAdapter != null) {
+                        gridAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull retrofit2.Call<AttendedGalleriesResponse> call, @NonNull Throwable t) {
+                // Keep grid empty
             }
         });
     }
@@ -364,6 +449,143 @@ public class ProfileActivity extends AppCompatActivity {
         sheetView.findViewById(R.id.btn_close_shop).setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
+    }
+
+    private void showEditProfileDialog() {
+        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+        if (userId == -1) return;
+
+        AppDatabaseHelper dbHelper = AppDatabaseHelper.getInstance(this);
+        User user = dbHelper.getUserById(userId);
+
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View sheetView = getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
+        dialog.setContentView(sheetView);
+
+        editDialogProfilePic = sheetView.findViewById(R.id.edit_profile_picture);
+        TextInputEditText editUsername = sheetView.findViewById(R.id.edit_username);
+        TextInputEditText editCaption = sheetView.findViewById(R.id.edit_caption);
+        TextInputEditText editDob = sheetView.findViewById(R.id.edit_dob);
+        TextInputEditText editAddress = sheetView.findViewById(R.id.edit_address);
+
+        pendingProfilePicPath = null;
+
+        // Pre-fill current values
+        if (user != null) {
+            if (user.getUsername() != null) editUsername.setText(user.getUsername());
+            if (user.getCaption() != null) editCaption.setText(user.getCaption());
+            if (user.getDob() != null) editDob.setText(user.getDob());
+            if (user.getAddress() != null) editAddress.setText(user.getAddress());
+
+            String picPath = user.getProfilePicturePath();
+            if (picPath != null && !picPath.isEmpty() && new File(picPath).exists()) {
+                editDialogProfilePic.setPadding(0, 0, 0, 0);
+                Glide.with(this)
+                        .load(new File(picPath))
+                        .transform(new CircleCrop())
+                        .into(editDialogProfilePic);
+            }
+        }
+
+        // Photo picker
+        sheetView.findViewById(R.id.btn_change_photo).setOnClickListener(v ->
+                editPhotoPickerLauncher.launch("image/*"));
+        editDialogProfilePic.setOnClickListener(v ->
+                editPhotoPickerLauncher.launch("image/*"));
+
+        // Date picker for DOB
+        editDob.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR, -18);
+            new DatePickerDialog(this, (view, year, month, day) -> {
+                Calendar selected = Calendar.getInstance();
+                selected.set(year, month, day);
+                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+                editDob.setText(sdf.format(selected.getTime()));
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        // Save button
+        sheetView.findViewById(R.id.btn_save_profile).setOnClickListener(v -> {
+            String username = editUsername.getText() != null ? editUsername.getText().toString().trim() : "";
+            if (username.isEmpty()) {
+                editUsername.setError("Username is required");
+                return;
+            }
+
+            String caption = editCaption.getText() != null ? editCaption.getText().toString().trim() : "";
+            String dob = editDob.getText() != null ? editDob.getText().toString().trim() : "";
+            String address = editAddress.getText() != null ? editAddress.getText().toString().trim() : "";
+
+            saveProfileChanges(userId, username, caption, dob, address, dialog);
+        });
+
+        dialog.show();
+    }
+
+    private void saveProfileChanges(int userId, String username, String caption, String dob, String address, BottomSheetDialog dialog) {
+        AppDatabaseHelper dbHelper = AppDatabaseHelper.getInstance(this);
+        User user = dbHelper.getUserById(userId);
+        if (user == null) user = new User();
+
+        user.setId(userId);
+        user.setUsername(username);
+        user.setCaption(caption);
+        user.setDob(dob);
+        user.setAddress(address);
+        if (pendingProfilePicPath != null) {
+            user.setProfilePicturePath(pendingProfilePicPath);
+        }
+        dbHelper.insertUser(user);
+
+        // Update backend
+        ApiService apiService = RetrofitClient.getApiService();
+        Map<String, String> body = new HashMap<>();
+        body.put("username", username);
+        body.put("caption", caption);
+        body.put("dob", dob);
+        body.put("address", address);
+
+        User finalUser = user;
+        apiService.updateUser(userId, body).enqueue(new retrofit2.Callback<UserResponse>() {
+            @Override
+            public void onResponse(@NonNull retrofit2.Call<UserResponse> call,
+                                   @NonNull retrofit2.Response<UserResponse> response) {
+                Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
+                displayUserData(finalUser);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NonNull retrofit2.Call<UserResponse> call, @NonNull Throwable t) {
+                // Still update locally
+                displayUserData(finalUser);
+                dialog.dismiss();
+                Toast.makeText(ProfileActivity.this, "Saved locally", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String copyPhotoToInternalStorage(Uri uri) {
+        try {
+            File dir = new File(getFilesDir(), "profile_photos");
+            if (!dir.exists()) dir.mkdirs();
+            File destFile = new File(dir, "profile_" + System.currentTimeMillis() + ".jpg");
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(destFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+            return destFile.getAbsolutePath();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private void signOut() {

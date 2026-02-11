@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="48dp"
+        android:paddingTop="@dimen/header_padding_top"
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
@@ -27,8 +27,8 @@
             android:paddingBottom="4dp">
 
             <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="@dimen/icon_size_coin"
+                android:layout_height="@dimen/icon_size_coin"
                 android:src="@drawable/ic_coin"
                 android:layout_marginEnd="4dp" />
 
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="100 pts"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body_default"
                 android:textStyle="bold"
                 android:textColor="#000000" />
 
@@ -62,8 +62,8 @@
 
             <!-- Success Checkmark Icon -->
             <ImageView
-                android:layout_width="69dp"
-                android:layout_height="69dp"
+                android:layout_width="@dimen/event_created_checkmark_size"
+                android:layout_height="@dimen/event_created_checkmark_size"
                 android:src="@drawable/bg_success_checkmark"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="20dp" />
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event Created! Way to go!"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_medium"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:layout_marginBottom="8dp" />
@@ -83,11 +83,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Who's joining you? Invite someone who needs a boost today."
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body_default"
                 android:textColor="#000000"
                 android:gravity="center"
                 android:layout_marginBottom="20dp"
-                android:maxWidth="283dp" />
+                android:maxWidth="@dimen/event_created_subtitle_max_width" />
 
             <!-- Community List Card -->
             <LinearLayout
@@ -105,7 +105,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="\uD83D\uDC95 Discover your community \uD83D\uDC95"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_size_body_default"
                         android:textStyle="bold"
                         android:textColor="#66000000"
                         android:gravity="center"
@@ -115,8 +115,8 @@
                     <!-- Close button -->
                     <ImageView
                         android:id="@+id/btn_close_community"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_size_standard"
+                        android:layout_height="@dimen/icon_size_standard"
                         android:layout_gravity="end|center_vertical"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/ic_close_circle"
@@ -144,11 +144,11 @@
             <TextView
                 android:id="@+id/done_button"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="@dimen/button_height_small"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/bg_done_btn"
                 android:text="Done"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body_default"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:gravity="center"

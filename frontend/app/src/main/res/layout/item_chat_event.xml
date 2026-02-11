@@ -11,8 +11,8 @@
 
     <!-- Bot Avatar -->
     <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/chat_bot_avatar_size"
+        android:layout_height="@dimen/chat_bot_avatar_size"
         android:src="@drawable/ic_bot_avatar"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="2dp" />
@@ -34,7 +34,7 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:textColor="#343149"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_size_body_standard"
             android:layout_marginBottom="8dp" />
 
         <!-- Event Cards Container -->

@@ -15,8 +15,8 @@
         android:id="@+id/suggestion_emoji"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="🎉"
-        android:textSize="22sp"
+        android:text="&#127881;"
+        android:textSize="@dimen/text_size_emoji_small"
         android:layout_marginEnd="12dp" />
 
     <!-- Event Type Title -->
@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_body_medium"
         android:textStyle="bold"
         android:textColor="#343149" />
 
@@ -33,8 +33,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="→"
-        android:textSize="18sp"
+        android:text="&#8594;"
+        android:textSize="@dimen/text_size_body_large"
         android:textColor="#7A7CEC" />
 
 </LinearLayout>

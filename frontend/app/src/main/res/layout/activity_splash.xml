@@ -8,8 +8,8 @@
     <!-- Logo centered slightly above middle -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="280dp"
-        android:layout_height="180dp"
+        android:layout_width="@dimen/splash_logo_width"
+        android:layout_height="@dimen/splash_logo_height"
         android:src="@drawable/logo_buddeee"
         android:scaleType="fitCenter"
         android:contentDescription="Buddeee"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Buddeee"
-        android:textSize="40sp"
+        android:textSize="@dimen/text_size_title_xlarge"
         android:textColor="#343149"
         android:fontFamily="@font/itim"
         android:letterSpacing="-0.01"

@@ -16,8 +16,8 @@
         <!-- Emoji Box on Left (60x60dp) -->
         <FrameLayout
             android:id="@+id/emoji_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/info_window_emoji_box_size"
+            android:layout_height="@dimen/info_window_emoji_box_size"
             android:layout_alignParentStart="true"
             android:background="@drawable/bg_emoji_box_chat">
 
@@ -26,8 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="🎉"
-                android:textSize="36sp" />
+                android:text="&#x1F389;"
+                android:textSize="@dimen/text_size_emoji_large" />
 
         </FrameLayout>
 
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event Title"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_body_small"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:maxLines="1"
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time"
-                android:textSize="9sp"
+                android:textSize="@dimen/text_size_label_small"
                 android:textStyle="normal"
                 android:textColor="#000000"
                 android:maxLines="1"
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location"
-                android:textSize="9sp"
+                android:textSize="@dimen/text_size_label_small"
                 android:textStyle="normal"
                 android:textColor="#000000"
                 android:maxLines="1"
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0/10 participants"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_label_small"
                     android:textStyle="normal"
                     android:textColor="#000000"
                     android:maxLines="1" />
@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Details"
-                    android:textSize="7sp"
+                    android:textSize="@dimen/text_size_info_window_btn"
                     android:textStyle="normal"
                     android:textAllCaps="false"
                     android:paddingStart="10dp"

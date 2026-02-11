@@ -40,10 +40,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Send to"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_medium"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:padding="16dp" />
+                android:padding="@dimen/spacing_content_padding" />
 
             <!-- Users List -->
             <androidx.recyclerview.widget.RecyclerView
@@ -60,11 +60,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/share_send_button_height"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:text="Send"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_body_medium"
         android:enabled="false"
         app:cornerRadius="8dp" />
 

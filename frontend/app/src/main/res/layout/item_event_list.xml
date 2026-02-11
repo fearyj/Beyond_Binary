@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginStart="21dp"
-    android:layout_marginEnd="21dp"
+    android:layout_marginStart="@dimen/spacing_card_horizontal"
+    android:layout_marginEnd="@dimen/spacing_card_horizontal"
     android:layout_marginBottom="20dp"
     android:background="@drawable/bg_event_card_home"
     android:elevation="4dp"
-    android:padding="12dp"
+    android:padding="@dimen/spacing_card_padding"
     android:clickable="true"
     android:focusable="true">
 
@@ -20,8 +20,8 @@
         <!-- Emoji Icon Box -->
         <FrameLayout
             android:id="@+id/emoji_box"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/home_event_emoji_box_size"
+            android:layout_height="@dimen/home_event_emoji_box_size"
             android:background="@drawable/bg_emoji_home_blue">
 
             <TextView
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text=""
-                android:textSize="36sp" />
+                android:textSize="@dimen/text_size_emoji_large" />
 
         </FrameLayout>
 
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Event Title"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body_default"
                     android:textStyle="bold"
                     android:textColor="#000000"
                     android:maxLines="1"
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sports"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_label_small"
                     android:textColor="#343149"
                     android:background="@drawable/bg_event_action_btn"
                     android:paddingStart="6dp"
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="1 May | Wed | 6:00 PM - 7:00 PM"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_size_detail"
                 android:textColor="#000000"
                 android:layout_marginTop="2dp" />
 
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Location"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_size_detail"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:maxLines="1"
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="5/20 Pax"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_size_detail"
                 android:textColor="#747688"
                 android:layout_marginTop="1dp" />
 
@@ -120,10 +120,10 @@
                 <TextView
                     android:id="@+id/btn_event_details"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="@dimen/button_height_action_small"
                     android:background="@drawable/bg_event_action_btn"
                     android:text="Event Details"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_label_small"
                     android:textStyle="bold"
                     android:textColor="#343149"
                     android:gravity="center"
@@ -137,10 +137,10 @@
                 <TextView
                     android:id="@+id/btn_view_map"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="@dimen/button_height_action_small"
                     android:background="@drawable/bg_event_action_btn"
                     android:text="View Map"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_label_small"
                     android:textStyle="bold"
                     android:textColor="#343149"
                     android:gravity="center"

@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="@dimen/spacing_form_padding">
 
     <!-- Top spacer -->
     <View
@@ -22,7 +22,7 @@
         android:gravity="center"
         android:text="Let's get to know you"
         android:textColor="@color/black"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size_title_large"
         android:textStyle="bold" />
 
     <!-- Middle spacer -->
@@ -41,7 +41,7 @@
         android:paddingEnd="16dp"
         android:text="Question goes here"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="@dimen/text_size_body_large" />
 
     <!-- Middle spacer -->
     <View
@@ -53,10 +53,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_option_a"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/onboarding_button_height"
         android:text="Option A"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_body_medium"
         app:backgroundTint="@color/black"
         app:cornerRadius="28dp" />
 
@@ -68,10 +68,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_option_b"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/onboarding_button_height"
         android:text="Option B"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_body_medium"
         app:backgroundTint="@color/black"
         app:cornerRadius="28dp" />
 

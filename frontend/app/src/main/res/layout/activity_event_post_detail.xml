@@ -9,7 +9,7 @@
     <!-- Top bar (back arrow) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="@dimen/post_detail_bar_height"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="4dp"
@@ -18,8 +18,8 @@
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/post_detail_back_button_size"
+            android:layout_height="@dimen/post_detail_back_button_size"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Post"
-            android:textSize="17sp"
+            android:textSize="@dimen/text_size_body_post_title"
             android:textStyle="bold"
             android:textColor="#000000"
             android:layout_marginStart="8dp" />
@@ -50,56 +50,35 @@
             <!-- Post Header -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/header_height"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp">
 
                 <!-- Profile pic -->
-                <View
+                <ImageView
                     android:id="@+id/header_profile_pic"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/profile_circle_background" />
+                    android:layout_width="@dimen/post_detail_header_profile_pic"
+                    android:layout_height="@dimen/post_detail_header_profile_pic"
+                    android:background="@drawable/profile_circle_background"
+                    android:scaleType="centerCrop" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/post_username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="10dp">
-
-                    <TextView
-                        android:id="@+id/post_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="sarah.mitchell"
-                        android:textSize="13sp"
-                        android:textColor="#000000" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" · "
-                        android:textSize="12sp"
-                        android:textColor="#8E8E8E" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Following"
-                        android:textSize="12sp"
-                        android:textColor="#8E8E8E" />
-
-                </LinearLayout>
+                    android:layout_marginStart="10dp"
+                    android:textSize="@dimen/text_size_body_chat_btn"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
 
                 <!-- Three dots menu -->
                 <ImageButton
                     android:id="@+id/btn_more"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/post_detail_header_profile_pic"
+                    android:layout_height="@dimen/post_detail_header_profile_pic"
                     android:src="@android:drawable/ic_menu_more"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="More options"
@@ -116,7 +95,7 @@
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/image_carousel"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="@dimen/post_detail_carousel_height"
                     android:background="#F5F5F5" />
 
                 <!-- Slide counter badge -->
@@ -133,7 +112,7 @@
                     android:paddingBottom="4dp"
                     android:text="1/5"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_body_small" />
 
             </FrameLayout>
 
@@ -147,74 +126,6 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="4dp" />
 
-            <!-- Action Buttons Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp">
-
-                <ImageButton
-                    android:id="@+id/btn_like"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Like"
-                    android:scaleType="centerInside"
-                    android:padding="4dp" />
-
-                <ImageButton
-                    android:id="@+id/btn_comment"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Comment"
-                    android:scaleType="centerInside"
-                    android:padding="4dp"
-                    android:layout_marginStart="8dp" />
-
-                <ImageButton
-                    android:id="@+id/btn_share"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Share"
-                    android:scaleType="centerInside"
-                    android:padding="4dp"
-                    android:layout_marginStart="8dp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <ImageButton
-                    android:id="@+id/btn_bookmark"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Bookmark"
-                    android:scaleType="centerInside"
-                    android:padding="4dp" />
-
-            </LinearLayout>
-
-            <!-- Likes count -->
-            <TextView
-                android:id="@+id/likes_count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="4dp"
-                android:text="2,542 likes"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
             <!-- Caption -->
             <TextView
                 android:id="@+id/caption_text"
@@ -223,55 +134,9 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="6dp"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body_default"
                 android:lineSpacingExtra="3dp"
                 android:textColor="#1E2939" />
-
-            <!-- View comments -->
-            <TextView
-                android:id="@+id/view_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="4dp"
-                android:text="View all 87 comments"
-                android:textSize="14sp"
-                android:textColor="#8E8E8E"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <!-- Add comment row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp">
-
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/profile_circle_background" />
-
-                <EditText
-                    android:id="@+id/comment_input"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:background="@android:color/transparent"
-                    android:hint="Add a comment..."
-                    android:textSize="13sp"
-                    android:textColor="#262626"
-                    android:textColorHint="#8E8E8E"
-                    android:inputType="text"
-                    android:maxLines="1" />
-
-            </LinearLayout>
 
             <!-- Timestamp -->
             <TextView
@@ -283,7 +148,7 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="16dp"
                 android:text="2 hours ago"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textColor="#8E8E8E" />
 
         </LinearLayout>
