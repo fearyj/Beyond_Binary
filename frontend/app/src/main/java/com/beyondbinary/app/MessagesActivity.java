@@ -40,11 +40,11 @@ public class MessagesActivity extends AppCompatActivity {
         conversations.add(new MessageConversation("Martin Blankenship", "Great, I'll bring the snacks!", "11:58", "👨",
                 "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"));
         conversations.add(new MessageConversation("Paige Salinas", "You: Thinking of checking out that new...", "11:00", "👩‍🦰",
-                "https://images.unsplash.com/photo-1507527557404-50fbc8ba6e46?w=100&h=100&fit=crop"));
+                "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?w=100&h=100&fit=crop"));
         conversations.add(new MessageConversation("Vincenzo Roberts", "Haha, worth it for sure!!", "10:58", "😎",
                 "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop"));
         conversations.add(new MessageConversation("Marceline Avila", "See you later!", "09:46", "👱‍♀️",
-                "https://images.unsplash.com/photo-1517849845537-1d51a20414de?w=100&h=100&fit=crop"));
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"));
 
         adapter = new MessagesAdapter(conversations, conversation -> {
             // Open chat screen

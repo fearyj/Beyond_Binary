@@ -20,6 +20,7 @@ import com.beyondbinary.app.api.DeleteEventResponse;
 import com.beyondbinary.app.api.EventResponse;
 import com.beyondbinary.app.api.RetrofitClient;
 import com.beyondbinary.app.api.UpdateEventResponse;
+import com.beyondbinary.app.api.UploadPhotoResponse;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,6 +30,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,10 +113,10 @@ public class EventDetailActivity extends AppCompatActivity {
                 new ActivityResultContracts.GetContent(),
                 uri -> {
                     if (uri != null) {
-                        String path = copyEventPhotoToInternalStorage(uri);
-                        if (path != null) {
-                            saveEventPhotoPath(path);
-                            displayEventPhoto(path);
+                        // Copy to temp file then upload to server
+                        String tempPath = copyEventPhotoToInternalStorage(uri);
+                        if (tempPath != null) {
+                            uploadPhotoToServer(tempPath);
                         }
                     }
                 }
@@ -155,12 +159,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // Dismiss overlay when tapping outside
         uploadPromptOverlay.setOnClickListener(v -> uploadPromptOverlay.setVisibility(View.GONE));
-
-        // Check for existing event photo
-        String existingPhotoPath = getEventPhotoPath();
-        if (existingPhotoPath != null) {
-            displayEventPhoto(existingPhotoPath);
-        }
 
         // Load event details
         if (eventId != -1) {
@@ -402,26 +400,46 @@ public class EventDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void saveEventPhotoPath(String path) {
+    private void uploadPhotoToServer(String localPath) {
         SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
         int userId = prefs.getInt("user_id", -1);
-        prefs.edit().putString("event_photo_" + userId + "_" + eventId, path).apply();
-    }
-
-    private String getEventPhotoPath() {
-        SharedPreferences prefs = getSharedPreferences("beyondbinary_prefs", MODE_PRIVATE);
-        int userId = prefs.getInt("user_id", -1);
-        String path = prefs.getString("event_photo_" + userId + "_" + eventId, null);
-        if (path != null && new File(path).exists()) {
-            return path;
+        if (userId == -1) {
+            Toast.makeText(this, "Please sign in to upload photos", Toast.LENGTH_SHORT).show();
+            return;
         }
-        return null;
+
+        File photoFile = new File(localPath);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
+        MultipartBody.Part photoPart = MultipartBody.Part.createFormData("photo", photoFile.getName(), fileBody);
+        RequestBody userIdBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(userId));
+
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.uploadEventPhoto(eventId, userIdBody, photoPart).enqueue(new Callback<UploadPhotoResponse>() {
+            @Override
+            public void onResponse(Call<UploadPhotoResponse> call, Response<UploadPhotoResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    Toast.makeText(EventDetailActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT).show();
+                    displayEventPhoto(response.body().getImageUrl());
+                } else {
+                    Toast.makeText(EventDetailActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
+                Toast.makeText(EventDetailActivity.this, "Upload error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void displayEventPhoto(String path) {
+    private void displayEventPhoto(String imageUrl) {
         eventPhotoContainer.setVisibility(View.VISIBLE);
+        // Build full URL from the relative path returned by the server
+        String baseUrl = com.beyondbinary.app.BuildConfig.API_BASE_URL
+                .replace("/api/", "");
+        String fullUrl = baseUrl + imageUrl;
         Glide.with(this)
-                .load(new File(path))
+                .load(fullUrl)
                 .centerCrop()
                 .into(eventPhoto);
     }

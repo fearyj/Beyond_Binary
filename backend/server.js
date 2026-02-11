@@ -3,7 +3,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
 require('dotenv').config();
 
 const { initializeVectorStore, reindexEvents } = require('./chatbot/vectorStore');
@@ -18,6 +20,23 @@ let chatbotGraph = null;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve uploaded photos as static files
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
+
+// Multer storage configuration for event photo uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadsDir),
+    filename: (req, file, cb) => {
+        const uniqueName = `event_${req.params.id}_${Date.now()}${path.extname(file.originalname)}`;
+        cb(null, uniqueName);
+    }
+});
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
 // Database connection
 const db = new sqlite3.Database(DB_PATH, (err) => {
@@ -146,6 +165,45 @@ function initializeDatabase() {
             console.error('Error creating user_interactions table:', err);
         } else {
             console.log('User interactions table ready');
+        }
+    });
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            receiver_id INTEGER NOT NULL,
+            text TEXT,
+            type TEXT DEFAULT 'text',
+            event_id INTEGER,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (sender_id) REFERENCES users(id),
+            FOREIGN KEY (receiver_id) REFERENCES users(id),
+            FOREIGN KEY (event_id) REFERENCES events(id)
+        )
+    `, (err) => {
+        if (err) {
+            console.error('Error creating messages table:', err);
+        } else {
+            console.log('Messages table ready');
+        }
+    });
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS event_photos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            image_url TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (event_id) REFERENCES events(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    `, (err) => {
+        if (err) {
+            console.error('Error creating event_photos table:', err);
+        } else {
+            console.log('Event photos table ready');
         }
     });
 }
@@ -635,6 +693,228 @@ app.get('/api/interactions/:userId', (req, res) => {
     );
 });
 
+// ==================== EVENT PHOTOS ROUTES ====================
+
+// Upload a photo for an event
+app.post('/api/events/:id/photos', upload.single('photo'), (req, res) => {
+    const eventId = req.params.id;
+    const userId = req.body.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'user_id is required' });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'No photo file provided' });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    db.run(
+        'INSERT INTO event_photos (event_id, user_id, image_url) VALUES (?, ?, ?)',
+        [eventId, userId, imageUrl],
+        function(err) {
+            if (err) {
+                console.error('Error saving event photo:', err);
+                return res.status(500).json({ error: 'Failed to save photo' });
+            }
+
+            res.status(201).json({
+                success: true,
+                message: 'Photo uploaded successfully',
+                photoId: this.lastID,
+                image_url: imageUrl
+            });
+        }
+    );
+});
+
+// Get photos for a specific event
+app.get('/api/events/:id/photos', (req, res) => {
+    const eventId = req.params.id;
+
+    db.all(
+        'SELECT * FROM event_photos WHERE event_id = ? ORDER BY created_at DESC',
+        [eventId],
+        (err, rows) => {
+            if (err) {
+                console.error('Error fetching event photos:', err);
+                return res.status(500).json({ error: 'Failed to fetch photos' });
+            }
+
+            res.json({
+                success: true,
+                photos: rows
+            });
+        }
+    );
+});
+
+// Get attended event galleries for a user (profile grid)
+app.get('/api/users/:userId/attended-galleries', (req, res) => {
+    const { userId } = req.params;
+
+    // Find events the user attended that have at least one photo
+    db.all(
+        `SELECT DISTINCT e.id, e.title, e.eventType, e.time, e.location
+         FROM user_interactions ui
+         JOIN events e ON ui.event_id = e.id
+         WHERE ui.user_id = ?
+           AND ui.interaction_type = 'attended'
+         ORDER BY ui.created_at DESC`,
+        [userId],
+        (err, events) => {
+            if (err) {
+                console.error('Error fetching attended galleries:', err);
+                return res.status(500).json({ error: 'Failed to fetch galleries' });
+            }
+
+            if (events.length === 0) {
+                return res.json({ success: true, galleries: [] });
+            }
+
+            // For each attended event, fetch all photos
+            const eventIds = events.map(e => e.id);
+            const placeholders = eventIds.map(() => '?').join(',');
+
+            db.all(
+                `SELECT event_id, image_url FROM event_photos
+                 WHERE event_id IN (${placeholders})
+                 ORDER BY created_at ASC`,
+                eventIds,
+                (err, photos) => {
+                    if (err) {
+                        console.error('Error fetching gallery photos:', err);
+                        return res.status(500).json({ error: 'Failed to fetch gallery photos' });
+                    }
+
+                    // Group photos by event_id
+                    const photosByEvent = {};
+                    for (const photo of photos) {
+                        if (!photosByEvent[photo.event_id]) {
+                            photosByEvent[photo.event_id] = [];
+                        }
+                        photosByEvent[photo.event_id].push(photo.image_url);
+                    }
+
+                    // Build gallery response — include events even if they have no photos yet
+                    const galleries = events.map(event => ({
+                        eventId: event.id,
+                        title: event.title,
+                        eventType: event.eventType,
+                        time: event.time,
+                        location: event.location,
+                        imageUrls: photosByEvent[event.id] || []
+                    }));
+
+                    res.json({ success: true, galleries });
+                }
+            );
+        }
+    );
+});
+
+// ==================== MESSAGING ROUTES ====================
+
+// Send an event invite message
+app.post('/api/messages/invite', (req, res) => {
+    const { sender_id, receiver_id, event_id } = req.body;
+
+    if (!sender_id || !receiver_id || !event_id) {
+        return res.status(400).json({ error: 'sender_id, receiver_id, and event_id are required' });
+    }
+
+    // Fetch event details for the invite text
+    db.get('SELECT * FROM events WHERE id = ?', [event_id], (err, event) => {
+        if (err || !event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        const inviteText = `invited you to: ${event.title}`;
+
+        db.run(
+            'INSERT INTO messages (sender_id, receiver_id, text, type, event_id) VALUES (?, ?, ?, ?, ?)',
+            [sender_id, receiver_id, inviteText, 'event_invite', event_id],
+            function(err) {
+                if (err) {
+                    console.error('Error saving invite message:', err);
+                    return res.status(500).json({ error: 'Failed to send invite' });
+                }
+
+                res.status(201).json({
+                    success: true,
+                    messageId: this.lastID,
+                    message: {
+                        id: this.lastID,
+                        sender_id,
+                        receiver_id,
+                        text: inviteText,
+                        type: 'event_invite',
+                        event_id,
+                        event_title: event.title,
+                        event_time: event.time,
+                        event_location: event.location,
+                        event_type: event.eventType,
+                        current_participants: event.currentParticipants,
+                        max_participants: event.maxParticipants
+                    }
+                });
+            }
+        );
+    });
+});
+
+// Send a text message
+app.post('/api/messages', (req, res) => {
+    const { sender_id, receiver_id, text } = req.body;
+
+    if (!sender_id || !receiver_id || !text) {
+        return res.status(400).json({ error: 'sender_id, receiver_id, and text are required' });
+    }
+
+    db.run(
+        'INSERT INTO messages (sender_id, receiver_id, text, type) VALUES (?, ?, ?, ?)',
+        [sender_id, receiver_id, text, 'text'],
+        function(err) {
+            if (err) {
+                console.error('Error saving message:', err);
+                return res.status(500).json({ error: 'Failed to send message' });
+            }
+
+            res.status(201).json({
+                success: true,
+                messageId: this.lastID
+            });
+        }
+    );
+});
+
+// Get messages between two users (conversation thread)
+app.get('/api/messages/:userId/:otherUserId', (req, res) => {
+    const { userId, otherUserId } = req.params;
+
+    db.all(
+        `SELECT m.*, e.title as event_title, e.time as event_time,
+                e.location as event_location, e.eventType as event_type,
+                e.currentParticipants as current_participants,
+                e.maxParticipants as max_participants
+         FROM messages m
+         LEFT JOIN events e ON m.event_id = e.id
+         WHERE (m.sender_id = ? AND m.receiver_id = ?)
+            OR (m.sender_id = ? AND m.receiver_id = ?)
+         ORDER BY m.created_at ASC`,
+        [userId, otherUserId, otherUserId, userId],
+        (err, rows) => {
+            if (err) {
+                console.error('Error fetching messages:', err);
+                return res.status(500).json({ error: 'Failed to fetch messages' });
+            }
+
+            res.json({ success: true, messages: rows });
+        }
+    );
+});
+
 // ==================== STATS ROUTES ====================
 
 // Get event statistics
@@ -700,6 +980,12 @@ app.listen(PORT, () => {
     console.log(`  GET    /api/users/:userId/events`);
     console.log(`  POST   /api/interactions`);
     console.log(`  GET    /api/interactions/:userId`);
+    console.log(`  POST   /api/events/:id/photos`);
+    console.log(`  GET    /api/events/:id/photos`);
+    console.log(`  GET    /api/users/:userId/attended-galleries`);
+    console.log(`  POST   /api/messages/invite`);
+    console.log(`  POST   /api/messages`);
+    console.log(`  GET    /api/messages/:userId/:otherUserId`);
     console.log(`  GET    /api/stats`);
     console.log(`  POST   /api/chatbot/chat`);
 });

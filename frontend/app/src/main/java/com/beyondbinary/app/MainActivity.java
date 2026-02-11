@@ -129,8 +129,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         boolean openChatbot = getIntent().getBooleanExtra("OPEN_CHATBOT", false);
+        boolean openMyEvents = getIntent().getBooleanExtra("OPEN_MY_EVENTS", false);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        if (bottomNav != null && onboardingDone && !openChatbot) {
+        if (bottomNav != null && onboardingDone && !openChatbot && !openMyEvents) {
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
