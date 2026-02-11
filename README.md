@@ -5,31 +5,48 @@ A community-driven Android application that helps isolated individuals connect t
 ## Architecture
 
 ```
-+-----------------------------------------------------------+
-|                  Android App (Frontend)                     |
-|  Java / Android SDK / Material Design 3                    |
-|  Google Maps, Gemini AI, Retrofit, Glide                   |
-+---------------------------+-------------------------------+
-                            | HTTP/REST (Retrofit)
-                            v
-+---------------------------+-------------------------------+
-|               Node.js Backend (Express.js)                 |
-|  RESTful API / User Auth / Event CRUD                      |
-+---------------------------+-------------------------------+
-                            |
-                            v
-+-----------------------------------------------------------+
-|                    SQLite Database                          |
-|  Events, Users, Interactions                               |
-+-----------------------------------------------------------+
++----------------------------------------------------------------------+
+|                       Android App (Frontend)                          |
+|  Java · Android SDK (API 36) · Material Design 3                     |
+|  Google Maps SDK · Retrofit 2 / OkHttp · Glide · ExoPlayer (Media3) |
+|  Google Gemini 2.0 Flash (on-device event ranking)                   |
+|  Room · Gson · Flexbox · ViewPager2                                  |
++----------------------------------+-----------------------------------+
+                                   | HTTP / REST (Retrofit)
+                                   v
++----------------------------------------------------------------------+
+|                    Node.js Backend (Express.js)                       |
+|  RESTful API · User Auth (bcrypt) · Event CRUD · Multer (uploads)    |
+|  ----------------------------------------------------------------    |
+|  RAG Chatbot Pipeline (LangGraph)                                    |
+|    Retrieval  →  Synthesis  →  Constraint Checker                    |
+|    LangChain MemoryVectorStore    Google Gemini 2.5 Flash            |
+|    Gemini Embedding (gemini-embedding-001)                           |
++----------------------------------+-----------------------------------+
+                                   |
+                                   v
++----------------------------------------------------------------------+
+|                         SQLite Database                               |
+|  Events · Users · Interactions · Messages · Event Photos             |
++----------------------------------------------------------------------+
 ```
+
+### AI / ML Summary
+
+| Component | Model / Tool | Purpose |
+|-----------|-------------|---------|
+| Event ranking | Google Gemini 2.0 Flash | Re-ranks personalized feed by relevance to user interests |
+| Health-based recommendations | Rule engine | Filters events based on step count and heart rate |
+| Chatbot (retrieval) | Gemini Embedding (`gemini-embedding-001`) + LangChain MemoryVectorStore | Semantic search over events |
+| Chatbot (synthesis) | Google Gemini 2.5 Flash | Generates natural-language responses with event context |
+| Chatbot (orchestration) | LangGraph (StateGraph) | 3-node RAG pipeline: retrieval → synthesis → constraint check |
 
 ## Features
 
-### Event Discovery
-- Personalized and Recommended tabs with swipeable feeds
-- Google Gemini 2.0 Flash AI-powered event ranking
-- Event detail view with join, share, and map integration
+### Event Discovery (FYP Tabs)
+- **Personalized** — Events matched to user interests, re-ranked by Gemini AI
+- **Recommended** — Events based on health data (step count & heart rate)
+- Vertical-swipe card feed with full-screen video backgrounds (ExoPlayer)
 
 ### Interactive Event Map
 - Google Maps with custom emoji markers for 70+ event categories
@@ -47,24 +64,61 @@ A community-driven Android application that helps isolated individuals connect t
 - Photo grid from attended events
 
 ### AI Chatbot
-- Gemini-powered assistant for event discovery and queries
-- Context-aware responses using event database
+- Backend-driven RAG chatbot using LangGraph + Gemini
+- Semantic event search via vector embeddings
+- Context-aware responses with conversation history
 
 ### Messaging
 - Direct messaging between users
-- Event card sharing in chat
+- Event card sharing / invites in chat
+
+## How the Feed Tabs Work
+
+### Personalized Tab (`PersonalizedFragment`)
+
+1. Reads the **user profile** from SQLite (bio + interest tags like "Walking,Yoga,Outdoor").
+2. Queries events whose **category** matches the user's interest tags.
+3. If a **Gemini API key** is configured:
+   - Sends the user profile + event list to `EventRankingAgent`.
+   - The agent calls **Gemini 2.0 Flash** with a prompt asking it to rank events by relevance.
+   - Gemini returns a comma-separated list of event IDs in ranked order.
+   - The agent reorders the events accordingly.
+4. Displays the (ranked) events in a vertical-swipe feed.
+
+### Recommended Tab (`RecommendedFragment`)
+
+1. Reads **mock health data** from `res/raw/mock_health_data.json` (e.g. `{"steps": 3500, "heartRate": 92}`).
+2. Applies rules:
+   - **Steps < 4,000** → show Walking & Outdoor events.
+   - **Heart rate > 85** → show Meditation & Yoga events.
+   - **Otherwise** → show all events.
+3. Displays the filtered events in the same vertical-swipe feed.
+
+Both tabs share the same card layout (`item_event_card.xml`) and adapter (`EventCardAdapter`). Each card shows a full-screen video background with an overlaid text panel (title, category, description, location).
+
+### How the AI Ranking Works
+
+The `EventRankingAgent` class:
+
+1. Creates a `GenerativeModel` using **Gemini 2.0 Flash** and the API key from `BuildConfig`.
+2. Builds a text prompt containing the user's bio, interests, and a numbered list of events.
+3. Asks Gemini to return **only a comma-separated list of event IDs** sorted by relevance.
+4. Parses the response, reorders events to match, and appends any unmentioned events at the end.
+5. If the API call fails (no key, network error, bad response), it **falls back silently** to the original event order.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Frontend | Java, Android SDK (compileSdk 36), Material Design 3 |
-| AI | Google Gemini 2.0 Flash (generative AI SDK) |
+| AI (on-device) | Google Gemini 2.0 Flash (generative AI SDK) |
+| AI (backend) | Google Gemini 2.5 Flash, Gemini Embedding, LangChain, LangGraph |
 | Maps | Google Maps SDK for Android |
+| Video | ExoPlayer (Media3) |
 | Networking | Retrofit 2, OkHttp |
 | Image Loading | Glide |
-| Local DB | SQLite (AppDatabaseHelper) |
-| Backend | Node.js, Express.js |
+| Local DB | Room, SQLite (AppDatabaseHelper) |
+| Backend | Node.js, Express.js, bcrypt, Multer |
 | Backend DB | SQLite3 |
 | Build | Gradle 9.1.0, AGP 9.0.0 |
 
@@ -82,17 +136,18 @@ Beyond_Binary/
 │   │   │   ├── AddEventActivity.java          # Event creation form
 │   │   │   ├── EventDetailActivity.java       # Full event detail page
 │   │   │   ├── MessagesActivity.java          # Messaging list
+│   │   │   ├── ShareEventActivity.java        # Event sharing / invite
 │   │   │   ├── ShopItem.java / ShopItemAdapter.java  # Shop overlay
 │   │   │   ├── agents/
-│   │   │   │   └── EventRankingAgent.java     # Gemini AI integration
+│   │   │   │   └── EventRankingAgent.java     # Gemini AI event ranking
 │   │   │   ├── api/                           # Retrofit API service + response models
 │   │   │   ├── chatbot/                       # AI chatbot fragment
 │   │   │   ├── data/
 │   │   │   │   ├── database/AppDatabaseHelper.java
 │   │   │   │   ├── models/User.java, Event.java
-│   │   │   │   └── providers/EventProvider.java
+│   │   │   │   └── providers/EventProvider.java, HealthDataProvider.java
 │   │   │   ├── fyp/                           # Home tabs (Personalized, Recommended)
-│   │   │   ├── messaging/                     # Chat activity
+│   │   │   ├── messaging/                     # Chat activity + adapter
 │   │   │   ├── onboarding/                    # Interest selection onboarding
 │   │   │   └── registration/                  # Sign up / sign in
 │   │   └── res/
@@ -100,14 +155,20 @@ Beyond_Binary/
 │   │       ├── drawable/                      # Vector icons, shape backgrounds
 │   │       ├── drawable-xxhdpi/               # PNG assets (houses, shop items, logo)
 │   │       ├── font/itim.ttf                  # Itim font
-│   │       └── values/                        # Colors, strings, themes
+│   │       ├── raw/mock_health_data.json      # Mock health data
+│   │       └── values/                        # Colors, strings, themes, dimens
 │   ├── build.gradle                           # Dependencies, API keys from local.properties
 │   └── local.properties                       # API keys (gitignored)
 │
 ├── backend/                           # Node.js REST API
 │   ├── server.js                      # Express server with all endpoints
+│   ├── chatbot/
+│   │   ├── graph.js                   # LangGraph RAG pipeline (3-node StateGraph)
+│   │   ├── vectorStore.js             # LangChain MemoryVectorStore + Gemini embeddings
+│   │   └── prompts.js                 # Chatbot prompt templates
 │   ├── init-database.js               # Database seeder (sample Singapore events)
 │   ├── database/events.db             # SQLite database (gitignored)
+│   ├── public/uploads/                # Uploaded event photos
 │   ├── package.json
 │   └── .env                           # Environment config (gitignored)
 │
@@ -134,8 +195,8 @@ cd Beyond_Binary
 
 ### 2. Get API Keys
 
-- **Google Maps API Key**: [Google Cloud Console](https://console.cloud.google.com/) - Enable Maps SDK for Android
-- **Google Gemini API Key**: [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **Google Maps API Key**: [Google Cloud Console](https://console.cloud.google.com/) — Enable Maps SDK for Android
+- **Google Gemini API Key**: [Google AI Studio](https://aistudio.google.com/app/apikey) — Used for both frontend ranking and backend chatbot
 
 ### 3. Backend Setup
 
@@ -144,6 +205,14 @@ cd backend
 npm install
 npm run init-db    # Seed database with sample events
 npm start          # Start server on port 3000
+```
+
+Create `backend/.env`:
+```
+PORT=3000
+DATABASE_PATH=./database/events.db
+NODE_ENV=development
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
 For development with auto-restart: `npm run dev`
@@ -186,15 +255,25 @@ Base URL: `http://localhost:3000/api` (emulator: `http://10.0.2.2:3000/api`)
 | GET | /api/health | Health check |
 | GET | /api/events | List all events |
 | GET | /api/events/:id | Get event by ID |
-| GET | /api/events/nearby?latitude=&longitude=&radius= | Nearby events |
+| GET | /api/events/nearby?lat=&lng=&radius= | Nearby events |
 | POST | /api/events | Create event |
 | PUT | /api/events/:id | Update event |
 | DELETE | /api/events/:id | Delete event |
-| GET | /api/stats | System statistics |
-| POST | /api/users | Create user |
+| POST | /api/users | Register user |
+| POST | /api/users/login | Login (email + password) |
 | GET | /api/users/:id | Get user |
-| PUT | /api/users/:id | Update user |
-| GET | /api/users/:id/interactions | User interactions |
+| PUT | /api/users/:id | Update user profile |
+| GET | /api/users/:userId/events | User's joined/created events |
+| POST | /api/interactions | Track user-event interaction |
+| GET | /api/interactions/:userId | User interaction history |
+| POST | /api/events/:id/photos | Upload event photo |
+| GET | /api/events/:id/photos | Get event photos |
+| GET | /api/users/:userId/attended-galleries | Attended event photo galleries |
+| POST | /api/messages/invite | Send event invite message |
+| POST | /api/messages | Send text message |
+| GET | /api/messages/:userId/:otherUserId | Get conversation thread |
+| POST | /api/chatbot/chat | AI chatbot |
+| GET | /api/stats | System statistics |
 
 ## App Navigation Flow
 
@@ -212,25 +291,19 @@ MainActivity
 ├── Add Event
 ├── My Events
 ├── AI Chatbot
-├── Messages → Chat
+├── Messages → Chat (text + event invites)
 └── Profile (Achievement Community + Shop)
 ```
 
-## Configuration (Gitignored)
+## Mock / Seeded Data
 
-**frontend/local.properties:**
-```properties
-sdk.dir=/path/to/android/sdk
-geminiApiKey=YOUR_KEY
-mapsApiKey=YOUR_KEY
-```
-
-**backend/.env:**
-```
-PORT=3000
-DATABASE_PATH=./database/events.db
-NODE_ENV=development
-```
+| Component | Source | Notes |
+|-----------|--------|-------|
+| Events | Seeded into SQLite via `init-database.js` | Sample Singapore events |
+| User profile | Created via registration | Or seeded default user |
+| Health data | `mock_health_data.json` | Static JSON; steps=3500, heartRate=92 |
+| AI event ranking | Real Gemini API call | Requires valid API key; degrades gracefully without one |
+| Event videos | Public sample video URLs | Streamed from the internet |
 
 ## Troubleshooting
 
@@ -241,20 +314,11 @@ NODE_ENV=development
 | Backend connection failed | Ensure backend is running; emulator uses 10.0.2.2 not localhost |
 | Events not loading | Check backend logs; verify Retrofit config in RetrofitClient.java |
 | Port 3000 in use | Kill the process or use `PORT=3001 npm start` |
-
-## Development Workflow
-
-| What Changed | Rebuild APK? | Reinstall? | Restart Emulator? | Restart Backend? |
-|---|---|---|---|---|
-| Backend code | No | No | No | Auto (nodemon) |
-| Java / Kotlin | Yes | Yes | No | No |
-| XML layouts | Yes | Yes | No | No |
-| Drawables / resources | Yes | Yes | No | No |
-| build.gradle | Yes | Yes | No | No |
+| Chatbot not responding | Check GEMINI_API_KEY in backend `.env`; wait for vector store init |
 
 ## Security Notes
 
-Never commit: `local.properties`, `backend/.env`, `backend/database/events.db`, `node_modules/`, `build/` -- all are in `.gitignore`.
+Never commit: `local.properties`, `backend/.env`, `backend/database/events.db`, `node_modules/`, `build/` — all are in `.gitignore`.
 
 ## License
 
