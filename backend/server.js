@@ -613,7 +613,7 @@ app.put('/api/users/:id', (req, res) => {
     );
 });
 
-// Get user's events (created and joined, excluding left events)
+// Get user's events (created and joined, excluding left/attended/not_attended events)
 app.get('/api/users/:userId/events', (req, res) => {
     const { userId } = req.params;
 
@@ -624,11 +624,11 @@ app.get('/api/users/:userId/events', (req, res) => {
          WHERE ui.user_id = ?
            AND ui.interaction_type IN ('created', 'joined')
            AND NOT EXISTS (
-               SELECT 1 FROM user_interactions ui_left
-               WHERE ui_left.user_id = ?
-                 AND ui_left.event_id = e.id
-                 AND ui_left.interaction_type = 'left'
-                 AND ui_left.created_at > ui.created_at
+               SELECT 1 FROM user_interactions ui_done
+               WHERE ui_done.user_id = ?
+                 AND ui_done.event_id = e.id
+                 AND ui_done.interaction_type IN ('left', 'attended', 'not_attended')
+                 AND ui_done.created_at > ui.created_at
            )
          ORDER BY e.createdAt DESC`,
         [userId, userId],

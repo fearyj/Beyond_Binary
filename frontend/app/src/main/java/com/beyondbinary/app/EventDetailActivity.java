@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.beyondbinary.app.utils.EventCategoryHelper;
 import com.beyondbinary.app.api.ApiService;
 import com.beyondbinary.app.api.CreateInteractionResponse;
 import com.beyondbinary.app.api.DeleteEventResponse;
@@ -67,42 +68,6 @@ public class EventDetailActivity extends AppCompatActivity {
     private boolean userHasJoined = false;
     private ActivityResultLauncher<String> eventPhotoPickerLauncher;
 
-    // Emoji mapping for event types
-    private static final java.util.Map<String, String> EVENT_EMOJIS = new HashMap<>();
-    static {
-        EVENT_EMOJIS.put("soccer", "\u26BD");
-        EVENT_EMOJIS.put("basketball", "\uD83C\uDFC0");
-        EVENT_EMOJIS.put("tennis", "\uD83C\uDFBE");
-        EVENT_EMOJIS.put("ping pong", "\uD83C\uDFD3");
-        EVENT_EMOJIS.put("volleyball", "\uD83C\uDFD0");
-        EVENT_EMOJIS.put("running", "\uD83C\uDFC3");
-        EVENT_EMOJIS.put("yoga", "\uD83E\uDDD8");
-        EVENT_EMOJIS.put("gym", "\uD83C\uDFCB\uFE0F");
-        EVENT_EMOJIS.put("hiking", "\u26F0\uFE0F");
-        EVENT_EMOJIS.put("cycling", "\uD83D\uDEB4");
-        EVENT_EMOJIS.put("coffee", "\u2615");
-        EVENT_EMOJIS.put("dinner", "\uD83C\uDF7D\uFE0F");
-        EVENT_EMOJIS.put("lunch", "\uD83C\uDF5C");
-        EVENT_EMOJIS.put("bbq", "\uD83C\uDF56");
-        EVENT_EMOJIS.put("movie", "\uD83C\uDFAC");
-        EVENT_EMOJIS.put("book club", "\uD83D\uDCDA");
-        EVENT_EMOJIS.put("board games", "\uD83C\uDFB2");
-        EVENT_EMOJIS.put("party", "\uD83C\uDF89");
-        EVENT_EMOJIS.put("concert", "\uD83C\uDFB5");
-        EVENT_EMOJIS.put("beach", "\uD83C\uDFD6\uFE0F");
-        EVENT_EMOJIS.put("painting", "\uD83C\uDFA8");
-        EVENT_EMOJIS.put("photography", "\uD83D\uDCF7");
-        EVENT_EMOJIS.put("museum", "\uD83C\uDFDB\uFE0F");
-        EVENT_EMOJIS.put("language exchange", "\uD83D\uDDE3\uFE0F");
-        EVENT_EMOJIS.put("coding", "\uD83D\uDCBB");
-        EVENT_EMOJIS.put("picnic", "\uD83E\uDDFA");
-        EVENT_EMOJIS.put("swimming", "\uD83C\uDFCA");
-        EVENT_EMOJIS.put("badminton", "\uD83C\uDFF8");
-        EVENT_EMOJIS.put("fishing", "\uD83C\uDFA3");
-        EVENT_EMOJIS.put("karaoke", "\uD83C\uDFA4");
-        EVENT_EMOJIS.put("bowling", "\uD83C\uDFB3");
-        EVENT_EMOJIS.put("study", "\uD83D\uDCDD");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +175,7 @@ public class EventDetailActivity extends AppCompatActivity {
         descriptionText.setText(event.getDescription());
 
         // Set emoji based on event type
-        String emoji = getEmojiForEvent(event.getEventType());
+        String emoji = EventCategoryHelper.getEmojiForEventType(event.getEventType());
         emojiText.setText(emoji);
 
         // Parse and display date and time separately
@@ -263,25 +228,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 ((TextView) joinButton).setText("Full");
             }
         }
-    }
-
-    private String getEmojiForEvent(String eventType) {
-        if (eventType == null) return "\uD83C\uDF1F";
-        String lower = eventType.toLowerCase().trim();
-
-        // Exact match
-        if (EVENT_EMOJIS.containsKey(lower)) {
-            return EVENT_EMOJIS.get(lower);
-        }
-
-        // Partial match
-        for (java.util.Map.Entry<String, String> entry : EVENT_EMOJIS.entrySet()) {
-            if (lower.contains(entry.getKey()) || entry.getKey().contains(lower)) {
-                return entry.getValue();
-            }
-        }
-
-        return "\uD83C\uDF1F"; // Default star emoji
     }
 
     private void joinEvent() {
@@ -370,6 +316,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void onResponse(Call<CreateInteractionResponse> call, Response<CreateInteractionResponse> response) {
                     String message = attended ? "Marked as Attended" : "Marked as Not Attended";
                     Toast.makeText(EventDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                 }
                 @Override
                 public void onFailure(Call<CreateInteractionResponse> call, Throwable t) {

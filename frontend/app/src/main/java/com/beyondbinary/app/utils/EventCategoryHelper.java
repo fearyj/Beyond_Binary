@@ -167,6 +167,12 @@ public class EventCategoryHelper {
         if (lowerType.contains("karaoke")) return "🎤";
         if (lowerType.contains("dance") || lowerType.contains("dancing")) return "💃";
 
+        // Wellness - specific types (checked before Learning so "Yoga Class" → 🧘 not 🎓)
+        if (lowerType.contains("yoga")) return "🧘";
+        if (lowerType.contains("meditation")) return "🧘‍♀️";
+        if (lowerType.contains("spa") || lowerType.contains("massage")) return "💆";
+        if (lowerType.contains("wellness") || lowerType.contains("health")) return "💚";
+
         // Learning - specific types
         if (lowerType.contains("book") || lowerType.contains("reading")) return "📚";
         if (lowerType.contains("study")) return "📖";
@@ -174,12 +180,6 @@ public class EventCategoryHelper {
         if (lowerType.contains("coding") || lowerType.contains("programming")) return "💻";
         if (lowerType.contains("workshop") || lowerType.contains("seminar")) return "👨‍🏫";
         if (lowerType.contains("class")) return "🎓";
-
-        // Wellness - specific types
-        if (lowerType.contains("yoga")) return "🧘";
-        if (lowerType.contains("meditation")) return "🧘‍♀️";
-        if (lowerType.contains("spa") || lowerType.contains("massage")) return "💆";
-        if (lowerType.contains("wellness") || lowerType.contains("health")) return "💚";
 
         // Games - specific types
         if (lowerType.contains("board game") || lowerType.contains("boardgame")) return "🎲";
